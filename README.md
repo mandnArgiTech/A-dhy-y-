@@ -8,22 +8,44 @@ A 100% authentic, modular C implementation of Pāṇini's Aṣṭādhyāyī — 
 |----------|------|------|
 | [mandnArgiTech/A-dhy-y-](https://github.com/mandnArgiTech/A-dhy-y-) | **This repo** — C implementation | — |
 | [ashtadhyayi-com/data](https://github.com/ashtadhyayi-com/data) | Primary data + reference oracles | |
-| &nbsp;&nbsp;`sutraani/data.txt`      | 3,983 sūtras (BORI edition) | 3.6 MB |
-| &nbsp;&nbsp;`shivasutra/data.txt`    | 14 Māheśvara-sūtras + Kāśikā | 98 KB |
-| &nbsp;&nbsp;`pratyahara/data.txt`    | 52 pratyāhāra expansions | 14 KB |
-| &nbsp;&nbsp;`dhatu/data.txt`         | 2,259 dhātus with meanings | 2.4 MB |
-| &nbsp;&nbsp;`ganapath/data.txt`      | 262 gaṇas | 175 KB |
-| &nbsp;&nbsp;**`shabda/data2.txt`**   | **9,007 prātipadikas × 24 forms = 216,168 subanta forms (ORACLE)** | 9.8 MB |
-| &nbsp;&nbsp;**`dhatu/dhatuforms_*.txt`** | **2,229 dhātus × 10 lakāras × 2 padas × 9 = 254,736 tiṅanta forms (ORACLE)** | 9.3 MB |
-| &nbsp;&nbsp;**`shabda/shabdaprakriya.txt`** | **4,863 step-by-step prakriyā traces with sūtra IDs (ORACLE)** | 3.0 MB |
-| &nbsp;&nbsp;`unaadi/data.txt`        | 748 Uṇādi sūtras | 204 KB |
-| &nbsp;&nbsp;`krut/pratyay.txt`       | 129 kṛt suffixes | 22 KB |
-| &nbsp;&nbsp;`krut/prakruti.txt`      | 444 kṛt derivational entries | 55 KB |
-| &nbsp;&nbsp;`linganushasanam/data.txt`       | 189 liṅgānuśāsana sūtras | 62 KB |
-| &nbsp;&nbsp;`paribhashendushekhar/data.txt`  | 133 paribhāṣās with commentary | 337 KB |
 
-All data files have Devanāgarī primary form + metadata. Our ingestion scripts convert
-Devanāgarī → SLP1 and produce TSVs in `data/` for C consumption.
+### Core text data (used by engine at runtime)
+
+| File | Entries | Purpose |
+|------|---------|---------|
+| `sutraani/data.txt` | 3,983 sūtras | Aṣṭādhyāyī (BORI edition) |
+| `shivasutra/data.txt` | 14 | Māheśvara-sūtras + Kāśikā commentary |
+| `pratyahara/data.txt` | 52 | Pre-computed pratyāhāra expansions |
+| `dhatu/data.txt` | 2,259 | Dhātupāṭha with meanings |
+| `ganapath/data.txt` | 262 gaṇas | Named lists referenced by sūtras |
+| `unaadi/data.txt` | 748 | Uṇādi sūtras (supplementary kṛt) |
+| `krut/pratyay.txt` | 129 | Kṛt suffix definitions |
+| `krut/prakruti.txt` | 444 | Kṛt derivational entries |
+| `linganushasanam/data.txt` | 189 | Gender assignment rules |
+| `paribhashendushekhar/data.txt` | 133 | Paribhāṣās with Nāgeśa's commentary |
+
+### Reference oracles (validation targets)
+
+| File | Forms | Target Phase | Validation Target |
+|------|-------|--------------|-------------------|
+| **`shabda/data2.txt`** | **216,168** (9,007 × 24) | Phase 4 subanta | ≥99% match |
+| **`dhatu/dhatuforms_*.txt`** | **254,736** (2,229 × 10 × 2 × 9) | Phase 3 tiṅanta | ≥99% match |
+| **`shabda/shabdaprakriya.txt`** | **13,456 steps** (4,863 derivations) | Trace validation | ≥70% sūtra match per step |
+
+### Classical commentary (reference only, not loaded at runtime)
+
+| File | Entries | What it is |
+|------|---------|-----------|
+| `mahabhashyam/1.txt`…`*.txt` | Many | Patañjali's Mahābhāṣya — THE definitive commentary |
+| `vakyapadeeyam/data.txt` | 1,997 | Bhartṛhari's Vākyapadīya — philosophy of language |
+| `bhushanasara/data.txt` | 73 | Vaiyākaraṇa Bhūṣaṇa Sāra — philosophical grammar |
+| `paramalaghumanjoosha/data.txt` | 14 chapters | Nāgeśa's philosophical treatise |
+| `ska/data.txt` | 6,481 | Siddhānta Kaumudī — commentary reorganization |
+| `shiksha/data.txt` | 60 | Pāṇini's Śikṣā — phonetics |
+| `fit/data.txt` | 87 | Phiṭ-sūtras — accent rules (Phase 7 candidate) |
+
+All data files have Devanāgarī primary form + metadata. Ingestion scripts in
+`tools/ingest_*.py` convert Devanāgarī → SLP1 and produce TSVs in `data/`.
 
 ## Architecture
 
