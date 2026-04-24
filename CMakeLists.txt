@@ -11,7 +11,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_link_options(-fsanitize=address,undefined)
 endif()
 
-include_directories(include core ancillary prakriya sandhi samasa encoding)
+include_directories(include core core/phonology core/sutrapatha core/metadata core/conflict ancillary prakriya sandhi samasa encoding)
 
 # ── Source files (populated incrementally per story) ─────────────────────────
 
@@ -48,6 +48,7 @@ set(CONFLICT_SRC
 
 set(PRAKRIYA_SRC
     prakriya/term.c
+    prakriya/context.c
     prakriya/pipeline.c
     prakriya/tinanta/lakara.c
     prakriya/tinanta/ting.c
