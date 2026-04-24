@@ -55,8 +55,8 @@ void test_pratyahara_ac(void) {
   TEST_ASSERT_FALSE(pratyahara_contains("ac", 'k'));
 }
 void test_pratyahara_hal(void) {
-  TEST_ASSERT_TRUE(pratyahara_contains("hal", 'k'));
-  TEST_ASSERT_FALSE(pratyahara_contains("hal", 'a'));
+  TEST_ASSERT_TRUE(pratyahara_contains("hl", 'k'));
+  TEST_ASSERT_FALSE(pratyahara_contains("hl", 'a'));
 }
 void test_pratyahara_ik(void) {
   const Pratyahara *p = pratyahara_get("ik");
