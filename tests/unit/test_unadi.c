@@ -35,7 +35,20 @@ void test_is_attested(void) {
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, "data/unadipatha.tsv"));
   TEST_ASSERT_TRUE(unadi_is_attested(&db, "manas"));
   TEST_ASSERT_TRUE(unadi_is_attested(&db, "tapas"));
+  TEST_ASSERT_TRUE(unadi_is_attested(&db, "smfti"));
   TEST_ASSERT_FALSE(unadi_is_attested(&db, "xyz"));
+  unadi_db_free(&db);
+}
+
+void test_unadi_form_returns_iast(void) {
+  UnadiDB db;
+  TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, "data/unadipatha.tsv"));
+  ASH_Form f = unadi_form(&db, "vA", "yu");
+  TEST_ASSERT_TRUE(f.valid);
+  TEST_ASSERT_EQUAL_STRING("vAyu", f.slp1);
+  TEST_ASSERT_EQUAL_STRING("vāyu", f.iast);
+  TEST_ASSERT_EQUAL_INT(1, f.step_count);
+  ash_form_free(&f);
   unadi_db_free(&db);
 }
 
@@ -45,5 +58,6 @@ int main(void) {
   RUN_TEST(test_janu_lookup);
   RUN_TEST(test_not_in_corpus);
   RUN_TEST(test_is_attested);
+  RUN_TEST(test_unadi_form_returns_iast);
   return UNITY_END();
 }

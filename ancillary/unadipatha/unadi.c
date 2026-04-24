@@ -1,36 +1,81 @@
-/* unadi.c — Story 5.5 baseline implementation */
+/* unadi.c — Story 5.5 implementation */
 #include "unadi.h"
 #include "encoding.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* Fallback lexical core for environments without full unadipatha.tsv yet. */
-static const UnadiEntry FALLBACK_ENTRIES[] = {
-  {1, "vA",   "yu", "vAyu",  "wind",    "unadi_1.2"},
-  {2, "jan",  "u",  "jAnu",  "knee",    "unadi_1.5"},
-  {3, "banD", "u",  "banDu", "kinsman", "unadi_1.8"},
-  {4, "man",  "as", "manas", "mind",    "unadi_2.1"},
-  {5, "tap",  "as", "tapas", "austerity", "unadi_2.2"},
-  {6, "smf",  "ti", "smfti", "memory",  "unadi_2.3"},
-};
-
-static void unadi_copy_entry(UnadiEntry *dst, const UnadiEntry *src) {
-  if (!dst || !src) return;
-  memcpy(dst, src, sizeof(*dst));
+static int unadi_parse_line(UnadiEntry *entry, char *line) {
+  if (!entry || !line) return -1;
+  char *cols[6] = {0};
+  int ncol = 0;
+  char *p = line;
+  while (ncol < 6 && p) {
+    cols[ncol++] = p;
+    p = strchr(p, '\t');
+    if (p) {
+      *p = '\0';
+      p++;
+    }
+  }
+  if (ncol < 6) return -1;
+  entry->unadi_id = (uint32_t)strtoul(cols[0], NULL, 10);
+  strncpy(entry->root_slp1, cols[1], sizeof(entry->root_slp1) - 1);
+  strncpy(entry->suffix_slp1, cols[2], sizeof(entry->suffix_slp1) - 1);
+  strncpy(entry->form_slp1, cols[3], sizeof(entry->form_slp1) - 1);
+  strncpy(entry->meaning_en, cols[4], sizeof(entry->meaning_en) - 1);
+  strncpy(entry->sutra_ref, cols[5], sizeof(entry->sutra_ref) - 1);
+  return 0;
 }
 
 int unadi_db_load(UnadiDB *db, const char *tsv_path) {
-  (void)tsv_path;
-  if (!db) return -1;
+  if (!db || !tsv_path) return -1;
   memset(db, 0, sizeof(*db));
-  db->entries = calloc((int)(sizeof(FALLBACK_ENTRIES) / sizeof(FALLBACK_ENTRIES[0])),
-                       sizeof(UnadiEntry));
-  if (!db->entries) return -1;
-  db->count = (int)(sizeof(FALLBACK_ENTRIES) / sizeof(FALLBACK_ENTRIES[0]));
-  for (int i = 0; i < db->count; i++) {
-    unadi_copy_entry(&db->entries[i], &FALLBACK_ENTRIES[i]);
+  FILE *fp = fopen(tsv_path, "r");
+  if (!fp && strncmp(tsv_path, "data/", 5) == 0) {
+    /* Tests often run from build directories; retry via parent path. */
+    char alt_path[512];
+    snprintf(alt_path, sizeof(alt_path), "../%s", tsv_path);
+    fp = fopen(alt_path, "r");
   }
+  if (!fp) return -1;
+
+  char line[1024];
+  if (!fgets(line, sizeof(line), fp)) {
+    fclose(fp);
+    return -1;
+  }
+
+  int capacity = 256;
+  db->entries = calloc(capacity, sizeof(UnadiEntry));
+  if (!db->entries) {
+    fclose(fp);
+    return -1;
+  }
+
+  while (fgets(line, sizeof(line), fp)) {
+    size_t n = strlen(line);
+    while (n > 0 && (line[n - 1] == '\n' || line[n - 1] == '\r')) {
+      line[--n] = '\0';
+    }
+    if (line[0] == '\0') continue;
+    if (db->count >= capacity) {
+      capacity *= 2;
+      UnadiEntry *grown = realloc(db->entries, (size_t)capacity * sizeof(UnadiEntry));
+      if (!grown) {
+        fclose(fp);
+        free(db->entries);
+        db->entries = NULL;
+        db->count = 0;
+        return -1;
+      }
+      db->entries = grown;
+    }
+    if (unadi_parse_line(&db->entries[db->count], line) == 0) {
+      db->count++;
+    }
+  }
+  fclose(fp);
   return 0;
 }
 
@@ -94,7 +139,7 @@ ASH_Form unadi_form(const UnadiDB *db, const char *root_slp1,
     return f;
   }
   f.step_count = 1;
-  f.steps[0].sutra_id = 0;
+  f.steps[0].sutra_id = 500500 + entry->unadi_id;
   strncpy(f.steps[0].before_slp1, root_slp1 ? root_slp1 : "",
           sizeof(f.steps[0].before_slp1) - 1);
   strncpy(f.steps[0].after_slp1, f.slp1, sizeof(f.steps[0].after_slp1) - 1);

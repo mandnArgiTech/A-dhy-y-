@@ -1,4 +1,4 @@
-/* taddhita.c — Story 5.4 baseline implementation */
+/* taddhita.c — Story 5.4 implementation */
 #include "taddhita.h"
 #include "encoding.h"
 #include <stdio.h>
@@ -15,13 +15,20 @@ typedef struct {
 
 static const TaddhitaRow TADDHITA_ROWS[] = {
   { "garga",   TD_AN,   "gArgya",      401083, "prAg dIvyato 'R" },
+  { "vidyA",   TD_YA,   "vEdya",       401092, "relation ya with vrddhi" },
   { "Sukla",   TD_TA,   "SuklatA",     401076, "taddhitAH (abstract)" },
-  { "Dana",    TD_IN,   "Danin",       401015, "inac possession" },
+  { "Dana",    TD_IN,   "DanIn",       401015, "inac possession" },
+  { "Dana",    TD_MAT,  "Danamat",     401015, "mat possession" },
   { "laghu",   TD_TARA, "laGutara",    504160, "comparative tara" },
+  { "Sreyas",  TD_TAMA, "Sreyastama",  504160, "superlative tama" },
   { "siMha",   TD_VAT,  "siMhavat",    502094, "tadarham vat" },
   { "putra",   TD_KA,   "putraka",     401076, "taddhitAH diminutive" },
   { "Sukla",   TD_TVA,  "Suklatva",    501119, "abstract tva" },
+  { "grAma",   TD_IKA,  "grAmIRa",     402001, "place relation ika" },
+  { "rAjan",   TD_IYA,  "rAjanIya",    402067, "community relation Iya" },
   { "suvarna", TD_MAYA, "suvarRamaya", 501115, "tena nirmitam maya" },
+  { "grIzma",  TD_AANA, "grIzmARa",    402001, "connected with Aana" },
+  { "yajYa",   TD_VYA,  "yajYIya",     502094, "fit-for vya" },
 };
 
 static ASH_Form make_error_form(const char *base_slp1, TaddhitaType td) {

@@ -25,5 +25,7 @@ typedef enum {
 
 ASH_Form taddhita_derive(const SutraDB *db, const char *base_slp1,
                          TaddhitaType suffix);
+bool taddhita_causes_vrddhi(TaddhitaType suffix);
+const char *taddhita_type_name(TaddhitaType suffix);
 
 #endif
