@@ -1,0 +1,43 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# Generated data (keep TSV files if committed)
+# data/*.tsv  ← intentionally tracked
+vendor/sutra_fallback.json
+vendor/dhatupatha_fallback.json
+vendor/ganapatha_fallback.json
+
+# Unity test framework (downloaded by Story 0.1)
+tests/unity/
+
+# Regression results (large, generated)
+tests/regression/tinanta_oracle_results.tsv
+tests/regression/subanta_oracle_results.tsv
+tests/regression/sutra_coverage_report.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile  # in build dirs only; root Makefile is tracked
+install_manifest.txt

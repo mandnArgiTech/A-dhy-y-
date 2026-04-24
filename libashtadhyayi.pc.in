@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libashtadhyayi
+Description: Complete C implementation of Panini's Ashtadhyayi
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lashtadhyayi
+Cflags: -I${includedir}
