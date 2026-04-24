@@ -211,6 +211,8 @@ char varna_vrddhi(char c) {
     case 'u': case 'U': return 'O';
     case 'f': case 'F': return 'A';
     case 'x': case 'X': return 'A';
+    case 'e': case 'E': return 'E';  /* e and ai both map to ai (vṛddhi of both) */
+    case 'o': case 'O': return 'O';  /* o and au both map to au */
     default:            return c;
   }
 }
