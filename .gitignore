@@ -5,21 +5,18 @@ build/
 *.so
 *.dylib
 
-# Generated data (keep TSV files if committed)
-# data/*.tsv  ← intentionally tracked
-vendor/sutra_fallback.json
-vendor/dhatupatha_fallback.json
-vendor/ganapatha_fallback.json
+# Vendor fallbacks ARE committed (offline ingestion support)
+# vendor/*.json and vendor/*.h are tracked
 
-# Unity test framework (downloaded by Story 0.1)
+# Unity test framework (downloaded by Story 0.1 — do not commit)
 tests/unity/
 
-# Regression results (large, generated)
+# Large regression outputs (generated, not committed)
 tests/regression/tinanta_oracle_results.tsv
 tests/regression/subanta_oracle_results.tsv
 tests/regression/sutra_coverage_report.txt
 
-# Python
+# Python cache
 __pycache__/
 *.pyc
 .venv/
@@ -34,23 +31,9 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# CMake
+# CMake build dir internal files (not the root Makefile)
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 CTestTestfile.cmake
-Makefile  # in build dirs only; root Makefile is tracked
 install_manifest.txt
-
-# Track generated data files (needed by C library at runtime)
-!data/*.tsv
-!data/*.md
-
-# Vendor fallbacks are committed (offline support)
-!vendor/sutra_fallback.json
-!vendor/dhatupatha_fallback.json
-!vendor/ganapatha_fallback.json
-!vendor/shivasutra_fallback.json
-!vendor/pratyahara_fallback.json
-!vendor/sutras_count.h
-!vendor/dhatupatha_count.h

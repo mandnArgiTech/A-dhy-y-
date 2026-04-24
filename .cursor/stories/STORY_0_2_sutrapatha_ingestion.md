@@ -1,143 +1,129 @@
 # Story 0.2 — Sutrapatha Source Ingestion
 
 **Phase:** 0 — Bootstrap & Data Ingestion  
-**Difficulty:** Medium  
-**Estimated time:** 2–3 hours  
-**Depends on:** Story 0.1 (build system working)
+**Difficulty:** Easy (script already implemented)**  
+**Estimated time:** 30 min (run + verify)  
+**Depends on:** Story 0.1
 
 ---
 
 ## Objective
 
-Parse the raw Sutrapatha text from the source repo and produce a clean, validated TSV file that all subsequent C code will read. This is the **single source of truth** for all 3,959 sūtras.
+The ingestion script `tools/ingest_source.py` is already written and tested.
+Run it, verify the output, and confirm `make validate-phase0` passes for the sutra step.
 
 ---
 
-## Source Data
+## Source
 
-The primary text is in this repo itself. Download the canonical IAST text from GRETIL as the reference:
+Data source (confirmed by inspection of the live repo):
+```
+github.com/ashtadhyayi-com/data  →  sutraani/data.txt
+```
 
+**Real JSON schema** inside `sutraani/data.txt`:
+```json
+{ "name": "sutraani", "data": [
+    { "i": "11001",
+      "a": "1",           ← adhyāya
+      "p": "1",           ← pāda
+      "n": "1",           ← sūtra number within pāda
+      "s": "वृद्धिरादैच्", ← Devanāgarī text  ← PRIMARY TEXT FIELD
+      "e": "vruddhiraadaich", ← loose romanization (NOT SLP1, do not use for parsing)
+      "type": "S$...$",   ← S=saṃjñā P=paribhāṣā A=adhikāra V=vidhi ...
+      "rpn": "1"          ← traditional ordering (has gaps — use sequential counter)
+    }, ...
+  ]
+}
 ```
-http://gretil.sub.uni-goettingen.de/gretil/1_sanskr/6_sastra/1_gram/paniniiu.htm
-```
+Total: **3,983 sūtras** (BORI edition).
 
-Additionally use the structured data from:
-```
-https://raw.githubusercontent.com/ashtadhyayi-com/data/master/sutras/sutra-details.json
-```
+The vendor fallback is pre-committed at `vendor/sutra_fallback.json`.
+The Devanāgarī → SLP1 converter is implemented in `tools/ingest_source.py`.
 
 ---
 
 ## Tasks
 
-### 1. Create `tools/ingest_source.py`
-
-```python
-#!/usr/bin/env python3
-"""
-ingest_source.py — Parse Ashtadhyayi sutrapatha into TSV.
-
-Usage:
-  python3 tools/ingest_source.py           # generate data/sutras.tsv
-  python3 tools/ingest_source.py --validate # validate existing TSV
-"""
-```
-
-The script must:
-
-1. **Fetch** the ashtadhyayi-com JSON (or use a local copy in `vendor/`).
-2. **Normalize** all text to Unicode NFC.
-3. **Convert** IAST to SLP1 using the mapping in `AGENTS.md`.
-4. **Output** `data/sutras.tsv` with columns:
-   ```
-   global_id  adhyaya  pada  num  text_iast  text_slp1  sutra_type
-   ```
-   - `global_id`: 1-based integer, canonical order
-   - `adhyaya`: 1–8
-   - `pada`: 1–4
-   - `num`: 1–N within the pada
-   - `text_iast`: IAST Unicode (UTF-8)
-   - `text_slp1`: SLP1 ASCII transliteration
-   - `sutra_type`: one of `SAMJNA|PARIBHASHA|ADHIKARA|VIDHI|NIYAMA|ATIDESHA|NISHEDHA`
-     (classify based on known lists; default unknown to `VIDHI`)
-
-5. **Output** `vendor/sutras_count.h`:
-   ```c
-   /* Auto-generated — do not edit */
-   #define ASH_SUTRA_COUNT <N>
-   #define ASH_SUTRA_TRADITIONAL_COUNT 3959
-   #define ASH_SUTRA_BORI_COUNT 3996
-   ```
-
-6. **Validate mode** (`--validate`): read existing TSV and assert:
-   - Row count is 3959 or 3996 (print which edition)
-   - No empty `text_slp1` fields
-   - `global_id` is strictly monotonically increasing
-   - All `adhyaya` values 1–8
-   - All `pada` values 1–4
-
-### 2. Classify sūtra types
-
-Use this known list (encode as a Python dict in the script):
-
-**Adhikāra sūtras** (partial list — fill in from Laghu Siddhānta Kaumudī):
-- 1.1.1 is `SAMJNA` (vṛddhi defined)
-- 1.3.1 is `SAMJNA` (bhū-ādi = dhātu)
-- 3.1.1 is `ADHIKARA` (pratyayaḥ)
-- 3.4.1 is `ADHIKARA` (laḥ karmaṇi ca bhāve cākarmakebhyaḥ)
-- 6.1.1 is `ADHIKARA` (ekaḥ pūrvaparayoḥ)
-- 8.2.1 is `PARIBHASHA` (pūrvatrāsiddham — asiddha principle)
-
-For all others, default to `VIDHI`.
-
-### 3. Create `data/` directory and run
+### 1. Run the ingestion script
 
 ```bash
-mkdir -p data vendor
 python3 tools/ingest_source.py
 ```
 
-### 4. Spot-check 10 specific sūtras
+Expected output:
+```
+Generated data/sutras.tsv: 3983 sūtras
+```
 
-Verify these known sūtras appear correctly in the TSV:
+### 2. Validate
 
-| global_id | Address | Expected IAST (partial) | Expected SLP1 (partial) |
-|-----------|---------|------------------------|------------------------|
-| 1 | 1.1.1 | vṛddhirādaic | vfdDirAdEc |
-| 2 | 1.1.2 | adeṅ guṇaḥ | adeN guRaH |
-| 10 | 1.1.10 | nājhnamavidhau | nAjhnamaviDAu |
-| 46 | 1.1.46 | ādyantau ṭakitau | AdyantO wAkitO |
-| (auto) | 3.1.68 | kartari śap | kartari Sap |
-| (auto) | 6.1.77 | iko yaṇ aci | iko yaN aci |
-| (auto) | 7.3.84 | sārvadhātukārdhadhātukayoḥ | sArvaDAtukArDADAtukayoH |
-| (auto) | 8.2.1 | pūrvatrāsiddham | pUrvAtrAsiddham |
+```bash
+python3 tools/ingest_source.py --validate
+```
+
+Expected:
+```
+PASS: 3983 sūtras loaded and validated ✓
+```
+
+### 3. Spot-check key sūtras in `data/sutras.tsv`
+
+Verify these rows exist with correct content:
+
+| global_id | adhyāya | pāda | num | text_deva | text_slp1 (partial) |
+|-----------|---------|------|-----|-----------|---------------------|
+| 1 | 1 | 1 | 1 | वृद्धिरादैच् | vfDDirAdEc |
+| 2 | 1 | 1 | 2 | अदेङ् गुणः | adeN guRaH |
+| (auto) | 3 | 1 | 68 | कर्तरि शप् | kartari Sap |
+| (auto) | 6 | 1 | 77 | इको यणचि | iko yaNaci |
+| (auto) | 7 | 3 | 84 | सार्वधातुकार्धधातुकयोः | (contains sArvaDAt) |
+| (auto) | 8 | 2 | 1 | पूर्वत्रासिद्धम् | pUrvAtrAsiddham |
+
+Use grep:
+```bash
+grep $'\t1\t1\t1\t' data/sutras.tsv     # 1.1.1
+grep $'\t3\t1\t68\t' data/sutras.tsv    # 3.1.68
+grep $'\t6\t1\t77\t' data/sutras.tsv    # 6.1.77
+```
+
+### 4. Confirm `vendor/sutras_count.h` was generated
+
+```bash
+cat vendor/sutras_count.h
+```
+
+Expected:
+```c
+/* Auto-generated by tools/ingest_source.py — do not edit */
+#define ASH_SUTRA_COUNT 3983
+#define ASH_SUTRA_TRADITIONAL_COUNT 3959
+#define ASH_SUTRA_BORI_COUNT 3983
+```
 
 ---
 
-## Output Files
+## TSV Column Reference
 
-```
-data/sutras.tsv          ← Primary output (tracked in git)
-vendor/sutras_count.h    ← C header with count constants
-```
+| Column | Type | Notes |
+|--------|------|-------|
+| `global_id` | int | Sequential 1-based (use this for all C lookups) |
+| `adhyaya` | int | 1–8 |
+| `pada` | int | 1–4 |
+| `num` | int | 1–N within pada |
+| `text_deva` | str | Devanāgarī Unicode (UTF-8), NFC normalized |
+| `text_slp1` | str | SLP1 ASCII (converted from Devanāgarī) |
+| `sutra_type` | str | SAMJNA / PARIBHASHA / ADHIKARA / VIDHI / NIYAMA / ATIDESHA / NISHEDHA |
+
+**Important:** `text_slp1` is converted from Devanāgarī using a character-level map.
+It is the canonical internal form for all C code. Do NOT use the `e` field from the source JSON.
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] `python3 tools/ingest_source.py` completes without exceptions
-- [ ] `python3 tools/ingest_source.py --validate` prints "PASS: N sūtras loaded"
-- [ ] `data/sutras.tsv` has ≥ 3959 rows
-- [ ] `vendor/sutras_count.h` defines `ASH_SUTRA_COUNT`
-- [ ] All 8 spot-check sūtras present with correct content
-- [ ] `make validate-phase0` target includes this check
-
----
-
-## Notes for Cursor
-
-- Use Python's `unicodedata.normalize('NFC', s)` for normalization.
-- The SLP1 mapping table is in `AGENTS.md` — do not invent a different scheme.
-- If the JSON source is unavailable at runtime, fall back to a bundled copy in `vendor/sutra_fallback.json` (download once and commit it).
-- Tab-separate columns; quote fields containing tabs with double-quotes.
-- The `sutra_type` column is best-effort for now; it will be refined in Story 2.1.
+- [ ] `python3 tools/ingest_source.py` exits 0
+- [ ] `python3 tools/ingest_source.py --validate` prints "PASS"
+- [ ] `data/sutras.tsv` has 3983 rows
+- [ ] Spot-check sūtras (1.1.1, 3.1.68, 6.1.77, 7.3.84, 8.2.1) found with correct content
+- [ ] `vendor/sutras_count.h` defines `ASH_SUTRA_COUNT 3983`
