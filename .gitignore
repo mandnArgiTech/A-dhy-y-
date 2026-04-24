@@ -6,12 +6,19 @@ build/
 *.dylib
 
 # Vendor fallbacks ARE committed (offline ingestion support)
-# vendor/*.json and vendor/*.h are tracked
+# (no vendor/ exclusion patterns here)
+
+# Large generated TSVs — regenerable via ingestion scripts, not committed
+data/shabda_forms.tsv
+data/dhatuforms.tsv
+data/shabdaprakriya.tsv
+
+# Smaller TSVs are committed for convenience
 
 # Unity test framework (downloaded by Story 0.1 — do not commit)
 tests/unity/
 
-# Large regression outputs (generated, not committed)
+# Large regression outputs
 tests/regression/tinanta_oracle_results.tsv
 tests/regression/subanta_oracle_results.tsv
 tests/regression/sutra_coverage_report.txt
@@ -31,7 +38,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# CMake build dir internal files (not the root Makefile)
+# CMake internals
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake

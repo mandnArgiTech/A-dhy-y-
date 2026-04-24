@@ -113,9 +113,11 @@ add_custom_target(validate-phase0
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_dhatupatha.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_ganapatha.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_pratyahara.py --validate
-  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_pratyahara.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_shabda.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_dhatuforms.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_shabdaprakriya.py --validate
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  COMMENT "Phase 0: Validating data ingestion"
+  COMMENT "Phase 0: Validating data ingestion (4 source files + 3 oracle files)"
 )
 
 add_custom_target(validate-phase1
