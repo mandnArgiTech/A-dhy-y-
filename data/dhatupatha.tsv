@@ -1,0 +1,2260 @@
+global_id	gana	serial_in_gana	upadesa_deva	upadesa_slp1	meaning_skt	meaning_en	pada_flag	settva
+1	1	1	भू	BU	सत्तायाम्	to exist, to become, to be, to happen	P	S
+2	1	2	एधँ	eD~	वृद्धौ	to grow, to increase, to prosper, to extend, to swell, to rise	A	S
+3	1	3	स्पर्धँ	sprD~	सङ्घर्षे	to challenge, to compete, to conflict, to rival, to struggle	A	S
+4	1	4	गाधृँ	gADf~	प्रतिष्ठालिप्सयोर्ग्रन्थे च	to praise oneself, to desire, to tie together, to string together, to seek, to stay together, to stand firmly, to compile	A	S
+5	1	5	बाधृँ	bADf~	लोडने, रोटने	to oppress, to torment, to harass, to destroy, to infect, to torture	A	S
+6	1	6	नाधृँ	nADf~	याच्ञोपतापैश्वर्याशीष्षु	to seek help, to beg, to irritate, to bless, to master	A	S
+7	1	7	नाथृँ	nATf~	याच्ञोपतापैश्वर्याशीष्षु	to seek help, to beg, to irritate, to bless, to master	A	S
+8	1	8	दधँ	dD~	धारणे	to hold, to possess	A	S
+9	1	9	स्कुदिँ	skudi~	आप्रवणे	to jump, to raise, to lift up	A	S
+10	1	10	श्विदिँ	Svidi~	श्वैत्ये	to be white	A	S
+11	1	11	वदिँ	vdi~	अभिवादनस्तुत्योः	to worship, to show honor, to do homage, to show respect, to venerate, to bow, to salute, to praise, to adore, to greet	A	S
+12	1	12	भदिँ	Bdi~	कल्याणे सुखे च	to be prosperous, to be glad, to be happy	A	S
+13	1	13	मदिँ	mdi~	स्तुतिमोदमदस्वप्नकान्तिगतिषु	to praise, to be glad, to be proud, to sleep, to shine, to move slowly, to intoxicate	A	S
+14	1	14	स्पदिँ	spdi~	किञ्चिच्चलने	to vibrate, to shake, to move a little, to palpitate, to quake, to tremble, to kick	A	S
+15	1	15	क्लिदिँ	klidi~	परिदेवने	to lament	A	S
+16	1	16	मुदँ	mud~	हर्षे	to be glad,to be happy, to rejoice, to delight	A	S
+17	1	17	ददँ	dd~	दाने	to give,to offer,to present	A	S
+18	1	18	ष्वदँ	zvd~	आस्वादने	to taste, to eat,to please the tongue, to have delight	A	S
+19	1	19	स्वर्दँ	svrd~	आस्वादने	 to taste,to eat,to please the tongue, to have delight	A	S
+20	1	20	उर्दँ	urd~	माने क्रीडायां आस्वादने च	to measure,to leap, to jump, to taste,to grant,to be cheerful	A	S
+21	1	21	कुर्दँ	kurd~	क्रीडायाम् एव	to leap, to jump	A	S
+22	1	22	खुर्दँ	Kurd~	क्रीडायाम् एव	to leap, to jump	A	S
+23	1	23	गुर्दँ	gurd~	क्रीडायाम् एव	to leap, to jump	A	S
+24	1	24	गुदँ	gud~	क्रीडायाम् एव	to leap, to jump	A	S
+25	1	25	षूदँ	zUd~	क्षरणे	to trickle, to leak, to ooze out, to distill, to emerge drop by drop	A	S
+26	1	26	ह्रादँ	hrAd~	अव्यक्ते शब्दे	to make a sound	A	S
+27	1	27	ह्लादीँ	hlAdI~	अव्यक्ते शब्दे सुखे च	to be  glad, to be pleasant, to make a sound	A	S
+28	1	28	स्वादँ	svAd~	आस्वादने	to taste,to please the tongue, to have delight	A	S
+29	1	29	पर्दँ	prd~	कुत्सिते शब्दे	to fart	A	S
+30	1	30	यतीँ	ytI~	प्रयत्ने	to try, to strive, to make effort, to attempt	A	S
+31	1	31	युतृँ	yutf~	भासने	to shine	A	S
+32	1	32	जुतृँ	jutf~	भासने	to shine	A	S
+33	1	33	विथृँ	viTf~	याचने	to beg,to ask	A	S
+34	1	34	वेथृँ	veTf~	याचने	to beg,to ask	A	S
+35	1	35	श्रथिँ	SrTi~	शैथिल्ये	to be tired, to be fatigued	A	S
+36	1	36	ग्रथिँ	grTi~	कौटिल्ये	to be crooked, to be wicked	A	S
+37	1	37	कत्थँ	ktT~	श्लाघायाम्	to praise,to boast,to flatter	A	S
+38	1	38	अतँ	at~	सातत्यगमने	to run, to walk with speed, to move continuously	P	S
+39	1	39	चितीँ	citI~	संज्ञाने	to perceive,to think,to recover consciousness,to observe, to see,to regain consciousness	P	S
+40	1	40	च्युतिँर्	cyuti~r	आसेचने	to sprinkle, to flow,to trickle, to fall, to deviate	P	S
+41	1	41	श्चुतिँर्	Scuti~r	आसेचने	to flow,to trickle, to fall, to deviate	P	S
+42	1	42	श्च्युतिँर्	Scyuti~r	क्षरणे	to flow,to trickle, to fall, to deviate	P	S
+43	1	43	ज्युतृँ	jyutf~	भासने	to illumine, to shine	P	S
+44	1	44	मथिँ	mTi~	हिंसासङ्क्लेशनयोः	to strike,to destroy, to kill, to crush, to tear off, to injure, to cause pain	P	S
+45	1	45	कुथिँ	kuTi~	हिंसासङ्क्लेशनयोः	to strike,to destroy, to kill, to crush, to tear off, to injure, to cause pain	P	S
+46	1	46	पुथिँ	puTi~	हिंसासङ्क्लेशनयोः	to strike,to destroy, to kill, to crush, to tear off, to injure, to cause pain	P	S
+47	1	47	लुथिँ	luTi~	हिंसासङ्क्लेशनयोः	to strike,to destroy, to kill, to crush, to tear off, to injure, to cause pain	P	S
+48	1	48	मन्थँ	mnT~	विलोडने	to churn, to shake, to stir, to strike,to agitate, to splash	P	S
+49	1	49	षिधँ	ziD~	गत्याम्	to regulate, to punish, to hinder, to instruct, to scare away, to drive off, to restrain	P	S
+50	1	50	षिधूँ	ziDU~	शास्त्रे (शासने) माङ्गल्ये च	to rule, to be auspicious	P	V
+51	1	51	खादृँ	KAdf~	भक्षणे	to eat,to consume	P	S
+52	1	52	खदँ	Kd~	स्थैर्ये हिंसायां भक्षणे च	to be firm,to be steady, to hurt, to kill, to eat, to consume, to bite	P	S
+53	1	53	बदँ	bd~	स्थैर्ये	to be firm, to be steady	P	S
+54	1	54	गदँ	gd~	व्यक्तायां वाचि	to speak, to tell, to explain, to talk	P	S
+55	1	55	रदँ	rd~	विलेखने	to cut, to split, to scratch, to divide	P	S
+56	1	56	णदँ	Rd~	अव्यक्ते शब्दे	to thunder, to roar, to make a loud sound	P	S
+57	1	57	अर्दँ	ard~	गतौ याचने च	to go,to beg, to request	P	S
+58	1	58	नर्दँ	nrd~	शब्दे	to make a sound, to shout	P	S
+59	1	59	गर्दँ	grd~	शब्दे	to make a sound, to shout	P	S
+60	1	60	तर्दँ	trd~	हिंसायाम्	to injure,to hurt,to kill, to destroy	P	S
+61	1	61	कर्दँ	krd~	कुत्सिते शब्दे	to rumble,to caw	P	S
+62	1	62	खर्दँ	Krd~	दन्दशूके (सर्पदंशे)	to bite,to sting	P	S
+63	1	63	अतिँ	ati~	बन्धने	to bind	P	S
+64	1	64	अदिँ	adi~	बन्धने	to bind	P	S
+65	1	65	इदिँ	idi~	परमैश्वर्ये	to be powerful, to be gifted, to have divine power	P	S
+66	1	66	बिदिँ	bidi~	अवयवे	to split,to cleave,to divide	P	S
+67	1	67	भिदिँ	Bidi~	अवयवे	to split,to cleave,to divide	P	S
+68	1	68	गडिँ	gqi~	वदनैकदेशे	to have cheek disease	P	S
+69	1	69	णिदिँ	Ridi~	कुत्सायाम्	to blame,to censure,to condemn, to insult, to ridicule, to revile, to criticise	P	S
+70	1	70	टुनदिँ	wundi~	समृद्धौ	to prosper	P	S
+71	1	71	चदिँ	cdi~	आह्लादे दीप्तौ च	to be glad, to shine	P	S
+72	1	72	त्रदिँ	trdi~	चेष्टायाम्	to try, to be busy, to be active	P	S
+73	1	73	कदिँ	kdi~	आह्वाने रोदने च	to call out,to cry,to cry out continually,to lament,to grieve, to shed tears	P	S
+74	1	74	क्रदिँ	krdi~	आह्वाने रोदने च	to call out,to cry,to cry out continually,to lament,to grieve, to shed tears	P	S
+75	1	75	क्लदिँ	kldi~	आह्वाने रोदने च	to call out,to cry,to cry out continually,to lament,to grieve, to shed tears	P	S
+76	1	76	क्लिदिँ	klidi~	परिदेवने	to lament to grieve, to shed tears, to have sorrow	P	S
+77	1	77	शुन्धँ	SunD~	शुद्धौ	to purify, to cleanse	P	S
+78	1	78	शीकृँ	SIkf~	सेचने	to sprinkle	A	S
+79	1	79	सीकृँ	sIkf~	सेचने	to sprinkle	A	S
+80	1	80	लोकृँ	lokf~	दर्शने	to see,to perceive,to look	A	S
+81	1	81	श्लोकृँ	Slokf~	सङ्घाते	to compose, to write poem	A	S
+82	1	82	श्रेकृँ	Srekf~	गतौ	to compose, to write poem	A	S
+83	1	83	द्रेकृँ	drekf~	शब्दोत्साहयोः	to sound,to show joy, to be exhilarated	A	S
+84	1	84	ध्रेकृँ	Drekf~	शब्दोत्साहयोः	to sound,to show joy, to be exhilarated	A	S
+85	1	85	रेकृँ	rekf~	शङ्कायाम्	to doubt, to suspect	A	S
+86	1	86	सेकृँ	sekf~	गतौ	to go,to move	A	S
+87	1	87	स्रेकृँ	srekf~	गतौ	to go,to move	A	S
+88	1	88	स्रकिँ	srki~	गतौ	to go,to move	A	S
+89	1	89	श्रकिँ	Srki~	गतौ	to go,to move	A	S
+90	1	90	श्लकिँ	Slki~	गतौ	to go,to move	A	S
+91	1	91	शकिँ	Ski~	शङ्कायाम्	to doubt,to suspect	A	S
+92	1	92	अकिँ	aki~	लक्षणे	to go, to blame,to censure,to condemn, to insult, to ridicule, to revile, to criticise	A	S
+93	1	93	वकिँ	vki~	कौटिल्ये	to be crooked, to bend, to move in curve	A	S
+94	1	94	मकिँ	mki~	मण्डने	to decorate	A	S
+95	1	95	ककँ	kk~	लौल्ये	to be proud,to be unsteady,to be thirsty	A	S
+96	1	96	कुकँ	kuk~	आदाने	to take,to accept,to seize	A	S
+97	1	97	वृकँ	vfk~	आदाने	to accept,to seize	A	S
+98	1	98	चकँ	ck~	तृप्तौ प्रतीघाते च	to be satisfied, to be contended, to repel, to cheat, to betray	A	S
+99	1	99	ककिँ	kki~	गतौ	to go	A	S
+100	1	100	वकिँ	vki~	गतौ	to go	A	S
+101	1	101	श्वकिँ	Svki~	गतौ	to go	A	S
+102	1	102	त्रकिँ	trki~	गतौ	to go	A	S
+103	1	103	ढौकृँ	QOkf~	गतौ	to go	A	S
+104	1	104	त्रौकृँ	trOkf~	गतौ	to go	A	S
+105	1	105	ष्वष्कँ	zvzk~	गतौ	to go	A	S
+106	1	106	वस्कँ	vsk~	गतौ	to go	A	S
+107	1	107	मस्कँ	msk~	गतौ	to go	A	S
+108	1	108	टिकृँ	wikf~	गतौ	to go	A	S
+109	1	109	टीकृँ	wIkf~	गतौ	to go	A	S
+110	1	110	तिकृँ	tikf~	गतौ	to go	A	S
+111	1	111	तीकृँ	tIkf~	गतौ	to go	A	S
+112	1	112	रघिँ	rGi~	गतौ	to go	A	S
+113	1	113	लघिँ	lGi~	गतौ भोजननिवृत्तौ च	to go, to fast, to abstain from food	A	S
+114	1	114	ष्वक्कँ	zvkk~	गतौ	to go	A	S
+115	1	115	अघिँ	aGi~	गत्याक्षेपे	to set out, to go, to commence, to blame	A	S
+116	1	116	वघिँ	vGi~	गत्याक्षेपे	to set out, to go, to commence, to blame	A	S
+117	1	117	मघिँ	mGi~	गत्याक्षेपे गत्यारम्भे कैतवे च	to set out, to go, to commence, to blame, to cheat	A	S
+118	1	118	राघृँ	rAGf~	सामर्थ्ये	to be competent, to be able, to be powerful	A	S
+119	1	119	लाघृँ	lAGf~	सामर्थ्ये	to be competent, to be able, to be powerful	A	S
+120	1	120	द्राघृँ	drAGf~	सामर्थ्ये आयामे च	to be competent, to be able, to be powerful, to stretch, to spread	A	S
+121	1	121	ध्राघृँ	DrAGf~	सामर्थ्ये	to be competent, to be able, to be powerful	A	S
+122	1	122	श्लाघृँ	SlAGf~	कत्थने	to praise,to flatter,to boast	A	S
+123	1	123	फक्कँ	Pkk~	नीचैर्गतौ	to go slowly, to misbehave	P	S
+124	1	124	तकँ	tk~	हसने	to make fun, to laugh at	P	S
+125	1	125	तकिँ	tki~	कृच्छ्रजीवने	to live in distress	P	S
+126	1	126	बुक्कँ	bukk~	भषणे	to bark	P	S
+127	1	127	शुकँ	Suk~	गतौ	to move, to go	P	S
+128	1	128	कखँ	kK~	हसने	to laugh	P	S
+129	1	129	ओखृँ	oKf~	शोषणालमर्थयोः	to dry out, to decorate, to be sufficient, to refuse, to prevent, to stop	P	S
+130	1	130	राखृँ	rAKf~	शोषणालमर्थयोः	to dry out, to decorate, to be sufficient, to refuse, to prevent, to stop	P	S
+131	1	131	लाखृँ	lAKf~	शोषणालमर्थयोः	to dry out, to decorate, to be sufficient, to refuse, to prevent, to stop	P	S
+132	1	132	द्राखृँ	drAKf~	शोषणालमर्थयोः	to dry out, to decorate, to be sufficient, to refuse, to prevent, to stop	P	S
+133	1	133	ध्राखृँ	DrAKf~	शोषणालमर्थयोः	to dry out, to decorate, to be sufficient, to refuse, to prevent, to stop	P	S
+134	1	134	शाखृँ	SAKf~	व्याप्तौ	to pervade, to spread, to penetrate, to occupy	P	S
+135	1	135	श्लाखृँ	SlAKf~	व्याप्तौ	to pervade,to spread, to penetrate, to occupy	P	S
+136	1	136	उखँ	uK~	गतौ	to go	P	S
+137	1	137	उखिँ	uKi~	गतौ	to go	P	S
+138	1	138	वखँ	vK~	गतौ	to go	P	S
+139	1	139	वखिँ	vKi~	गतौ	to go	P	S
+140	1	140	मखँ	mK~	गतौ	to go	P	S
+141	1	141	मखिँ	mKi~	गतौ	to go	P	S
+142	1	142	णखँ	RK~	गतौ	to go	P	S
+143	1	143	णखिँ	RKi~	गतौ	to go	P	S
+144	1	144	रखँ	rK~	गतौ	to go	P	S
+145	1	145	रखिँ	rKi~	गतौ	to go	P	S
+146	1	146	लखँ	lK~	गतौ	to go	P	S
+147	1	147	लखिँ	lKi~	गतौ	to go	P	S
+148	1	148	इखँ	iK~	गतौ	to go	P	S
+149	1	149	इखिँ	iKi~	गतौ	to go	P	S
+150	1	150	जभँ	jB~	गात्रविनामे	to yawn,to gape	A	S
+151	1	151	ईखिँ	IKi~	गतौ	to go	P	S
+152	1	152	वल्गँ	vlg~	गतौ	to go	P	S
+153	1	153	रगिँ	rgi~	गतौ	to go	P	S
+154	1	154	लगिँ	lgi~	गतौ	to go	P	S
+155	1	155	अगिँ	agi~	गतौ	to go	P	S
+156	1	156	वगिँ	vgi~	गतौ	to go	P	S
+157	1	157	मगिँ	mgi~	गतौ	to go	P	S
+158	1	158	तगिँ	tgi~	गतौ	to go	P	S
+159	1	159	त्वगिँ	tvgi~	गतौ	to go	P	S
+160	1	160	श्वेलृँ	Svelf~	चलने	to go, walk	P	S
+161	1	161	श्रगिँ	Srgi~	गतौ	to go	P	S
+162	1	162	श्लगिँ	Slgi~	गतौ	to go	P	S
+163	1	163	इगिँ	igi~	गतौ	to go	P	S
+164	1	164	रिगिँ	rigi~	गतौ	to go	P	S
+165	1	165	लिगिँ	ligi~	गतौ	to go	P	S
+166	1	166	खर्खँ	KrK~	हसने	to laugh	P	S
+167	1	167	कक्ख	kkK	हसने	to laugh	P	S
+168	1	168	रिखँ	riK~	गतौ	to go	P	S
+169	1	169	घर्बँ	Grb~	गतौ	to go	P	S
+170	1	170	नर्बँ	nrb~	गतौ	to go	P	S
+171	1	171	भर्बँ	Brb~	गतौ	to go	P	S
+172	1	172	त्रखँ	trK~	गतौ	to go	P	S
+173	1	173	त्रिखिँ	triKi~	गतौ	to go	P	S
+174	1	174	शिखिँ	SiKi~	गतौ	to go	P	S
+175	1	175	युगिँ	yugi~	वर्जने	to abandon,to desert, to leave	P	S
+176	1	176	जुगिँ	jugi~	वर्जने	to abandon,to desert, to leave	P	S
+177	1	177	बुगिँ	bugi~	वर्जने	to abandon,to desert, to leave	P	S
+178	1	178	वुगिँ	vugi~	वर्जने	to abandon,to desert, to leave	P	S
+179	1	179	घघँ	GG~	हसने	to laugh, to tease	P	S
+180	1	180	घग्घँ	GgG~	हसने	to laugh, to tease	P	S
+181	1	181	वर्बँ	vrb~	गतौ	to go	P	S
+182	1	182	बभ्रँ	bBr~	गतौ	to go	P	S
+183	1	183	मघिँ	mGi~	मण्डने	to decorate	P	S
+184	1	184	शिघिँ	SiGi~	आघ्राणे	to smell	P	S
+185	1	185	मजँ	mj~	शब्दे	to sound	P	S
+186	1	186	वर्चँ	vrc~	दीप्तौ	to shine, to glow	A	S
+187	1	187	षचँ	zc~	सेचने सेवने च	to sprinkle,to serve, to satisfy	A	S
+188	1	188	लोचृँ	locf~	दर्शने	to see,to perceive	A	S
+189	1	189	शचँ	Sc~	व्यक्तायां वाचि	to articulate, to speak clearly	A	S
+190	1	190	श्वचँ	Svc~	गतौ	to go, to move	A	S
+191	1	191	श्वचिँ	Svci~	गतौ	to go	A	S
+192	1	192	कचँ	kc~	बन्धने	to bind, to tie	A	S
+193	1	193	कचिँ	kci~	दीप्तिबन्धनयोः	to shine, to glow, to bind, to tie	A	S
+194	1	194	काचिँ	kAci~	दीप्तिबन्धनयोः	to shine, to glow, to bind, to tie	A	S
+195	1	195	मचँ	mc~	कल्कने कथने च	to boast, to be egoistic, to cheat, to tear off, to powder, to speak, to talk	A	S
+196	1	196	मुचिँ	muci~	कल्कने कथने च	to boast, to be egoistic, to cheat, to tear off, to powder, to speak, to talk	A	S
+197	1	197	मचिँ	mci~	धारणोच्छ्रायपूजनेषु	to wear, to hold, to raise, to get respect	A	S
+198	1	198	पचिँ	pci~	व्यक्तीकरणे	to articulate, to speak clearly	A	S
+199	1	199	ष्टुचँ	zwuc~	प्रसादे	to be pleased, to be happy	A	S
+200	1	200	ऋजँ	fj~	गतिस्थानार्जनोपार्जनेषु	to go, to stand, to stand still, to gain, to live, to be healthy, to earn, to obtain, to acquire	A	S
+201	1	201	ऋजिँ	fji~	भर्जने	to fry, to parch	A	S
+202	1	202	भृजीँ	BfjI~	भर्जने	to fry, to parch	A	S
+203	1	203	एजृँ	ejf~	दीप्तौ	to glow, to shine	A	S
+204	1	204	भ्रेजृँ	Brejf~	दीप्तौ	to glow, to shine	A	S
+205	1	205	भ्राजृँ	BrAjf~	दीप्तौ	to glow, to shine	A	S
+206	1	206	काडृँ	kAqf~	अनादरे	to disregard,to insult	A	S
+207	1	207	ईजँ	Ij~	गतिकुत्सनयोः	to go, to blame,to censure,to condemn, to insult, to ridicule, to revile, to criticise	A	S
+208	1	208	पेबृ	pebf	सेवने	to serve, to devote oneself, practise	A	S
+209	1	209	प्लेबृँ	plebf~	सेवने	to serve, to devote oneself, practise	A	S
+210	1	210	शुचँ	Suc~	शोके	to worry, to sorrow, to grieve	P	S
+211	1	211	कुचँ	kuc~	शब्दे तारे	to utter a shrill cry, to make a birdlike sound	P	S
+212	1	212	कुन्चँ	kunc~	गतिकौटिल्याल्पीभावयोः	to go, to bend, to reduce, to contract, to diminish	P	S
+213	1	213	क्रुन्चँ	krunc~	गतिकौटिल्याल्पीभावयोः	to go, to bend, to reduce, to contract, to diminish	P	S
+214	1	214	लुन्चँ	lunc~	अपनयने	to cut, to break, to peel off, to pluck, to pull out, to tear off	P	S
+215	1	215	अन्चुँ	ancu~	गतिपूजनयोः	to go, to pray, to honor, to worship, to respect	P	S
+216	1	216	वन्चुँ	vncu~	गतौ	to go	P	S
+217	1	217	चन्चुँ	cncu~	गतौ	to go	P	S
+218	1	218	तन्चुँ	tncu~	गतौ	to go	P	S
+219	1	219	त्वन्चुँ	tvncu~	गतौ	to go	P	S
+220	1	220	म्रुन्चुँ	mruncu~	गतौ	to go	P	S
+221	1	221	म्लुन्चुँ	mluncu~	गतौ	to go	P	S
+222	1	222	म्रुचुँ	mrucu~	गतौ	to go	P	S
+223	1	223	म्लुचुँ	mlucu~	गतौ	to go	P	S
+224	1	224	ग्रुचुँ	grucu~	स्तेयकरणे	to rob,to steal	P	S
+225	1	225	ग्लुचुँ	glucu~	स्तेयकरणे	to rob,to steal	P	S
+226	1	226	कुजुँ	kuju~	स्तेयकरणे	to rob,to steal	P	S
+227	1	227	खुजुँ	Kuju~	स्तेयकरणे	to rob,to steal	P	S
+228	1	228	ग्लुन्चुँ	gluncu~	गतौ	to go	P	S
+229	1	229	षस्जँ	zsj~	गतौ	to go	P	S
+230	1	230	गुजँ	guj~	अव्यक्ते शब्दे	to hum, to buzz,to sound inarticulately, to utter unclearly	P	S
+231	1	231	गुजिँ	guji~	अव्यक्ते शब्दे	to hum, to buzz,to sound inarticulately, to utter unclearly	P	S
+232	1	232	अर्चँ	arc~	पूजायाम्	to pray, to honor, to worship, to respect	P	S
+233	1	233	म्लेछँ	mleC~	अव्यक्ते शब्दे	to speak indistinctly, to murmur, to blabber	P	S
+234	1	234	लछँ	lC~	लक्षणे	to mark	P	S
+235	1	235	लाछिँ	lACi~	लक्षणे	to mark	P	S
+236	1	236	वाछिँ	vACi~	इच्छायाम्	to want, to wish, to desire	P	S
+237	1	237	आछिँ	ACi~	आयामे	to elongate, to expand, to spread, to dialate	P	S
+238	1	238	ह्रीछँ	hrIC~	लज्जायाम्	to be shy	P	S
+239	1	239	हुर्छाँ	hurCA~	कौटिल्ये	to fall off, to move away, to retract	P	S
+240	1	240	मुर्छाँ	murCA~	मोहसमुच्छ्राययोः	to faint,to be unconscious, to be shy	P	S
+241	1	241	स्फुर्छाँ	sPurCA~	विस्तृतौ	to expand, to spread	P	S
+242	1	242	युछँ	yuC~	प्रमादे	to err,to neglect, to ignore, to make a mistake	P	S
+243	1	243	उछिँ	uCi~	उञ्छे	to collect piece by piece, to gather, to accumulate, to pile up	P	S
+244	1	244	उछीँ	uCI~	विवासे	to complete, to terminate, to conclude, to leave, to go away	P	S
+245	1	245	ध्रजँ	Drj~	गतौ	to go	P	S
+246	1	246	ध्रजिँ	Drji~	गतौ	to go	P	S
+247	1	247	अटिँ	awi~	गतौ	to go	A	S
+248	1	248	रेबृँ	rebf~	प्लवगतौ	to leap, to jump, to cross by flying, to cross by swimming	A	S
+249	1	249	धृजँ	Dfj~	गतौ	to go	P	S
+250	1	250	धृजिँ	Dfji~	गतौ	to go	P	S
+251	1	251	ध्वजँ	Dvj~	गतौ	to go	P	S
+252	1	252	ध्वजिँ	Dvji~	गतौ	to go	P	S
+253	1	253	षलृँ	zlf~	गतौ	to go, walk	P	S
+254	1	254	कूजँ	kUj~	अव्यक्ते शब्दे	to sing, to make an indistinct sound, to speak inarticulately	P	S
+255	1	255	भृषुँ	Bfzu~	सङ्घर्षे	to grind,to strike,to rub,to brush,to polish	P	S
+256	1	256	अर्जँ	arj~	अर्जने	to procure,to earn, to obtain	P	S
+257	1	257	षर्जँ	zrj~	अर्जने	to procure,to earn, to obtain	P	S
+258	1	258	गर्जँ	grj~	शब्दे	to roar,to growl,to thunder	P	S
+259	1	259	तर्जँ	trj~	भर्त्सने	to menace,to censure,to threaten,to terrify,to scold,to mock	P	S
+260	1	260	कर्जँ	krj~	व्यथने	to cause pain, to irritate	P	S
+261	1	261	खर्जँ	Krj~	व्यथने पूजने मार्जने च	to cause pain, to irritate, to worship, to respect	P	S
+262	1	262	अजँ	aj~	गतिक्षेपणयोः	to go,to drive,to throw,to ride	P	S
+263	1	263	तेजँ	tej~	पालने	to protect	P	S
+264	1	264	खजँ	Kj~	मन्थे	to churn,to agitate,to limp	P	S
+265	1	265	कवँ	kv~	शब्दे	to be intoxicated, to be drunk, to be confused	P	S
+266	1	266	खजिँ	Kji~	गतिवैकल्ये	to be unable to walk, to have disability, to limp	P	S
+267	1	267	एजृँ	ejf~	कम्पने	to shiver,to tremble, to shake	P	S
+268	1	268	टुओँस्फूर्जाँ	wuo~sPUrjA~	वज्रनिर्घोषे	to thunder,to explode,to burst	P	S
+269	1	269	क्षि	kzi	क्षये	to decay, to get killed, to get destroyed, to wane, to go away, to reduce, to shrink	P	A
+270	1	270	क्षीजँ	kzIj~	अव्यक्ते शब्दे	to speak inarticulately, to speak in sorrow, to whine, to be angry	P	S
+271	1	271	लजँ	lj~	भर्जने	to fry, to roast	P	S
+272	1	272	लजिँ	lji~	भर्जने	to fry, to roast	P	S
+273	1	273	लाजँ	lAj~	भर्जने भर्त्सने च	to fry, to roast, to blame,to traduce,to insult	P	S
+274	1	274	लाजिँ	lAji~	भर्जने भर्त्सने च	to fry, to roast, to blame,to traduce,to insult	P	S
+275	1	275	जजँ	jj~	युद्धे	to fight, to kill	P	S
+276	1	276	जजिँ	jji~	युद्धे	to fight, to kill	P	S
+277	1	277	तुजँ	tuj~	हिंसायाम्	to hurt,to injure,to kill	P	S
+278	1	278	तुजिँ	tuji~	पालने	to follow, to obey	P	S
+279	1	279	गजँ	gj~	शब्दे मदने च	to sound, to be intoxicated, to be drunk, to be confused	P	S
+280	1	280	गजिँ	gji~	शब्दे	to sound	P	S
+281	1	281	गृजँ	gfj~	शब्दे	to sound	P	S
+282	1	282	गृजिँ	gfji~	गर्जने	to sound,to roar,to grumble	P	S
+283	1	283	मुजँ	muj~	शब्दे	to sound	P	S
+284	1	284	मुजिँ	muji~	शब्दे	to sound, to hum, to buzz	P	S
+285	1	285	वजँ	vj~	गतौ	to go	P	S
+286	1	286	व्रजँ	vrj~	गतौ	to go	P	S
+287	1	287	अट्टँ	aww~	अतिक्रमहिंसयोः	to transgress,to kill, to hurt	A	S
+288	1	288	वेष्टँ	vezw~	वेष्टने	to surround, to cover	A	S
+289	1	289	चेष्टँ	cezw~	चेष्टायाम्	to act, to try, to put effort	A	S
+290	1	290	गोष्टँ	gozw~	सङ्घाते	to assemble,to collect,to pile up	A	S
+291	1	291	लोष्टँ	lozw~	सङ्घाते	to assemble,to collect,to pile up	A	S
+292	1	292	घट्टँ	Gww~	चलने	to walk	A	S
+293	1	293	स्फुटँ	sPuw~	विकसने	to blow,to blossom,to burst,to break open,to split open	A	S
+294	1	294	अठिँ	aWi~	गतौ	to go	A	S
+295	1	295	वठिँ	vWi~	एकचर्यायाम्	to go alone	A	S
+296	1	296	मठिँ	mWi~	शोके	to sorrow, to grieve, to be anxious	A	S
+297	1	297	कठिँ	kWi~	शोके	to sorrow, to grieve, to be anxious	A	S
+298	1	298	मुठिँ	muWi~	पालने	to protect	A	S
+299	1	299	हेठँ	heW~	विबाधायाम्	to hinder, to be wicked, to be cruel	A	S
+300	1	300	एठँ	eW~	विबाधायाम्	to hinder, to be wicked, to be cruel	A	S
+301	1	301	हिडिँ	hiqi~	गत्यनादरयोः	to roam, to disrespect, to insult	A	S
+302	1	302	हुडिँ	huqi~	सङ्घाते	to accept, to agree, to take away	A	S
+303	1	303	कुडिँ	kuqi~	दाहे	to burn, to maim, to mutilate	A	S
+304	1	304	वडिँ	vqi~	विभाजने	to separate, to divide	A	S
+305	1	305	मडिँ	mqi~	विभाजने	to separate, to divide	A	S
+306	1	306	भडिँ	Bqi~	परिभाषणे	to speak, to tease, to mock	A	S
+307	1	307	पिडिँ	piqi~	सङ्घाते	to heap, to pile up, to gather	A	S
+308	1	308	मुडिँ	muqi~	मार्जने	to cleanse, to purify	A	S
+309	1	309	तुडिँ	tuqi~	तोडने	to disregard,to condemn, to kill, to injure, to cause pain	A	S
+310	1	310	हुडिँ	huqi~	वरणे हरणे च	to accept, to agree, to take away	A	S
+311	1	311	स्फुडिँ	sPuqi~	विकसने	to grow, to blossom	A	S
+312	1	312	चडिँ	cqi~	कोपे	to be angry	A	S
+313	1	313	शडिँ	Sqi~	रुजायां सङ्घाते च	to have disease, to be ill, to heap, to pile up, to gather	A	S
+314	1	314	तडिँ	tqi~	ताडने	to strike, to hit	A	S
+315	1	315	पडिँ	pqi~	गतौ	to go	A	S
+316	1	316	कडिँ	kqi~	मदे	to be intoxicated,  to be drunk, to be confused	A	S
+317	1	317	खडिँ	Kqi~	मन्थे	to break, to fragment, to shatter, to cut, to tear	A	S
+318	1	318	हेडृँ	heqf~	अनादरे	to disregard,to insult	A	S
+319	1	319	होडृँ	hoqf~	अनादरे	to disregard,to insult	A	S
+320	1	320	बाडृँ	bAqf~	आप्लाव्ये	to bathe	A	S
+321	1	321	वाडृँ	vAqf~	आप्लाव्ये	to bathe	A	S
+322	1	322	द्राडृँ	drAqf~	विशरणे	to cut,to split, to fragment, to tear, to shatter	A	S
+323	1	323	ध्राडृँ	DrAqf~	विशरणे	to cut,to split, to fragment, to tear, to shatter	A	S
+324	1	324	शाडृँ	SAqf~	श्लाघायाम्	to praise	A	S
+325	1	325	शौटृँ	SOwf~	गर्वे	to be proud	P	S
+326	1	326	यौटृँ	yOwf~	बन्धे	to bind, to keep under control	P	S
+327	1	327	मेडृँ	meqf~	उन्मादे	to be mad, to be mentally ill	P	S
+328	1	328	म्रेडृँ	mreqf~	उन्मादे	to be mad, to be mentally ill	P	S
+329	1	329	म्लेटृँ	mlewf~	उन्मादे	to be mad, to be mentally ill	P	S
+330	1	330	चटेँ	cwe~	वर्षावरणयोः	to rain, to approach, to cover, to surround	P	S
+331	1	331	कटेँ	kwe~	वर्षावरणयोः	to rain, to approach, to cover, to surround	P	S
+332	1	332	अटँ	aw~	गतौ	to wander	P	S
+333	1	333	पटँ	pw~	गतौ	to go	P	S
+334	1	334	रटँ	rw~	परिभाषणे	to memorize, to recall, to chat	P	S
+335	1	335	लटँ	lw~	बाल्ये	to kid, to be childish, to speak less	P	S
+336	1	336	शटँ	Sw~	रुजाविशरणगत्यवसादनेषु	to be sick,to divide,to pierce,to go,to be weary, to be tired, to be sad	P	S
+337	1	337	वटँ	vw~	वेष्टने	to cover,to surround,to string, to collect, to bring together	P	S
+338	1	338	किटँ	kiw~	त्रासे	to frighten,to irritate, to cause pain	P	S
+339	1	339	खिटँ	Kiw~	त्रासे	to frighten,to irritate, to cause pain	P	S
+340	1	340	शिटँ	Siw~	अनादरे	to insult, to disregard	P	S
+341	1	341	षिटँ	ziw~	अनादरे	to insult, to disregard	P	S
+342	1	342	जटँ	jw~	सङ्घाते	to become matted, to become entangled	P	S
+343	1	343	झटँ	Jw~	सङ्घाते	to become matted, to become entangled	P	S
+344	1	344	भटँ	Bw~	भृतौ	to rent, to hire, to employ	P	S
+345	1	345	तटँ	tw~	उच्छ्राये	to go up, to go high, to raise	P	S
+346	1	346	खटँ	Kw~	काङ्क्षायाम्	to wish, to desire	P	S
+347	1	347	णटँ	Rw~	नृत्तौ	to dance, to act	P	S
+348	1	348	पिटँ	piw~	शब्दसङ्घातयोः	to sound, to heap, to pile up	P	S
+349	1	349	हटँ	hw~	दीप्तौ	to glow, to shine	P	S
+350	1	350	षटँ	zw~	अवयवे	to be a part	P	S
+351	1	351	लुटँ	luw~	विलोडने	to agitate, to churn, to stir, to roll	P	S
+352	1	352	लुडँ	luq~	विलोडने	to agitate, to churn, to stir, to roll	P	S
+353	1	353	चिटँ	ciw~	परप्रैष्ये	to obey, to be slave	P	S
+354	1	354	विटँ	viw~	शब्दे	to sound	P	S
+355	1	355	बिटँ	biw~	आक्रोशे	to swear,to curse,to shout, to abuse	P	S
+356	1	356	हिटँ	hiw~	आक्रोशे	to swear,to curse,to shout, to abuse	P	S
+357	1	357	इटँ	iw~	गतौ	to go	P	S
+358	1	358	किटँ	kiw~	गतौ	to frighten,to irritate, to cause pain	P	S
+359	1	359	कटीँ	kwI~	गतौ	to go	P	S
+360	1	360	चुटिँ	cuwi~	अल्पीभावे	to reduce, to shrink, to contract	P	S
+361	1	361	मडिँ	mqi~	भूषायाम्	to adorn, to decorate	P	S
+362	1	362	कुडिँ	kuqi~	वैकल्ये	to be lame,to be dull	P	S
+363	1	363	कुठिँ	kuWi~	वैकल्ये	to be lame,to be dull	P	S
+364	1	364	मुडँ	muq~	मर्दने	to press, to massage, to rub	P	S
+365	1	365	प्रुडँ	pruq~	मर्दने विमर्दने	to press, to massage, to rub	P	S
+366	1	366	मुटँ	muw~	मर्दने	to press, to massage, to rub	P	S
+367	1	367	पुडँ	puq~	मर्दने	to press, to massage, to rub	P	S
+368	1	368	चुडिँ	cuqi~	अल्पीभावे	to reduce, to shrink, to contract	P	S
+369	1	369	मुडिँ	muqi~	खण्डने	to powder, to grind, to shave	P	S
+370	1	370	पुडिँ	puqi~	खण्डने	to powder, to grind, to shave	P	S
+371	1	371	रुटिँ	ruwi~	स्तेये	to steal, to rob	P	S
+372	1	372	लुटिँ	luwi~	स्तेये	to steal, to rob	P	S
+373	1	373	रुठिँ	ruWi~	स्तेये	to steal,to rob	P	S
+374	1	374	लुठिँ	luWi~	स्तेये	to steal,to rob	P	S
+375	1	375	रुडिँ	ruqi~	स्तेये	to steal, to rob	P	S
+376	1	376	लुडिँ	luqi~	स्तेये	to steal, to rob	P	S
+377	1	377	वटिँ	vwi~	विभाजने	to partition, to share to divide	P	S
+378	1	378	स्फटिँ	sPwi~	विशरणे	to burst,to break open,to split open, to destroy, to shatter, explode	P	S
+379	1	379	स्फुटिँर्	sPuwi~r	विशरणे	to burst,to break open,to split open, to destroy, to shatter, explode	P	S
+380	1	380	स्फुटिँ	sPuwi~	विशरणे	to burst,to break open,to split open, to destroy, to shatter, explode	P	S
+381	1	381	पठँ	pW~	व्यक्तायां वाचि	to learn, to read, to study, to recite	P	S
+382	1	382	वठँ	vW~	स्थौल्ये	to become fat, to gain weight	P	S
+383	1	383	हौडृँ	hOqf~	गतौ	to go	P	S
+384	1	384	मठँ	mW~	मदनिवासयोः	to be egoistic, to stay	P	S
+385	1	385	कठँ	kW~	कृच्छ्रजीवने	to drag on the days of life, to live in distress	P	S
+386	1	386	रठँ	rW~	परिभाषणे	to speak, to memorise	P	S
+387	1	387	रटँ	rw~	परिभाषणे	to memorize, to recall, to chat	P	S
+388	1	388	हठँ	hW~	प्लुतिशठत्वयोः बलात्कारे च	to leap,to jump, to be wicked,to treat with violence, to rape, to do crime	P	S
+389	1	389	रुठँ	ruW~	उपघाते	to hit, to push down, to throw down, to knock down	P	S
+390	1	390	लुठँ	luW~	उपघाते	to hit, to push down, to throw down, to knock down	P	S
+391	1	391	ऊठँ	UW~	उपघाते	to hit, to push down, to throw down, to knock down	P	S
+392	1	392	उठँ	uW~	उपघाते	to hit, to push down, to throw down, to knock down	P	S
+393	1	393	पिठँ	piW~	हिंसासङ्क्लेशनयोः	to kill, to give pain	P	S
+394	1	394	शठँ	SW~	कैतवे हिंसासङ्क्लेशनयोः द्यूते स्पर्धायां च	to cheat,to defraud, to kill, to give pain	P	S
+395	1	395	शुठँ	SuW~	प्रतिघाते गतिप्रतिघाते च	to stop, to hinder, to restrain, to oppose	P	S
+396	1	396	शूठँ	SUW~	गतिप्रतिघाते	to stop, to hinder, to restrain, to oppose	P	S
+397	1	397	कुठिँ	kuWi~	प्रतिघाते	to stop, to hinder, to restrain	P	S
+398	1	398	लुठिँ	luWi~	आलस्ये प्रतिघाते च	to be lazy, to combat, to resist	P	S
+399	1	399	शुठिँ	SuWi~	शोषणे	to dry,to become dry	P	S
+400	1	400	रुठिँ	ruWi~	गतौ	to go	P	S
+401	1	401	लुठिँ	luWi~	गतौ	to go	P	S
+402	1	402	चुड्डँ	cuqq~	भावकरणे	to indicate, to give opinion, to hint, to give clue	P	S
+403	1	403	अड्डँ	aqq~	अभियोगे	to join from all sides, to pray, to do a crime	P	S
+404	1	404	कड्डँ	kqq~	कार्कश्ये	to be harsh, to be rough, to be ruthless	P	S
+405	1	405	क्रीडृँ	krIqf~	विहारे	to amuse oneself, to enjoy, to play, to gamble, to make a noise	P	S
+406	1	406	तुडृँ	tuqf~	तोडने	to split, to tear, to cut, to break, to hurt, to injure, to kill	P	S
+407	1	407	तूडृँ	tUqf~	तोडने	to split, to tear, to cut, to break, to hurt, to injure, to kill	P	S
+408	1	408	हुडृँ	huqf~	गतौ	to go	P	S
+409	1	409	हूडृँ	hUqf~	गतौ	to go	P	S
+410	1	410	होडृँ	hoqf~	गतौ	to go	P	S
+411	1	411	रौडृँ	rOqf~	अनादरे	to disrespect, to insult	P	S
+412	1	412	रोडृँ	roqf~	उन्मादे	to be mad, to lose mental stability	P	S
+413	1	413	लोडृँ	loqf~	उन्मादे	to be mad, to lose mental stability	P	S
+414	1	414	अडँ	aq~	उद्यमे	to exert,to try, to put effort	P	S
+415	1	415	लडँ	lq~	विलासे	to enjoy, to play	P	S
+416	1	416	ललँ	ll~	विलासे	to enjoy, to play	P	S
+417	1	417	कडँ	kq~	मदे	to be drunk, to be intoxicated, to be confused	P	S
+418	1	418	कडिँ	kqi~	मदे	to be drunk, to be intoxicated, to be confused	P	S
+419	1	419	गडिँ	gqi~	वदनैकदेशे	to have cheek disease	P	S
+420	1	420	तिपृँ	tipf~	क्षरणे	to drop, to ooze, to sprinkle	A	A
+421	1	421	तेपृँ	tepf~	क्षरणे कम्पने च	to drop, to ooze, to sprinkle, to shiver, to shake,  to tremble	A	S
+422	1	422	ष्टिपृँ	zwipf~	क्षरणे	to drop, to ooze, to sprinkle	A	S
+423	1	423	ष्टेपृँ	zwepf~	क्षरणे	to drop, to ooze, to sprinkle	A	S
+424	1	424	ग्लेपृँ	glepf~	दैन्ये	to be poor, to be miserable	A	S
+425	1	425	टुवेपृँ	wuvepf~	कम्पने	to tremble,to shake	A	S
+426	1	426	केपृँ	kepf~	कम्पने गतौ च	to tremble,to shake, to go	A	S
+427	1	427	गेपृँ	gepf~	कम्पने गतौ च	to tremble,to shake, to go	A	S
+428	1	428	ग्लेपृँ	glepf~	कम्पने गतौ च	to shiver, to tremble, to shake	A	S
+429	1	429	मेपृँ	mepf~	गतौ	to go	A	S
+430	1	430	रेपृँ	repf~	गतौ	to go	A	S
+431	1	431	लेपृँ	lepf~	गतौ	to go	A	S
+432	1	432	हेपृँ	hepf~	गतौ	to go	A	S
+433	1	433	धेपृँ	Depf~	गतौ	to go	A	S
+434	1	434	त्रपूँष्	trpU~z	लज्जायाम्	to be ashamed, to be abashed,to be embarrassed, to shy	A	V
+435	1	435	कपिँ	kpi~	चलने	to shake, to tremble, to quake, to shiver	A	S
+436	1	436	रबिँ	rbi~	शब्दे	to sound, to make noise, to shout	A	S
+437	1	437	लबिँ	lbi~	शब्दे	to sound, to make noise, to shout	A	S
+438	1	438	अबिँ	abi~	शब्दे	to sound	A	S
+439	1	439	लबिँ	lbi~	अवस्रंसने शब्दे च	to hang down	A	S
+440	1	440	कबृँ	kbf~	वर्णे	to praise, to color, to paint	A	S
+441	1	441	क्लीबृँ	klIbf~	अधार्ष्ट्ये	to behave like a eunuch,to be timorous, to be modest, to be unassuming, to be nervous, to be shy	A	S
+442	1	442	क्षीबृँ	kzIbf~	मदे	to be drunk, to be intoxicated, to be confused	A	S
+443	1	443	क्षीवृँ	kzIvf~	मदे	to be drunk, to be intoxicated, to be confused	A	S
+444	1	444	शीभृँ	SIBf~	कत्थने	to boast, to praise oneself	A	S
+445	1	445	लौडृँ	lOqf~	उन्मादे	to be mad, to lose mental stability	P	S
+446	1	446	चीभृँ	cIBf~	कत्थने	to boast, to praise oneself	A	S
+447	1	447	रेभृँ	reBf~	शब्दे	to sound	A	S
+448	1	448	अभिँ	aBi~	शब्दे	to sound	A	S
+449	1	449	रभिँ	rBi~	शब्दे	to sound	A	S
+450	1	450	षिधुँ	ziDu~	गत्याम्	to regulate, to punish, to hinder, to instruct, to scare away, to drive off, to restrain	P	S
+451	1	451	ष्टभिँ	zwBi~	प्रतिबन्धे	to stop,to hinder,to become stiff,  to paralyze,to fix firmly	A	S
+452	1	452	स्कभिँ	skBi~	प्रतिबन्धे	to stop,to hinder,to become stiff,  to paralyze,to fix firmly	A	S
+453	1	453	जभीँ	jBI~	गात्रविनामे	to yawn,to gape	A	S
+454	1	454	जृभिँ	jfBi~	गात्रविनामे	to yawn,to gape	A	S
+455	1	455	शल्भँ	SlB~	कत्थने	to boast, to praise oneself	A	S
+456	1	456	वल्भँ	vlB~	भोजने	to eat,to devour	A	S
+457	1	457	गल्भँ	glB~	धार्ष्ट्ये	to be bold, to be confident, to show courage	A	S
+458	1	458	श्रन्भुँ	SrnBu~	प्रमादे	to err, to make mistake	A	S
+459	1	459	स्रन्भुँ	srnBu~	प्रमादे	to err, to make mistake	U	S
+460	1	460	ष्टुभुँ	zwuBu~	स्तम्भे	to stop,to hinder,to become stiff,  to paralyze,to fix firmly	A	S
+461	1	461	गुपूँ	gupU~	रक्षणे	to protect, to hide, to conceal	P	V
+462	1	462	धूपँ	DUp~	सन्तापे	to heat, to fumigate	P	S
+463	1	463	जपँ	jp~	व्यक्तायां वाचि मानसे च	to speak, to meditate, to mutter, to speak nonsense	P	S
+464	1	464	जल्पँ	jlp~	व्यक्तायां वाचि	to speak, to meditate, to mutter, to speak nonsense	P	S
+465	1	465	चपँ	cp~	सान्त्वने	to console,to sooth,to pacify	P	S
+466	1	466	षपँ	zp~	समवाये	to connect, to join, to understand completely	P	S
+467	1	467	रपँ	rp~	व्यक्तायां वाचि	to talk,to speak, to articulate	P	S
+468	1	468	लपँ	lp~	व्यक्तायां वाचि	to talk,to speak, to articulate	P	S
+469	1	469	चुपँ	cup~	मन्दायां गतौ	to move slowly	P	S
+470	1	470	तुपँ	tup~	हिंसायाम्	to injure,to hurt,to kill	P	S
+471	1	471	तुन्पँ	tunp~	हिंसायाम्	to injure,to hurt,to kill	P	S
+472	1	472	त्रुपँ	trup~	हिंसायाम्	to injure,to hurt,to kill	P	S
+473	1	473	त्रुन्पँ	trunp~	हिंसायाम्	to injure,to hurt,to kill	P	S
+474	1	474	तुफँ	tuP~	हिंसायाम्	to injure,to hurt,to kill	P	S
+475	1	475	तुन्फँ	tunP~	हिंसायाम्	to injure,to hurt,to kill	P	S
+476	1	476	त्रुफँ	truP~	हिंसायाम्	to injure,to hurt,to kill	P	S
+477	1	477	त्रुन्फँ	trunP~	हिंसायाम्	to injure,to hurt,to kill	P	S
+478	1	478	पर्पँ	prp~	गतौ	to go	P	S
+479	1	479	रफँ	rP~	गतौ	to go	P	S
+480	1	480	रफिँ	rPi~	गतौ	to go	P	S
+481	1	481	अर्बँ	arb~	गतौ	to go	P	S
+482	1	482	पर्बँ	prb~	गतौ	to go	P	S
+483	1	483	लर्बँ	lrb~	गतौ	to go	P	S
+484	1	484	बर्बँ	brb~	गतौ	to go	P	S
+485	1	485	मर्बँ	mrb~	गतौ	to go	P	S
+486	1	486	कर्बँ	krb~	गतौ	to go	P	S
+487	1	487	खर्बँ	Krb~	गतौ	to go	P	S
+488	1	488	गर्बँ	grb~	गतौ	to go	P	S
+489	1	489	शर्बँ	Srb~	गतौ	to go	P	S
+490	1	490	षर्बँ	zrb~	गतौ	to go	P	S
+491	1	491	चर्बँ	crb~	गतौ अर्दने च	to go, to trouble, to distress	P	S
+492	1	492	कुबिँ	kubi~	छादने आच्छादने च	to cover	P	S
+493	1	493	लुबिँ	lubi~	अर्दने	to kill, to cause pain, to torment, to irritate	P	S
+494	1	494	तुबिँ	tubi~	अर्दने	to be invisible,to trouble,to distress,to hurt, to tear, to claw, to pluck	P	S
+495	1	495	चुबिँ	cubi~	वक्त्रसंयोगे	to kiss	P	S
+496	1	496	षृभुँ	zfBu~	हिंसायाम्	to kill, to destroy	P	S
+497	1	497	षृन्भुँ	zfnBu~	हिंसायाम्	to kill, to destroy	P	S
+498	1	498	षिभुँ	ziBu~	हिंसायाम्	to kill, to destroy	P	S
+499	1	499	षिन्भुँ	zinBu~	हिंसायाम्	to kill, to destroy	P	S
+500	1	500	शुभँ	SuB~	भाषणे भासने हिंसायां च	to speak, to shine,to glow, to speak,to kill	P	S
+501	1	501	शुन्भँ	SunB~	भाषणे भासने हिंसायां दीप्तौ च	to speak, to shine,to glow, to speak,to kill	P	S
+502	1	502	घिणिँ	GiRi~	ग्रहणे	to take	A	S
+503	1	503	घुणिँ	GuRi~	ग्रहणे	to take	A	S
+504	1	504	घृणिँ	GfRi~	ग्रहणे	to take	A	S
+505	1	505	घुणँ	GuR~	भ्रमणे	to roam round	A	S
+506	1	506	घुर्णँ	GurR~	भ्रमणे	to roam round	A	S
+507	1	507	पणँ	pR~	व्यवहारे स्तुतौ च	to deal, to transact, to do business, to barter, to praise	A	S
+508	1	508	पनँ	pn~	व्यवहारे स्तुतौ च	to deal, to transact, to do business, to barter, to praise	A	S
+509	1	509	भामँ	BAm~	क्रोधे	to be angry	A	S
+510	1	510	क्षमूँष्	kzmU~z	सहने	to endure, to suffer, to forgive	A	V
+511	1	511	कमुँ	kmu~	कान्तौ	to love,to desire, to long for, to have intercourse with	A	S
+512	1	512	अणँ	aR~	शब्दे	to breathe,to utter a voice,to sound	P	S
+513	1	513	रणँ	rR~	शब्दे	to sound	P	S
+514	1	514	वणँ	vR~	शब्दे	to sound	P	S
+515	1	515	भणँ	BR~	शब्दे	to sound	P	S
+516	1	516	मणँ	mR~	शब्दे	to sound	P	S
+517	1	517	कणँ	kR~	शब्दे	to sound	P	S
+518	1	518	क्वणँ	kvR~	शब्दे	to sound	P	S
+519	1	519	व्रणँ	vrR~	शब्दे	to sound	P	S
+520	1	520	भ्रणँ	BrR~	शब्दे	to sound	P	S
+521	1	521	ध्वणँ	DvR~	शब्दे	to sound	P	S
+522	1	522	धणँ	DR~	शब्दे	to sound	P	S
+523	1	523	ओणृँ	oRf~	अपनयने	to remove,to discard, to push away	P	S
+524	1	524	शोणृँ	SoRf~	वर्णगत्योः	to be red,to go	P	S
+525	1	525	श्रोणृँ	SroRf~	सङ्घाते	to heap together,to collect, to pile together	P	S
+526	1	526	श्लोणृँ	SloRf~	सङ्घाते	to heap together,to collect, to pile together	P	S
+527	1	527	पैणृँ	pERf~	गतिप्रेरणश्लेषणेषु	to go,to inspire, to send,to touch,to hug, to embrace	P	S
+528	1	528	प्रैणृँ	prERf~	गतिप्रेरणश्लेषणेषु	to go,to inspire, to send,to touch,to hug, to embrace	P	S
+529	1	529	ध्रणँ	DrR~	शब्दे	to sound	P	S
+530	1	530	बणँ	bR~	शब्दे	to sound	P	S
+531	1	531	कनीँ	knI~	दीप्तिकान्तिगतिषु	to glow, to shine, to approach	P	S
+532	1	532	ष्टनँ	zwn~	शब्दे	to sound	P	S
+533	1	533	वनँ	vn~	शब्दे	to sound	P	S
+534	1	534	वनँ	vn~	सम्भक्तौ	to serve, to be slave, to have problem	P	S
+535	1	535	षणँ	zR~	सम्भक्तौ	to serve, to help, to be slave, to have problem	P	S
+536	1	536	अमँ	am~	गतौ शब्दे सम्भक्तौ च	to go, to sound, to serve, to help, to be slave	P	S
+537	1	537	द्रमँ	drm~	गतौ	to go	P	S
+538	1	538	हम्मँ	hmm~	गतौ	to go	P	S
+539	1	539	मीमृँ	mImf~	गतौ शब्दे च	to go, to talk	P	S
+540	1	540	चमुँ	cmu~	अदने	to eat	P	S
+541	1	541	छमुँ	Cmu~	अदने	to eat	P	S
+542	1	542	जमुँ	jmu~	अदने	to eat	P	S
+543	1	543	झमुँ	Jmu~	अदने	to eat	P	S
+544	1	544	जिमुँ	jimu~	अदने	to eat	P	S
+545	1	545	क्रमुँ	krmu~	पादविक्षेपे	to walk,to step,to go ahead,to cross,to leap,to ascend, to protect, to approach	P	S
+546	1	546	अयँ	ay~	गतौ	to go	A	S
+547	1	547	वयँ	vy~	गतौ	to go	A	S
+548	1	548	पयँ	py~	गतौ	to go	A	S
+549	1	549	मयँ	my~	गतौ	to go	A	S
+550	1	550	चयँ	cy~	गतौ	to go	A	S
+551	1	551	तयँ	ty~	गतौ	to go	A	S
+552	1	552	णयँ	Ry~	गतौ रक्षणे च	to go	A	S
+553	1	553	दयँ	dy~	दानगतिरक्षणहिंसाऽदानेषु	to accept, to recieve, to obtain, to go, to protect, to kill, to hurt, to injure, to accept, to take	A	S
+554	1	554	रयँ	ry~	गतौ	to go	A	S
+555	1	555	ययँ	yy~	गतौ	to go	A	S
+556	1	556	ऊयीँ	UyI~	तन्तुसन्ताने	to weave,to sew	A	S
+557	1	557	पूयीँ	pUyI~	विशरणे दुर्गन्धे च	to split,to stink, to cut	A	S
+558	1	558	क्नूयीँ	knUyI~	शब्दे उन्दने च	to sound,to be wet	A	S
+559	1	559	क्ष्मायीँ	kzmAyI~	विधूनने	to tremble,to shake, to quake, to shake	A	S
+560	1	560	स्फायीँ	sPAyI~	वृद्धौ	to grow,to increase,to expand	A	S
+561	1	561	ओँप्यायीँ	o~pyAyI~	वृद्धौ	to grow,to increase,to expand	A	S
+562	1	562	तायृँ	tAyf~	सन्तानपालनयोः	to spread,to protect	A	S
+563	1	563	शलँ	Sl~	चलनसंवरणयोः	to go, to cover	A	S
+564	1	564	वलँ	vl~	संवरणे सञ्चरणे च	to cover, to hide, to go	A	S
+565	1	565	वल्लँ	vll~	संवरणे सञ्चरणे च	to cover, to hide, to go	A	S
+566	1	566	मलँ	ml~	धारणे	to wear, to hold, to possess	A	S
+567	1	567	मल्लँ	mll~	धारणे	to wear, to hold, to possess	A	S
+568	1	568	भलँ	Bl~	परिभाषणहिंसादानेषु	to speak, to kill, to destroy, to injure, to give, to donate	A	S
+569	1	569	भल्लँ	Bll~	परिभाषणहिंसादानेषु	to speak, to kill, to destroy, to injure, to give, to donate	A	S
+570	1	570	कलँ	kl~	शब्दसङ्ख्यानयोः	to sound, to count	A	S
+571	1	571	कल्लँ	kll~	अव्यक्ते शब्दे अशब्दे च	to sound indistinctly, to be quiet	A	S
+572	1	572	तेवृँ	tevf~	देवने	to play, to sport	A	S
+573	1	573	देवृँ	devf~	देवने	to play, to sport	A	S
+574	1	574	षेवृँ	zevf~	सेवने	to serve, to devote oneself, practise	A	S
+575	1	575	गेवृँ	gevf~	सेवने	to serve, to devote oneself, practise	A	S
+576	1	576	ग्लेवृँ	glevf~	सेवने	to serve, to devote oneself, practise	A	S
+577	1	577	पेवृँ	pevf~	सेवने	to serve, to devote oneself, practise	A	S
+578	1	578	मेवृँ	mevf~	सेवने	to serve, to devote oneself, practise	A	S
+579	1	579	म्लेवृँ	mlevf~	सेवने	to serve, to devote oneself, practise	A	S
+580	1	580	शेवृँ	Sevf~	सेवने	to serve, to devote oneself, practise	A	S
+581	1	581	खेवृँ	Kevf~	सेवने	to serve, to devote oneself, practise	A	S
+582	1	582	प्लेवृँ	plevf~	सेवने	to serve, to devote oneself, practise	A	S
+583	1	583	केवृँ	kevf~	सेवने	to serve, to devote oneself, practise	A	S
+584	1	584	रेवृँ	revf~	प्लवगतौ	to leap, to jump, to cross by flying, to cross by swimming	A	S
+585	1	585	मव्यँ	mvy~	बन्धने	to hinder, to tie, to bind, to stop, to resist	P	S
+586	1	586	सूर्क्ष्यँ	sUrkzy~	ईर्ष्यायाम्	to envy, to grudge	P	S
+587	1	587	ईर्क्ष्यँ	Irkzy~	ईर्ष्यायाम्	to envy, to grudge	P	S
+588	1	588	ईर्ष्यँ	Irzy~	ईर्ष्यायाम्	to envy, to grudge	P	S
+589	1	589	हयँ	hy~	गतौ	to go	P	S
+590	1	590	शुच्यँ	Sucy~	अभिषवे	to bathe, to give bath, to extract, to churn, to print	P	S
+591	1	591	चुच्यँ	cucy~	अभिषवे	to bathe, to give bath, to extract, to churn, to print	P	S
+592	1	592	हर्यँ	hry~	गतिकान्त्योः	to go,to glow, to shine	P	S
+593	1	593	अलँ	al~	भूषणपर्याप्तिवारणेषु	to decorate, to satisfy, to fulfill, to get rid of, to complete	P	S
+594	1	594	ञिफलाँ	YiPlA~	विशरणे	to blossom, to bear fruits	P	S
+595	1	595	मीलँ	mIl~	निमेषणे	to blink, to wink	P	S
+596	1	596	श्मीलँ	SmIl~	निमेषणे	to blink, to wink	P	S
+597	1	597	स्मीलँ	smIl~	निमेषणे	to blink, to wink	P	S
+598	1	598	क्ष्मीलँ	kzmIl~	निमेषणे	to blink, to wink	P	S
+599	1	599	पीलँ	pIl~	प्रतिष्टम्भे	to be mad, to be insane, to stop, to resist, to obstruct	P	S
+600	1	600	णीलँ	RIl~	वर्णे	to color, to dye, to paint, to darken	P	S
+601	1	601	शीलँ	SIl~	समाधौ	to meditate,to practise, to concentrate, to think, to pray, to worship	P	S
+602	1	602	कीलँ	kIl~	बन्धने	to nail	P	S
+603	1	603	कूलँ	kUl~	आवरणे	to cover	P	S
+604	1	604	शूलँ	SUl~	रुजायां सङ्घाते सङ्कोषे च	to be ill,to have stomach ache, to have pain	P	S
+605	1	605	तूलँ	tUl~	निष्कर्षे	to extract	P	S
+606	1	606	पूलँ	pUl~	सङ्घाते	to collect,to gather,to heap up,to assemble	P	S
+607	1	607	मूलँ	mUl~	प्रतिष्ठायाम्	to root, to be firm, to establish	P	S
+608	1	608	फलँ	Pl~	निष्पत्तौ	to succeed, to complete, to conclude, to get good results	P	S
+609	1	609	चुल्लँ	cull~	भावकरणे	to give opinion	P	S
+610	1	610	फुल्लँ	Pull~	विकसने	to develop, to glow, to blossom, to flourish	P	S
+611	1	611	चिल्लँ	cill~	शैथिल्ये भावकरणे च	to loosen, to express, to speak out	P	S
+612	1	612	तिलँ	til~	गतौ	to go	P	S
+613	1	613	तिल्लँ	till~	गतौ	to go	P	S
+614	1	614	वेलृँ	velf~	चलने	to go, walk	P	S
+615	1	615	चेलृँ	celf~	चलने	to go, walk	P	S
+616	1	616	केलृँ	kelf~	चलने	to go, walk	P	S
+617	1	617	खेलृँ	Kelf~	चलने	to go, walk	P	S
+618	1	618	क्ष्वेलृँ	kzvelf~	चलने	to go, walk	P	S
+619	1	619	वेल्लँ	vell~	चलने	to go, walk	P	S
+620	1	620	चेल्लँ	cell~	चलने	to go, walk	P	S
+621	1	621	पेलृँ	pelf~	गतौ	to go	P	S
+622	1	622	फेलृँ	Pelf~	गतौ	to go	P	S
+623	1	623	शेलृँ	Self~	गतौ	to go, walk	P	S
+624	1	624	षेलृँ	zelf~	गतौ	to go, walk	P	S
+625	1	625	स्खलँ	sKl~	सञ्चलने	to stumble,to totter,to deviate,to blunder,to err,to stammer,to drop	P	S
+626	1	626	खलँ	Kl~	सञ्चये चलने च	to gather, to collect,to move, to shake	P	S
+627	1	627	गलँ	gl~	अदने स्रवणे च	to eat,to swallow, to drip,to flow,to dissolve	P	S
+628	1	628	षलँ	zl~	गतौ	to go	P	S
+629	1	629	दलँ	dl~	विशरणे विदारणे च	to break,to split,to expand,to open,to cut,to decline, to wither, to tear, to fade	P	S
+630	1	630	श्वलँ	Svl~	आशुगमने	to go fast	P	S
+631	1	631	श्वल्लँ	Svll~	आशुगमने	to go fast	P	S
+632	1	632	खोलृँ	Kolf~	गतिप्रतिघाते	to limp	P	S
+633	1	633	खोरृँ	Korf~	गतिप्रतिघाते	to limp	P	S
+634	1	634	धोरृँ	Dorf~	गतिचातुर्ये	to go quickly,to run,to trot,to be skillful	P	S
+635	1	635	त्सरँ	tsr~	छद्मगतौ	to creep,to crawl,to proceed crookedly, to proceed fraudulently	P	S
+636	1	636	क्मरँ	kmr~	हूर्छने	to be crooked	P	S
+637	1	637	अभ्रँ	aBr~	गतौ	to go	P	S
+638	1	638	वभ्रँ	vBr~	गतौ	to go	P	S
+639	1	639	मभ्रँ	mBr~	गतौ	to go	P	S
+640	1	640	चरँ	cr~	गतौ भक्षणे च	to go, to walk, to eat, to graze	P	S
+641	1	641	ष्ठिवुँ	zWivu~	निरसने	to spit	P	S
+642	1	642	जि	ji	जये	to prosper, to flourish	P	A
+643	1	643	जीवँ	jIv~	प्राणधारणे	to live,to revive,to live upon, to survive	P	S
+644	1	644	पीवँ	pIv~	स्थौल्ये	to be fat, to be thick	P	S
+645	1	645	मीवँ	mIv~	स्थौल्ये	to be fat, to be thick	P	S
+646	1	646	तीवँ	tIv~	स्थौल्ये	to be fat, to be thick	P	S
+647	1	647	णीवँ	RIv~	स्थौल्ये	to be fat, to be thick	P	S
+648	1	648	क्षीवुँ	kzIvu~	निरसने	to spit	P	S
+649	1	649	क्षेवुँ	kzevu~	निरसने	to spit	P	S
+650	1	650	उर्वीँ	urvI~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+651	1	651	तुर्वीँ	turvI~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+652	1	652	थुर्वीँ	TurvI~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+653	1	653	दुर्वीँ	durvI~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+654	1	654	धुर्वीँ	DurvI~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+655	1	655	गुर्वीँ	gurvI~	उद्यमने	to endeavour	P	S
+656	1	656	मुर्वीँ	murvI~	बन्धने	to bind, to hinder	P	S
+657	1	657	पुर्वँ	purv~	पूरणे	to fill, to complete	P	S
+658	1	658	पर्वँ	prv~	पूरणे	to fill, to complete	P	S
+659	1	659	मर्वँ	mrv~	पूरणे	to fill, to complete	P	S
+660	1	660	चर्वँ	crv~	अदने	to chew,to eat,to bite	P	S
+661	1	661	भर्वँ	Brv~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+662	1	662	पर्षँ	prz~	स्नेहने	to be wet, to be slippery	A	S
+663	1	663	बहिँ	bhi~	वृद्धौ	to grow	A	S
+664	1	664	कर्वँ	krv~	दर्पे	to boast, to be egoistic, to be proud	P	S
+665	1	665	खर्वँ	Krv~	दर्पे	to boast, to be egoistic, to be proud	P	S
+666	1	666	गर्वँ	grv~	दर्पे	to boast, to be egoistic, to be proud	P	S
+667	1	667	अर्वँ	arv~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+668	1	668	शर्वँ	Srv~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+669	1	669	षर्वँ	zrv~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+670	1	670	इविँ	ivi~	व्याप्तौ	to pervade,to occupy	P	S
+671	1	671	पिविँ	pivi~	सेवने सेचने च	to sprinkle,to make wet, to serve	P	S
+672	1	672	मिविँ	mivi~	सेवने सेचने संस्रने च	to sprinkle,to make wet, to serve	P	S
+673	1	673	णिविँ	Rivi~	सेवने सेचने संस्रने च	to sprinkle,to make wet, to serve	P	S
+674	1	674	षिविँ	zivi~	सेवने सेचने च	to sprinkle,to make wet, to serve	P	S
+675	1	675	हिविँ	hivi~	प्रीणने	to please,to satisfy, to calm down	P	S
+676	1	676	दिविँ	divi~	प्रीणने	to please,to satisfy, to calm down	P	S
+677	1	677	धिविँ	Divi~	प्रीणने	to please,to satisfy	P	S
+678	1	678	जिविँ	jivi~	प्रीणने	to be satisfied	P	S
+679	1	679	रिविँ	rivi~	गतौ	to go	P	S
+680	1	680	रविँ	rvi~	गतौ	to go	P	S
+681	1	681	धविँ	Dvi~	गतौ	to go	P	S
+682	1	682	कृविँ	kfvi~	गतौ हिंसाकरणयोश्च	to go, to kill, to hurt, to destroy, to irritate	P	S
+683	1	683	मवँ	mv~	बन्धने	to tie, to restrict, to hinder	P	S
+684	1	684	अवँ	av~	रक्षणगतिकान्तिप्रीतितृप्त्यवगमप्रवेशश्रवणस्वाम्यर्थयाचनक्रियेच्छादीप्त्यवाप्त्यालिङ्गनहिंसादानभागवृद्धिषु	to protect,to go, to desire, to wish, to love, to please, to satisfy, to enter, to hear, to own, to order, to command, to request, to beg, to act, to glow, to shine, to obtain, to hug, to embrace, to kill, to hurt, to grow, to gain power	P	S
+685	1	685	धावुँ	DAvu~	गतिशुद्ध्योः	to run,to flow,to cleanse,to wash	U	S
+686	1	686	धुक्षँ	Dukz~	सन्दीपनक्लेशनजीवनेषु	to kindle,to get tired, to be weary,to live	A	S
+687	1	687	धिक्षँ	Dikz~	सन्दीपनक्लेशनजीवनेषु	to kindle,to get tired, to be weary,to live	A	S
+688	1	688	वृक्षँ	vfkz~	वरणे	to cover, to like, to prefer, to choose, to select	A	S
+689	1	689	शिक्षँ	Sikz~	विद्योपादाने	to learn,to practise, to study, to gain knowledge	A	S
+690	1	690	भिक्षँ	Bikz~	भिक्षायामलाभे लाभे च	to ask,to beg, to request	A	S
+691	1	691	क्लेशँ	kleS~	अव्यक्तायां वाचि	to speak inarticulately,to irritate, to give pain	A	S
+692	1	692	दक्षँ	dkz~	वृद्धौ शीघ्रार्थे च	to prosper, to grow, to act fastm to be quick, to be alert	A	S
+693	1	693	दीक्षँ	dIkz~	मौण्ड्येज्योपनयननियमव्रतादेशेषु	to shave, to perform a sacrifice, to initiate a mantra, to perform sacred thread ceremony, to practise self-restraint, to teach religious activities	A	S
+694	1	694	ईक्षँ	Ikz~	दर्शने	to see, to perceive	A	S
+695	1	695	ईषँ	Iz~	गतिहिंसादर्शनेषु	to go, to kill, to see	A	S
+696	1	696	भाषँ	BAz~	व्यक्तायां वाचि	to articulate, to explain, to elocute	A	S
+697	1	697	वर्षँ	vrz~	स्नेहने	to be wet, to be slippery	A	S
+698	1	698	गेषृँ	gezf~	अन्विच्छायाम्	to search,to investigate, to find out, to seek	A	S
+699	1	699	ग्लेषृँ	glezf~	अन्विच्छायाम्	to search,to investigate, to find out, to seek	A	S
+700	1	700	पेषृँ	pezf~	प्रयत्ने	to try, to attempt	A	S
+701	1	701	एषृँ	ezf~	प्रयत्ने	to try, to attempt	A	S
+702	1	702	येषृँ	yezf~	प्रयत्ने	to try, to attempt	A	S
+703	1	703	जेषृँ	jezf~	गतौ	to go	A	S
+704	1	704	णेषृँ	Rezf~	गतौ	to go	A	S
+705	1	705	एषृँ	ezf~	गतौ	to go	A	S
+706	1	706	प्रेषृँ	prezf~	गतौ	to go	A	S
+707	1	707	रेषृँ	rezf~	अव्यक्ते शब्दे	to snicker, to sound inarticulately	A	S
+708	1	708	हेषृँ	hezf~	अव्यक्ते शब्दे	to snicker, to sound inarticulately	A	S
+709	1	709	ह्रेषृँ	hrezf~	अव्यक्ते शब्दे	to snicker, to sound inarticulately	A	S
+710	1	710	कासृँ	kAsf~	शब्दकुत्सायाम्	to cough	A	S
+711	1	711	भासृँ	BAsf~	दीप्तौ	to shine,to appear,to become evident, to glow	A	S
+712	1	712	णासृँ	RAsf~	शब्दे	to sound	A	S
+713	1	713	रासृँ	rAsf~	शब्दे	to sound	A	S
+714	1	714	णसँ	Rs~	कौटिल्ये	to be crooked	A	S
+715	1	715	भ्यसँ	Bys~	भये	to fear, to be afraid	A	S
+716	1	716	शसिँ	Ssi~	इच्छायाम्	to wish	A	S
+717	1	717	ग्रसुँ	grsu~	अदने	to eat,to devour,to swallow,to consume,to seize,to eclipse	A	S
+718	1	718	ग्लसुँ	glsu~	अदने	to eat,to devour,to swallow,to consume,to seize,to eclipse	A	S
+719	1	719	ईहँ	Ih~	चेष्टायाम्	to try	A	S
+720	1	720	वहिँ	vhi~	वृद्धौ	to grow	A	S
+721	1	721	महिँ	mhi~	वृद्धौ	to grow	A	S
+722	1	722	अहिँ	ahi~	गतौ	to grow	A	S
+723	1	723	गर्हँ	grh~	कुत्सायाम्	to blame,to censure	A	S
+724	1	724	गल्हँ	glh~	कुत्सायाम्	to blame,to censure	A	S
+725	1	725	बर्हँ	brh~	प्राधान्ये	to be eminent, to be superior	A	S
+726	1	726	बल्हँ	blh~	प्राधान्ये	to be eminent, to be superior	A	S
+727	1	727	वर्हँ	vrh~	परिभाषणहिंसाच्छादनेषु	to speak,to kill,to hurt, to cover	A	S
+728	1	728	वल्हँ	vlh~	परिभाषणहिंसाच्छादनेषु	to speak,to kill,to hurt, to cover	A	S
+729	1	729	प्लिहँ	plih~	गतौ	to go	A	S
+730	1	730	वेहृँ	vehf~	प्रयत्ने	to endeavour, to try	A	S
+731	1	731	जेहृँ	jehf~	प्रयत्ने गतौ च	to endeavour, to try	A	S
+732	1	732	बाहृँ	bAhf~	प्रयत्ने	to endeavour, to try	A	S
+733	1	733	द्राहृँ	drAhf~	निद्राक्षये निक्षेपे च	to wake up, to stay awake	A	S
+734	1	734	काशृँ	kASf~	दीप्तौ	to shine, to glow	A	S
+735	1	735	ऊहँ	Uh~	वितर्के	to conjecture,to infer,to guess, to reason, to imagine, to hypothesize	A	S
+736	1	736	गाहूँ	gAhU~	विलोडने	to destroy, to counterattack	A	V
+737	1	737	गृहूँ	gfhU~	ग्रहणे	to take,to seize, to accept	A	V
+738	1	738	ग्लहँ	glh~	ग्रहणे अपादाने च	to take,to seize, to accept	A	S
+739	1	739	घषँ	Gz~	कान्तिकरणे	to cleanse, to purify	A	S
+740	1	740	घुषिँ	Guzi~	कान्तिकरणे	to cleanse, to purify	A	S
+741	1	741	घुषिँर्	Guzi~r	अविशब्दने	to make indistinct sound	P	S
+742	1	742	अक्षूँ	akzU~	व्याप्तौ	to pervade,to reach	P	V
+743	1	743	तक्षूँ	tkzU~	तनूकरणे	to sharpen, to peel off	P	V
+744	1	744	त्वक्षूँ	tvkzU~	तनूकरणे	to reduce in size	P	V
+745	1	745	उक्षँ	ukz~	सेचने	to sprinkle,to wet	P	S
+746	1	746	रक्षँ	rkz~	पालने	to protect,to watch,to take care of	P	S
+747	1	747	णिक्षँ	Rikz~	चुम्बने	to kiss	P	S
+748	1	748	त्रक्षँ	trkz~	गतौ	to kiss	P	S
+749	1	749	ष्ट्रक्षँ	zwrkz~	गतौ	to kiss	P	S
+750	1	750	तृक्षँ	tfkz~	गतौ	to go	P	S
+751	1	751	ष्टृक्षँ	zwfkz~	गतौ	to kiss	P	S
+752	1	752	णक्षँ	Rkz~	गतौ	to go	P	S
+753	1	753	वक्षँ	vkz~	रोषे सङ्घाते च	to be angry,to collect, to gather	P	S
+754	1	754	मृक्षँ	mfkz~	सङ्घाते	to collect, to heap, to pile up	P	S
+755	1	755	म्रक्षँ	mrkz~	सङ्घाते	to collect, to heap, to pile up	P	S
+756	1	756	तक्षँ	tkz~	त्वचने	to cover	P	S
+757	1	757	पक्षँ	pkz~	परिग्रहे	to take side	P	S
+758	1	758	सूर्क्षँ	sUrkz~	आदरे	to respect, to honor	P	S
+759	1	759	षलृँ	zlf~	गतौ	to go, walk	P	S
+760	1	760	काक्षिँ	kAkzi~	काङ्क्षायाम्	to desire, to long for, to wish	P	S
+761	1	761	वाक्षिँ	vAkzi~	काङ्क्षायाम्	to desire, to long for, to wish	P	S
+762	1	762	माक्षिँ	mAkzi~	काङ्क्षायाम्	to desire, to long for, to wish	P	S
+763	1	763	द्राक्षिँ	drAkzi~	काङ्क्षायाम् घोरवाशिते च	to desire, to long for, to wish, to caw	P	S
+764	1	764	ध्राक्षिँ	DrAkzi~	काङ्क्षायाम् घोरवाशिते च	to desire, to long for, to wish, to caw	P	S
+765	1	765	ध्वाक्षिँ	DvAkzi~	काङ्क्षायाम् घोरवाशिते च	to desire, to long for, to wish, to caw	P	S
+766	1	766	शुच्यीँ	SucyI~	अभिषवे	to bathe, to give bath, to extract, to churn, to print	P	S
+767	1	767	चूषँ	cUz~	पाने	to suck	P	S
+768	1	768	तूषँ	tUz~	तुष्टौ	to be satisfied, to be happy	P	S
+769	1	769	पूषँ	pUz~	वृद्धौ	to grow	P	S
+770	1	770	मूषँ	mUz~	स्तेये	to steal to rob	P	S
+771	1	771	लूषँ	lUz~	भूषायाम्	to decorate	P	S
+772	1	772	रूषँ	rUz~	भूषायाम्	to decorate	P	S
+773	1	773	शूषँ	SUz~	प्रसवे	to deliver, to give birth	P	S
+774	1	774	षूषँ	zUz~	प्रसवे	to deliver, to give birth	P	S
+775	1	775	यूषँ	yUz~	हिंसायाम्	to kill, to destroy	P	S
+776	1	776	जूषँ	jUz~	हिंसायाम्	to kill, to destroy	P	S
+777	1	777	भूषँ	BUz~	अलङ्कारे	to adorn,to decorate	P	S
+778	1	778	ग्लुहूँ	gluhU~	ग्रहणे	to take,to seize, to accept	A	V
+779	1	779	ऊषँ	Uz~	रुजायाम्	to be ill	P	S
+780	1	780	ईषँ	Iz~	उञ्छे	to glean, to gather particle by particle	P	S
+781	1	781	कषँ	kz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+782	1	782	खषँ	Kz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+783	1	783	शिषँ	Siz~	हिंसायाम्	to kill, to destroy, to hurt	P	A
+784	1	784	जषँ	jz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+785	1	785	झषँ	Jz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+786	1	786	शषँ	Sz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+787	1	787	वषँ	vz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+788	1	788	मषँ	mz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+789	1	789	रुषँ	ruz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+790	1	790	रिषँ	riz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+791	1	791	भषँ	Bz~	भर्त्सने	to bark,to revile, to abuse, to criticise	P	S
+792	1	792	उषँ	uz~	दाहे	to burn	P	S
+793	1	793	जिषुँ	jizu~	सेचने	to sprinkle	P	S
+794	1	794	विषुँ	vizu~	सेचने	to sprinkle	P	A
+795	1	795	मिषुँ	mizu~	सेचने	to sprinkle	P	S
+796	1	796	मुषँ	muz~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+797	1	797	पुषँ	puz~	पुष्टौ	to nourish,to bring up,to support, to protect, to take care, to feed	P	S
+798	1	798	श्रिषुँ	Srizu~	दाहे	to set on fire	P	S
+799	1	799	श्लिषुँ	Slizu~	दाहे	to set on fire	P	S
+800	1	800	प्रुषुँ	pruzu~	दाहे	to set on fire	P	S
+801	1	801	प्लुषुँ	pluzu~	दाहे	to set on fire	P	S
+802	1	802	पृषुँ	pfzu~	सेचनहिंसासङ्क्लेशनेषु	to sprinkle,to kill, to destroy, to hurt	P	S
+803	1	803	वृषुँ	vfzu~	सेचनहिंसासङ्क्लेशनेषु	to sprinkle,to kill, to destroy, to hurt	P	S
+804	1	804	मृषुँ	mfzu~	सेचने सहने च	to sprinkle, to suffer, to endure, to bear, to tolerate	P	S
+805	1	805	घृषुँ	Gfzu~	सङ्घर्षे	to grind,to strike,to rub,to brush,to polish	P	S
+806	1	806	हृषुँ	hfzu~	अलीके	to be delighted , to rejoice , to be happy, to fill with pleasure, to speak lie	P	S
+807	1	807	तुसँ	tus~	शब्दे	to sound	P	S
+808	1	808	ह्रसँ	hrs~	शब्दे	to sound	P	S
+809	1	809	ह्लसँ	hls~	शब्दे	to sound	P	S
+810	1	810	रसँ	rs~	शब्दे	to sound	P	S
+811	1	811	लसँ	ls~	श्लेषणक्रीडनयोः	to embrace,to hug, to linger, to enjoy, to come to light, to play	P	S
+812	1	812	घसॢँ	Gs~	अदने	to eat,to devour, to binge, to overeat	P	A
+813	1	813	जर्जँ	jrj~	परिभाषणहिंसातर्जनेषु	to speak, to to blame,to kill,to reprove, to hit	P	S
+814	1	814	चर्चँ	crc~	परिभाषणहिंसातर्जनेषु	to speak, to to blame,to kill,to reprove, to hit	P	S
+815	1	815	झर्झँ	JrJ~	परिभाषणहिंसातर्जनेषु	to speak, to to blame,to kill,to reprove, to hit	P	S
+816	1	816	पिसृँ	pisf~	गतौ	to go	P	S
+817	1	817	पेसृँ	pesf~	गतौ	to go	P	S
+818	1	818	विसृँ	visf~	गतौ	to go	P	S
+819	1	819	वेसृँ	vesf~	गतौ	to go	P	S
+820	1	820	पिशृँ	piSf~	गतौ	to go	P	S
+821	1	821	पेशृँ	peSf~	गतौ	to go	P	S
+822	1	822	हसेँ	hse~	हसने	to laugh,to smile,to joke, to ridicule	P	S
+823	1	823	णिशँ	RiS~	समाधौ	to meditate upon, to think calmly	P	S
+824	1	824	मिशँ	miS~	शब्दे रोषकृते गतौ च	to make noise,to be angry, to tie, to bind, to go	P	S
+825	1	825	मशँ	mS~	शब्दे रोषकृते गतौ च	to make noise,to be angry, to tie, to bind, to go	P	S
+826	1	826	शवँ	Sv~	गतौ	to go	P	S
+827	1	827	शशँ	SS~	प्लुतगतौ	to jump,to dance, to leap	P	S
+828	1	828	शसुँ	Ssu~	हिंसायाम्	to kill, to destroy	P	S
+829	1	829	शन्सुँ	Snsu~	स्तुतौ	to praise, to complement	P	S
+830	1	830	चहँ	ch~	परिकल्कने	to be wicked,to be proud,to cheat, to boast	P	S
+831	1	831	महँ	mh~	पूजायाम्	to worship,to revere	P	S
+832	1	832	रहँ	rh~	त्यागे	to abandon,to quit, to leave	P	S
+833	1	833	रहिँ	rhi~	गतौ	to go	P	S
+834	1	834	दृहँ	dfh~	वृद्धौ	to grow, to prosper	P	S
+835	1	835	दृहिँ	dfhi~	वृद्धौ	to grow, to prosper	P	S
+836	1	836	बृहँ	bfh~	वृद्धौ	to grow, to prosper	P	S
+837	1	837	बृहिँ	bfhi~	वृद्धौ शब्दे च	to grow, to prosper, to sound	P	S
+838	1	838	तुहिँर्	tuhi~r	अर्दने	to hurt,to kill,to pain, to kill	P	S
+839	1	839	दुहिँर्	duhi~r	अर्दने	to hurt,to kill,to pain, to kill	P	S
+840	1	840	उहिँर्	uhi~r	अर्दने	to hurt,to kill,to pain, to kill	P	S
+841	1	841	अर्हँ	arh~	पूजायाम्	to be worthty, to be eligible, to have merit	P	S
+842	1	842	द्युतँ	dyut~	दीप्तौ	to glow, to illumine	A	S
+843	1	843	श्विताँ	SvitA~	वर्णे	to become white, to become clear	A	S
+844	1	844	ञिमिदाँ	YimidA~	स्नेहने	to be greasy,to be soft,to melt,to love	A	S
+845	1	845	ञिष्विदाँ	YizvidA~	स्नेहनमोचनयोः गात्रप्रस्रवणे च	to be greasy, to be soft, to smoothen,to quit	A	S
+846	1	846	ञिक्ष्विदाँ	YikzvidA~	स्नेहनमोचनयोः	to be greasy, to be soft, to smoothen,to quit	A	S
+847	1	847	रुचँ	ruc~	दीप्तावभिप्रीतौ च	to shine, to glow, to please, to like, to enjoy	A	S
+848	1	848	घुटँ	Guw~	परिवर्तने	to return, to retract, to come back, to revert	A	S
+849	1	849	रुटँ	ruw~	प्रतिघाते	to resist, to strike, to oppose, to push, to oppose	A	S
+850	1	850	लुटँ	luw~	प्रतिघाते	to resist, to strike, to oppose, to push, to oppose	A	S
+851	1	851	लुठँ	luW~	प्रतिघाते	to resist, to strike, to oppose, to push, to oppose	A	S
+852	1	852	वृहँ	vfh~	वृद्धौ	to grow, to prosper	P	S
+853	1	853	शुभँ	SuB~	दीप्तौ	to glow, to shine, to appear beautiful, to suite	A	S
+854	1	854	क्षुभँ	kzuB~	सञ्चलने	to be agitated,to shake,to disturb,to tremble,to be angry	A	S
+855	1	855	णभँ	RB~	हिंसायाम् अभावे च	to kill, to destroy	A	S
+856	1	856	तुभँ	tuB~	हिंसायाम्	to kill, to destroy	A	S
+857	1	857	स्रन्सुँ	srnsu~	अवस्रंसने	to fall down,to drop,to slip off,to hang down, to slide, to deteriorate	A	S
+858	1	858	ध्वन्सुँ	Dvnsu~	अवस्रंसने गतौ च	to fall down,to drop,to slip off,to hang down, to slide, to deteriorate	A	S
+859	1	859	भ्रन्सुँ	Brnsu~	अवस्रंसने	to fall down,to drop,to slip off,to hang down, to slide, to deteriorate	A	S
+860	1	860	भ्रन्शुँ	BrnSu~	अवस्रंसने	to fall down,to drop,to slip off,to hang down, to slide, to deteriorate	A	S
+861	1	861	स्रन्भुँ	srnBu~	विश्वासे	to trust, to believe	A	S
+862	1	862	वृतुँ	vftu~	वर्तने	to be, to happen, to be present	A	S
+863	1	863	वृधुँ	vfDu~	वृद्धौ	to increase, to grow, to prosper	A	S
+864	1	864	शृधुँ	SfDu~	उन्दने शब्दकुत्सायाम् च	to moisten, to wet, to fart	A	S
+865	1	865	स्यन्दूँ	syndU~	प्रस्रवणे	to ooze, to drip, to trickle	A	V
+866	1	866	कृपूँ	kfpU~	सामर्थ्ये	to be able, to be capable, to be powerful	A	V
+867	1	867	घटँ	Gw~	चेष्टायाम्	to act, to become, to arrange, to try, to make an effort	A	S
+868	1	868	व्यथँ	vyT~	भयसञ्चलनयोः	to be vexed,to fear,to be angry, to be irritated	A	S
+869	1	869	प्रथँ	prT~	प्रख्याने	to become famous,to arise, to declare, to manifest,to publish, to expand the scope	A	S
+870	1	870	प्रसँ	prs~	विस्तारे	to extend,to expand	A	S
+871	1	871	म्रदँ	mrd~	मर्दने	to crush,to grind	A	S
+872	1	872	स्खदँ	sKd~	स्खदने	to win, to cut, to tear, to stabilize, to cause pain, to irritate	A	S
+873	1	873	क्षजिँ	kzji~	गतिदानयोः	to go, to give	A	S
+874	1	874	दक्षँ	dkz~	गतिहिंसनशासनवृद्धिशीघ्रार्थेषु	to go, to kill, to destroy	A	S
+875	1	875	कृपँ	kfp~	कृपायां गतौ च	to pitty, to do favor, to go	A	S
+876	1	876	क्रपँ	krp~	कृपायां गतौ च	to pitty, to do favor, to go	A	S
+877	1	877	वृहिँ	vfhi~	वृद्धौ शब्दे च	to grow, to prosper, to sound	P	S
+878	1	878	कदिँ	kdi~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+879	1	879	क्रदिँ	krdi~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+880	1	880	क्लदिँ	kldi~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+881	1	881	कदँ	kd~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+882	1	882	क्रदँ	krd~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+883	1	883	क्लदँ	kld~	वैक्लव्ये	to be afraid, to to grieve,to cry,to shed tears	A	S
+884	1	884	ञित्वराँ	YitvrA~	सम्भ्रमे	to hurry up	A	S
+885	1	885	ज्वरँ	jvr~	रोगे	to have fever, to be ill	P	S
+886	1	886	गडँ	gq~	सेचने	to irrigate	P	S
+887	1	887	हेडँ	heq~	वेष्टने	to wrap, to cover, to surround,to clothe	P	S
+888	1	888	वटँ	vw~	परिभाषणे	to talk rubbish, to blabbr	P	S
+889	1	889	भटँ	Bw~	परिभाषणे	to talk rubbish, to blabbr	P	S
+890	1	890	णटँ	Rw~	नृत्तौ गतौ च	to dance,to act, to move	P	S
+891	1	891	ष्टकँ	zwk~	प्रतिघाते	to stop, to hinder, to resist, to block	P	S
+892	1	892	चकँ	ck~	तृप्तौ	to be satisfied,to be content	P	S
+893	1	893	कखेँ	kKe~	हसने	to laugh	P	S
+894	1	894	रगेँ	rge~	शङ्कायाम्	to doubt, to suspect	P	S
+895	1	895	लगेँ	lge~	सङ्गे	to adhere to, to become united, to come in contact, to approach,to touch	P	S
+896	1	896	ह्रगेँ	hrge~	संवरणे	to wrap, to cover, to conceal	P	S
+897	1	897	ह्लगेँ	hlge~	संवरणे	to wrap, to cover, to conceal	P	S
+898	1	898	षगेँ	zge~	संवरणे	to wrap, to cover, to conceal	P	S
+899	1	899	ष्टगेँ	zwge~	संवरणे	to wrap, to cover, to conceal	P	S
+900	1	900	कगेँ	kge~	अनेकार्थाः	to do some action	P	S
+901	1	901	अकँ	ak~	कुटिलायां गतौ	to move tortuously, to limp	P	S
+902	1	902	अगँ	ag~	कुटिलायां गतौ	to move tortuously, to limp	P	S
+903	1	903	कणँ	kR~	गतौ शब्दे च	to go, to sound	P	S
+904	1	904	रणँ	rR~	गतौ शब्दे च	to go, to sound	P	S
+905	1	905	चणँ	cR~	दाने गतौ च	to go, to give	P	S
+906	1	906	शणँ	SR~	दाने गतौ च	to go, to give	P	S
+907	1	907	श्रणँ	SrR~	दाने गतौ च	to go, to give	P	S
+908	1	908	श्रथँ	SrT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+909	1	909	ष्ठगेँ	zWge~	संवरणे	to wrap, to cover, to conceal	P	S
+910	1	910	श्लथँ	SlT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+911	1	911	क्नथँ	knT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+912	1	912	क्रथँ	krT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+913	1	913	क्लथँ	klT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+914	1	914	चनँ	cn~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+915	1	915	वनँ	vn~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+916	1	916	ज्वलँ	jvl~	दीप्तौ	to shine, to glow, to blaze, to flame	P	S
+917	1	917	ह्वलँ	hvl~	चलने	to walk	P	S
+918	1	918	ह्मलँ	hml~	चलने	to walk	P	S
+919	1	919	स्मृ	smf	आध्याने	to remember,to recollect,to think upon,to recite mentally,to memorize	P	A
+920	1	920	दॄ	d	भये	to be afraid	P	S
+921	1	921	नॄ	n	नये	to carry	P	S
+922	1	922	श्रा	SrA	पाके	to cook,to boil	P	A
+923	1	923	ज्ञा	jYA	मारणतोषणनिशामनेषु	to kill, to hurt, to please, to satisfy, to perceive, to understand	P	S
+924	1	924	चलँ	cl~	कम्पने	to move, to shake, to walk	P	S
+925	1	925	छदिः	CdiH	ऊर्जने	to be powerful, to be energized	P	S
+926	1	926	लडँ	lq~	विलासे जिह्वोन्मथने च	to enjoy, to play	P	S
+927	1	927	मदीँ	mdI~	हर्षग्लेपनयोः	to enjoy, to be happy, to be tired, to be distressed	P	S
+928	1	928	ध्वनँ	Dvn~	शब्दे	to sound	P	S
+929	1	929	शमोँ	Smo~	दर्शने	to look at, to inspect	P	S
+930	1	930	यमँ	ym~	अपरिवेषणे	to fast, to avoid eating	P	S
+931	1	931	स्खदिँर्	sKdi~r	विद्रावणे विदारणे च	to destroy,to cut, to break apart	A	S
+932	1	932	स्वनँ	svn~	अवतंसने	to decorate, to beautify	P	S
+933	1	933	-	-			-	-
+934	1	934	-	-			-	-
+935	1	935	-	-			-	-
+936	1	936	-	-			-	-
+937	1	937	-	-			-	-
+938	1	938	-	-			-	-
+939	1	939	-	-			-	-
+940	1	940	-	-			-	-
+941	1	941	-	-			-	-
+942	1	942	तृहँ	tfh~	वृद्धौ	to grow, to prosper	P	S
+943	1	943	तृहिँ	tfhi~	वृद्धौ	to grow, to prosper	P	S
+944	1	944	-	-			-	-
+945	1	945	रुगिँ	rugi~	वर्जने	to abandon,to desert, to leave	P	S
+946	1	946	खुडिँ	Kuqi~	गतिवैकल्ये	to halt, to stop	A	S
+947	1	947	म्लेडृँ	mleqf~	उन्मादे	to be mad, to be mentally ill	P	S
+948	1	948	मेटृँ	mewf~	उन्मादे	to be mad, to be mentally ill	P	S
+949	1	949	बिडँ	biq~	आक्रोशे	to swear,to curse,to shout, to abuse	P	S
+950	1	950	मक्षँ	mkz~	रोषे सङ्घाते च	to be angry,to collect, to gather	P	S
+951	1	951	वनुँ	vnu~	अनेकार्थत्वे	various meanings	P	S
+952	1	952	वाहृँ	vAhf~	प्रयत्ने	to endeavour, to try	A	S
+953	1	953	रमँ	rm~	क्रीडायाम्	to enjoy, to rejoice, to play	A	A
+954	1	954	डुयाचृँ	quyAcf~	याच्ञायाम्	to beg,to beg,to ask,to solicit	U	S
+955	1	955	फणँ	PR~	गतिदीप्त्योः	to go,to take away charm	P	S
+956	1	956	राजृँ	rAjf~	दीप्तौ	to shine, to glitter, to glow, to reign, to be lustrous	U	S
+957	1	957	टुभ्राजृँ	wuBrAjf~	दीप्तौ	to shine, to glitter, to glow, to reign, to be lustrous	A	S
+958	1	958	टुभ्राशृँ	wuBrASf~	दीप्तौ	to shine, to glitter, to glow, to reign, to be lustrous	A	S
+959	1	959	टुभ्लाशृँ	wuBlASf~	दीप्तौ	to shine, to glitter, to glow, to reign, to be lustrous	A	S
+960	1	960	स्यमुँ	symu~	शब्दे	to sound	P	S
+961	1	961	स्वनँ	svn~	शब्दे	to sound	P	S
+962	1	962	ध्वनँ	Dvn~	शब्दे	to sound	P	S
+963	1	963	षमँ	zm~	अवैकल्ये	to be calm, to be coolheaded	P	S
+964	1	964	ष्टमँ	zwm~	अवैकल्ये	to be calm, to be coolheaded	P	S
+965	1	965	ज्वलँ	jvl~	दीप्तौ	to blaze,to glow,to shine, to burn	P	S
+966	1	966	चलँ	cl~	कम्पने	to move, to walk, to shake	P	S
+967	1	967	जलँ	jl~	घातने	to be sharp,to be pointed	P	S
+968	1	968	टलँ	wl~	वैक्लव्ये	to be confused, to be distressed	P	S
+969	1	969	ट्वलँ	wvl~	वैकल्ये	to be confused, to be distressed	P	S
+970	1	970	ष्ठलँ	zWl~	स्थाने	to stand firm, to stand, to be stunned	P	S
+971	1	971	हलँ	hl~	विलेखने	to plow, to cultivate, to till, to furrow	P	S
+972	1	972	णलँ	Rl~	गन्धे बन्धने च	to smell,to bind	P	S
+973	1	973	पलँ	pl~	गतौ	to go	P	S
+974	1	974	बलँ	bl~	प्राणने धान्यावरोधने च	to breathe, to be powerful, to collect grains	P	S
+975	1	975	पुलँ	pul~	महत्त्वे	to be great, to pile up, to grow, to be large	P	S
+976	1	976	कुलँ	kul~	संस्त्याने बन्धुषु च	to collect, to gather, to treat equally, to treat like family	P	S
+977	1	977	शलँ	Sl~	गतौ	to go	P	S
+978	1	978	हुलँ	hul~	गतौ हिंसायां संवरणे च	to go	P	S
+979	1	979	पतॢँ	pt~	गतौ	to go	P	S
+980	1	980	क्षलँ	kzl~	सञ्चलने	to flow,to ooze,to drip	P	S
+981	1	981	क्वथेँ	kvTe~	निष्पाके	to boil,to cook, to decoct	P	S
+982	1	982	पथेँ	pTe~	गतौ	to go	P	S
+983	1	983	मथेँ	mTe~	विलोडने	to churn, to think, to meditate, to ponder	P	S
+984	1	984	टुवमँ	wuvm~	उद्गिरणे	to vomit,to drop,to emit,to give out,to be sick	P	S
+985	1	985	भ्रमुँ	Brmu~	चलने	to walk, to wander, to roam	P	S
+986	1	986	क्षरँ	kzr~	सञ्चलने	to flow,to ooze,to drip	P	S
+987	1	987	द्वृ	dvf	स्थगने	to cover,to surround, to conceal	P	A
+988	1	988	षहँ	zh~	मर्षणे	to tolerate, to bear, to forgive	A	S
+989	1	989	रमुँ	rmu~	क्रीडायाम्	to enjoy, to rejoice, to play	A	A
+990	1	990	षदॢँ	zd~	विशरणगत्यवसादनेषु	to go, to lose power, to be tired, to dry up, to destroy, to wither, to despond, to lose interest	P	A
+991	1	991	शदॢँ	Sd~	शातने	to perish,to fall,to wither,to decay, to wear off, to fall, to wane,to throw down	P	A
+992	1	992	क्रुशँ	kruS~	आह्वाने रोदने च	to call out, to shout, to cry	P	A
+993	1	993	कुचँ	kuc~	सम्पर्चनकौटिल्यप्रतिष्टम्भविलेखनेषु	to contract,to cleanse, to touch, to shrink,to be crooked,to bend, to write, to delineate	P	S
+994	1	994	बुधँ	buD~	अवगमने	to know,to understand,to be awakened with knowledge, to be restored to senses,to think, to learn	P	S
+995	1	995	रुहँ	ruh~	बीजजन्मनि प्रादुर्भावे च	to grow from seed,to manifest, to rise,to ascend, to take birth, to be born	P	A
+996	1	996	कसँ	ks~	गतौ	to go	P	S
+997	1	997	हिक्कँ	hikk~	अव्यक्ते शब्दे	to hiccup, to mutter	U	S
+998	1	998	अन्चुँ	ancu~	गतौ याचने च	to go, to beg,to ask,to solicit	U	S
+999	1	999	अचुँ	acu~	गतौ याचने च	to go, to beg,to ask,to solicit	U	S
+1000	1	1000	अचिँ	aci~	गतौ याचने च	to go, to beg,to ask,to solicit	U	S
+1001	1	1001	टुयाचृँ	wuyAcf~	याच्ञायाम्	to beg,to beg,to ask,to solicit	U	S
+1002	1	1002	रेटृँ	rewf~	परिभाषणे	to speak,to ask,to request	U	S
+1003	1	1003	चतेँ	cte~	याचने	to beg,to beg,to ask,to solicit	U	S
+1004	1	1004	चदेँ	cde~	याचने	to beg,to beg,to ask,to solicit	U	S
+1005	1	1005	प्रोथृँ	proTf~	पर्याप्तौ	to be powerful, to be capable, to be competent	U	S
+1006	1	1006	मिदृँ	midf~	मेधाहिंसनयोः	to understand, to know, to hurt, to injure, to cause trouble	U	S
+1007	1	1007	मेदृँ	medf~	मेधाहिंसनयोः सङ्गमे च	to understand, to know, to hurt, to injure, to cause trouble, to collect, to merge together	U	S
+1008	1	1008	मिथृँ	miTf~	मेधाहिंसनयोः	to understand, to know, to hurt, to injure, to cause trouble	U	S
+1009	1	1009	मेथृँ	meTf~	मेधाहिंसनयोः	to understand, to know, to hurt, to injure, to cause trouble	U	S
+1010	1	1010	मिधृँ	miDf~	मेधाहिंसनयोः	to understand, to know, to hurt, to injure, to cause trouble	U	S
+1011	1	1011	मेधृँ	meDf~	मेधाहिंसनयोः सङ्गमे च	to understand, to know, to hurt, to injure, to cause trouble, to join, to unite	U	S
+1012	1	1012	णिदृँ	Ridf~	कुत्सासन्निकर्षयोः	to ridicule, to insult, to reach, to go closer	U	S
+1013	1	1013	णेदृँ	Redf~	कुत्सासन्निकर्षयोः	to ridicule, to insult, to reach, to go closer	U	S
+1014	1	1014	शृधुँ	SfDu~	उन्दने	to kill, to hurt, to wet, to moist	U	S
+1015	1	1015	मृधुँ	mfDu~	उन्दने	to kill, to hurt, to wet, to moist	U	S
+1016	1	1016	बुधिँर्	buDi~r	बोधने	to know,to understand,to be awakened with knowledge, to be restored to senses,to think, to learn	U	S
+1017	1	1017	उँबुन्दिँर्	u~bundi~r	निशामने	to perceive,to apprehend, to comprehend, to understand with keen senses	U	S
+1018	1	1018	वेणृँ	veRf~	गतिज्ञानचिन्तानिशामनवादित्रग्रहणेषु	to go,to know,to understand, to remember, to memorize, to think, to play a musical instrument, to pick a musical instrument	U	S
+1019	1	1019	वेनृँ	venf~	गतिज्ञानचिन्तानिशामनवादित्रग्रहणेषु	to go,to know,to understand, to remember, to memorize, to think, to play a musical instrument, to pick a musical instrument	U	S
+1020	1	1020	खनुँ	Knu~	अवदारणे	to dig	U	S
+1021	1	1021	चीवृँ	cIvf~	आदानसंवरणयोः	to accept, to takem to wear, to hold	U	S
+1022	1	1022	चीपृँ	cIpf~	आदानसंवरणयोः	to accept, to takem to wear, to hold	U	S
+1023	1	1023	चायृँ	cAyf~	पूजानिशामनयोः	to worship, to know, to understand	U	S
+1024	1	1024	व्ययँ	vyy~	वित्तत्यागे गतौ च	to spend, to do an expense, to go	U	S
+1025	1	1025	दाशृँ	dASf~	दाने	to give,to offer an oblation	U	S
+1026	1	1026	भेषृँ	Bezf~	भये	to fear	U	S
+1027	1	1027	भ्रेषृँ	Brezf~	गतौ	to go	U	S
+1028	1	1028	भ्लेषृँ	Blezf~	गतौ	to go	U	S
+1029	1	1029	असँ	as~	गतिदीप्त्यादानेषु	to go, to shine, to glow, to take	U	S
+1030	1	1030	अषँ	az~	गतिदीप्त्यादानेषु	to go, to shine, to glow, to take	U	S
+1031	1	1031	यमँ	ym~	उपरमे	to stop, to resist, to hinder	P	A
+1032	1	1032	स्पशँ	spS~	बाधनस्पर्शनयोः	to obstruct,to stop, to hinder, to touch, to collect	U	S
+1033	1	1033	लषँ	lz~	कान्तौ	to wish, to desire	U	S
+1034	1	1034	चषँ	cz~	भक्षणे	to eat, to taste	U	S
+1035	1	1035	छषँ	Cz~	हिंसायाम्	to kill, to destroy, to hurt, to injure	U	S
+1036	1	1036	झषँ	Jz~	आदानसंवरणयोः	to hurt,to injure,to kill,to take,to put on, to wear	U	S
+1037	1	1037	भ्रक्षँ	Brkz~	अदने	to eat	U	S
+1038	1	1038	भ्लक्षँ	Blkz~	आदानसंवरणयोः	to eat	U	S
+1039	1	1039	भक्षँ	Bkz~	अदने	to eat	U	S
+1040	1	1040	प्लक्षँ	plkz~	अदने	to eat	U	S
+1041	1	1041	दासृँ	dAsf~	दाने	to give, to handover	U	S
+1042	1	1042	माहृँ	mAhf~	माने	to measure, to weigh	U	S
+1043	1	1043	गुहूँ	guhU~	संवरणे	to cover, to hide, to clothe	U	V
+1044	1	1044	श्रिञ्	SriY	सेवायाम्	to serve	U	S
+1045	1	1045	भृञ्	BfY	भरणे	to nourish, to protect, to fill, to maintain, to protect, to upbring	U	A
+1046	1	1046	हृञ्	hfY	हरणे	to take way, to carry, to steal, to acquire	U	A
+1047	1	1047	धृञ्	DfY	धारणे	to wear, to support,to possess, to hold	U	A
+1048	1	1048	षूर्क्ष्यँ	zUrkzy~	ईर्ष्यायाम्	to envy, to grudge	P	S
+1049	1	1049	णीञ्	RIY	प्रापणे	to obtain, to carry, to take	U	A
+1050	1	1050	धेट्	Dew	पाने	to drink	P	A
+1051	1	1051	ग्लै	glE	हर्षक्षये	to be tired, to wane, to be fatigued, to be exhausted	P	A
+1052	1	1052	म्लै	mlE	हर्षक्षये	to be tired, to wane, to be fatigued, to be exhausted	P	A
+1053	1	1053	द्यै	dyE	न्यक्करणे	to hate, to despise,to disfigure, to condemn	P	A
+1054	1	1054	द्रै	drE	स्वप्ने	to sleep	P	A
+1055	1	1055	ध्रै	DrE	तृप्तौ	to be pleased, to be satisfied	P	A
+1056	1	1056	ध्यै	DyE	चिन्तायाम्	to think,to meditate,to recollect, to concentrate  upon	P	A
+1057	1	1057	रै	rE	शब्दे	to sound	P	A
+1058	1	1058	स्त्यै	styE	शब्दसङ्घातयोः	to sound, to gather, to be crowded, to surround	P	A
+1059	1	1059	ष्ट्यै	zwyE	शब्दसङ्घातयोः	to sound, to gather, to be crowded, to surround	P	A
+1060	1	1060	खै	KE	खदने	to dig, to irritate, to cause pain, to be steady	P	A
+1061	1	1061	क्षै	kzE	क्षये	to wane,to decline,to decay,to reduce,to contract, to shrink	P	A
+1062	1	1062	जै	jE	क्षये	to wane,to decline,to decay,to reduce,to contract, to shrink	P	A
+1063	1	1063	षै	zE	क्षये	to wane,to decline,to decay,to reduce,to contract, to shrink	P	A
+1064	1	1064	कै	kE	शब्दे	to sound	P	A
+1065	1	1065	गै	gE	शब्दे	to sing	P	A
+1066	1	1066	शै	SE	पाके	to cook	P	A
+1067	1	1067	श्रै	SrE	पाके	to cook	P	A
+1068	1	1068	स्रै	srE	पाके	to cook	P	A
+1069	1	1069	पै	pE	शोषणे	to dry,to wither	P	A
+1070	1	1070	ओँवै	o~vE	शोषणे	to dry,to wither	P	A
+1071	1	1071	ष्टै	zwE	वेष्टने शोभायां च	to cover, to wrap, to decorate	P	A
+1072	1	1072	ष्णै	zRE	वेष्टने शोभायां च	to cover, to wrap, to decorate	P	A
+1073	1	1073	दैप्	dEp	शोधने	to purify,to cleanse	P	A
+1074	1	1074	पा	pA	पाने	to drink	P	A
+1075	1	1075	घ्रा	GrA	गन्धोपादाने घ्राणे च	to smell	P	A
+1076	1	1076	ध्मा	DmA	शब्दाग्निसंयोगयोः	to blow,to breathe out,to produce sound by blowing,to blow a fire,to manufacture by blowing, to play a conch	P	A
+1077	1	1077	ष्ठा	zWA	गतिनिवृत्तौ	to stay, to stand	P	A
+1078	1	1078	म्ना	mnA	अभ्यासे	to study,to repeat,to remember,to think	P	A
+1079	1	1079	दाण्	dAR	दाने	to give	P	A
+1080	1	1080	ह्वृ	hvf	कौटिल्ये	to be crooked	P	A
+1081	1	1081	स्वृ	svf	शब्दोपतापयोः	to sound, to be ill, to irritate, to trouble	P	V
+1082	1	1082	स्मृ	smf	चिन्तायाम्	to remember,to recollect,to memorize	P	A
+1083	1	1083	वृ	vf	संवरणे	to cover,to surround, to conceal	P	A
+1084	1	1084	ह्वृ	hvf	संवरणे	to cover, to hide, to enclose	P	A
+1085	1	1085	सृ	sf	गतौ	to go,to move,to approach,to slip	P	A
+1086	1	1086	ऋ	f	गतिप्रापणयोः	to go, to obtain, to reach	P	A
+1087	1	1087	गृ	gf	सेचने	to irrigate, to moisten, to wet	P	A
+1088	1	1088	घृ	Gf	सेचने	to irrigate, to moisten, to wet	P	A
+1089	1	1089	ध्वृ	Dvf	हूर्छने	to bend,to twist	P	A
+1090	1	1090	स्रु	sru	गतौ	to go,to drip, to ooze, to flow	P	A
+1091	1	1091	षु	zu	प्रसवैश्वर्ययोः	to give birth, to become pregnant, to conceive, to possess power, to possess supremacy	P	A
+1092	1	1092	श्रु	Sru	श्रवणे	to hear, to listen	P	A
+1093	1	1093	ध्रु	Dru	स्थैर्ये	to be firm, to be fixed	P	A
+1094	1	1094	दु	du	गतौ	to go	P	A
+1095	1	1095	द्रु	dru	गतौ	to go	P	A
+1096	1	1096	जि	ji	अभिभवे (न्यूनीभवने न्यूनीकरणे च)	to win, to conquer, to dislike, to refrain	P	A
+1097	1	1097	ज्रि	jri	अभिभवे (न्यूनीभवने न्यूनीकरणे च)	to conquer,to win, to have victory	P	A
+1098	1	1098	जृ	jf	गतौ	to go	P	A
+1099	1	1099	ष्मिङ्	zmiN	ईषद्धसने	to smile a bit	A	A
+1100	1	1100	गुङ्	guN	अव्यक्ते शब्दे	to speak inarticulately	A	A
+1101	1	1101	गाङ्	gAN	गतौ	to go	A	A
+1102	1	1102	उङ्	uN	शब्दे	to sound	A	A
+1103	1	1103	कुङ्	kuN	शब्दे	to hum, to speak inarticulately, to sound	A	A
+1104	1	1104	खुङ्	KuN	शब्दे	to sound	A	A
+1105	1	1105	गुङ्	guN	शब्दे	to speak, to make noise	A	A
+1106	1	1106	घुङ्	GuN	शब्दे	to sound	A	A
+1107	1	1107	ङुङ्	NuN	शब्दे	to sound	A	A
+1108	1	1108	च्युङ्	cyuN	गतौ	to go	A	A
+1109	1	1109	ज्युङ्	jyuN	गतौ	to go	A	A
+1110	1	1110	छ्युङ्	CyuN	गतौ	to go	A	A
+1111	1	1111	प्रुङ्	pruN	गतौ	to go	A	A
+1112	1	1112	प्लुङ्	pluN	गतौ	to go	A	A
+1113	1	1113	क्लुङ्	kluN	गतौ	to go	A	A
+1114	1	1114	रुङ्	ruN	गतिरेषणयोः	to go, to move, to kill, to be angry, to cause pain	A	A
+1115	1	1115	धृङ्	DfN	अवबन्धने विध्वंसने च	to fall down, to get destroyed	A	A
+1116	1	1116	मेङ्	meN	प्रणिदाने	to exchange, to handover	A	A
+1117	1	1117	देङ्	deN	रक्षणे	to protect	A	A
+1118	1	1118	श्यैङ्	SyEN	गतौ	to go	A	A
+1119	1	1119	प्यैङ्	pyEN	वृद्धौ	to grow, to increase, to swell;	A	A
+1120	1	1120	त्रैङ्	trEN	पालने	to protect, to secure	A	A
+1121	1	1121	पूङ्	pUN	पवने	to purify, to cleanse	A	S
+1122	1	1122	मूङ्	mUN	बन्धने	to tie, to get stuck	A	S
+1123	1	1123	डीङ्	qIN	विहायसा गतौ	to fly	A	S
+1124	1	1124	तॄ	t	प्लवनतरणयोः	to cross, to float, to swim	P	S
+1125	1	1125	गुपँ	gup~	गोपने निन्दायां च	to protect, to conceal, to hide, to blame, to criticize	A	S
+1126	1	1126	तिजँ	tij~	निशाने क्षमायाम् च	to sharpen, to whet, to endure, to tolerate, to bear, to forgive	A	S
+1127	1	1127	मानँ	mAn~	पूजायाम् जिज्ञासायां च	to worship, to investigate,to examine,to wish to know	A	S
+1128	1	1128	बधँ	bD~	बन्धने चित्तविकारे च	to bind,to restrain,to loathe,to hate, to criticize	A	S
+1129	1	1129	रभँ	rB~	राभस्ये	to be happy, to be glad	A	A
+1130	1	1130	डुलभँष्	qulB~z	प्राप्तौ	to get,to obtain,to take,to have,to find	A	A
+1131	1	1131	ष्वन्जँ	zvnj~	परिष्वङ्गे	to hug,to embrace	A	A
+1132	1	1132	हदँ	hd~	पुरीषोत्सर्गे	to excrete	A	A
+1133	1	1133	ञिष्विदाँ	YizvidA~	अव्यक्ते शब्दे	to be greedy,to perspire,to be disturbed,to quit	P	S
+1134	1	1134	स्कन्दिँर्	skndi~r	गतिशोषणयोः	to go, to dry	P	A
+1135	1	1135	यभँ	yB~	मैथुने	to copulate	P	A
+1136	1	1136	णमँ	Rm~	प्रह्वत्वे शब्दे च	to salute,to greet, to respect, to bend, to sound	P	A
+1137	1	1137	गमॢँ	gm~	गतौ	to go	P	A
+1138	1	1138	सृपॢँ	sfp~	गतौ	to go	P	A
+1139	1	1139	यमँ	ym~	उपरमे	to stop, to resist, to hinder	P	A
+1140	1	1140	तपँ	tp~	सन्तापे	to be angry, to burn, to become hot, to envy, to glow, to shine, to perform penance,to heat, to suffer pain,to hurt	P	A
+1141	1	1141	त्यजँ	tyj~	हानौ	to abandon,to leave,to quit,to let go,to renounce	P	A
+1142	1	1142	षन्जँ	znj~	सङ्गे	to hug, to embrace, to stay in close contact, to cling, to stick to	P	A
+1143	1	1143	दृशिँर्	dfSi~r	प्रेक्षणे	to see,to look	P	A
+1144	1	1144	दन्शँ	dnS~	दशने	to bite,to sting	P	A
+1145	1	1145	कृषँ	kfz~	विलेखने	to farm, to plow, to cultivate	P	A
+1146	1	1146	दहँ	dh~	भस्मीकरणे	to reduce to ashes,to burn, to destroy, to cause pain	P	A
+1147	1	1147	मिहँ	mih~	सेचने	to irrigate, to wet, to sprinkle, to urinate	P	A
+1148	1	1148	कितँ	kit~	निवासे रोगापनयने व्याधिप्रतीकारे निग्रहे अपनयने नाशने संशये च	to stay, to cure, to carry out medical examination, to fight disease	P	S
+1149	1	1149	दानँ	dAn~	खण्डने आर्जवे च	to cut off,to break	U	S
+1150	1	1150	शानँ	SAn~	तेजने निशाने च	to sharpen, to make pointed	U	S
+1151	1	1151	डुपचँष्	qupc~z	पाके	to cook	U	A
+1152	1	1152	षचँ	zc~	समवाये	to understand clearly, to be related, to be connected, to carry germs	U	S
+1153	1	1153	भजँ	Bj~	सेवायाम्	to worship,to honour,to pray, to serve	U	A
+1154	1	1154	रन्जँ	rnj~	रागे	to paint, to color	U	A
+1155	1	1155	शपँ	Sp~	आक्रोशे	to swear, to take oath, to pledge, to curse, to abuse	U	A
+1156	1	1156	त्विषँ	tviz~	दीप्तौ	to glow, to shine	U	A
+1157	1	1157	यजँ	yj~	देवपूजासङ्गतिकरणदानेषु	to sacrifice, to offer to a deity, to worship, to get associated with, to give	U	A
+1158	1	1158	डुवपँ	quvp~	बीजसन्ताने गर्भाधाने छेदने बीजतन्तुसन्ताने मुण्डबीजोप्त्योः वपने घर्षणे तन्तुनिर्माणे च	to sow,to plant,to chop	U	A
+1159	1	1159	वहँ	vh~	प्रापणे	to flow, to propel, to carry, to  haul, to drag	U	A
+1160	1	1160	वसँ	vs~	निवासे	to dwell,to live, to stay	P	A
+1161	1	1161	वेञ्	veY	तन्तुसन्ताने	to weave,to sew,to compose, to knit	U	A
+1162	1	1162	व्येञ्	vyeY	संवरणे	to cover,to hide	U	A
+1163	1	1163	ह्वेञ्	hveY	स्पर्धायां शब्दे च	to vie with,to challenge,to compete, to call, to invoke	U	A
+1164	1	1164	वदँ	vd~	व्यक्तायां वाचि	to talk, to speak, to tell, to describe, to inform, to explain to utter, to communicate	P	S
+1165	1	1165	टुओँश्वि	wuo~Svi	गतिवृद्ध्योः	to go,to increase,to grow,to swell, to be whitened	P	S
+1166	1	1166	ऋति	fti	जुगुप्सायां कृपायां च	to pity, to hate, to criticize, to abuse, to favour	A	S
+1167	2	1	अदँ	ad~	भक्षणे	to eat, to binge	P	A
+1168	2	2	हनँ	hn~	हिंसागत्योः	to kill, to destroy, to go	P	A
+1169	2	3	द्विषँ	dviz~	अप्रीतौ	to hate, to dislike, to grudge	U	A
+1170	2	4	दुहँ	duh~	प्रपूरणे	to milk, to extract	U	A
+1171	2	5	दिहँ	dih~	उपचये	to grow, to collect, to dishonor	U	A
+1172	2	6	लिहँ	lih~	आस्वादने	to lick, to taste, to pasture	U	A
+1173	2	7	चक्षिङ्	ckziN	व्यक्तायां वाचि	to articulate, to speak clearly	A	S
+1174	2	8	ईरँ	Ir~	गतौ कम्पने च	to go,to shake,to tremble	A	S
+1175	2	9	ईडँ	Iq~	स्तुतौ	to pray, to worship, to adore, to laud	A	S
+1176	2	10	ईशँ	IS~	ऐश्वर्ये	to rule,to command,to possess power	A	S
+1177	2	11	आसँ	As~	उपवेशने	to sit	A	S
+1178	2	12	शासुँ	SAsu~	इच्छायाम्	to desire, to bless, to praise	A	S
+1179	2	13	वसँ	vs~	आच्छादने	to cover, to wear, to pull, to dress	A	S
+1180	2	14	कसिँ	ksi~	गतिशासनयोः	to go, to rule, to punish	A	S
+1181	2	15	कसँ	ks~	गतिशासनयोः	to go, to rule, to punish	A	S
+1182	2	16	कशँ	kS~	गतिशासनयोः	to go, to rule, to punish	A	S
+1183	2	17	णिसिँ	Risi~	चुम्बने	to kiss	A	S
+1184	2	18	णिजिँ	Riji~	शुद्धौ	to purify, to cleanse	A	S
+1185	2	19	शिजिँ	Siji~	अव्यक्ते शब्दे	to murmur	A	S
+1186	2	20	पिजिँ	piji~	वर्णे सम्पर्चने अवयवे अव्यक्ते शब्दे च	to color, to paint, to make shine, to murmur	A	S
+1187	2	21	पृजिँ	pfji~	वर्णे	to color, to paint, to make shine	A	S
+1188	2	22	वृजीँ	vfjI~	वर्जने	to avoid,to abandon, to leave	A	S
+1189	2	23	वृजिँ	vfji~	वर्जने	to avoid,to abandon, to leave	A	S
+1190	2	24	पृचीँ	pfcI~	सम्पर्चने	to unite, to communicate	A	S
+1191	2	25	षूङ्	zUN	प्राणिगर्भविमोचने	to procreate, to give birth	A	V
+1192	2	26	शीङ्	SIN	स्वप्ने	to sleep	A	S
+1193	2	27	यु	yu	मिश्रणेऽमिश्रणे च	to mix, to join, to group	P	S
+1194	2	28	रु	ru	शब्दे	to sound, to howl, to hum, to yelp, to roar, to cry out loud	P	S
+1195	2	29	तु	tu	गतिवृद्धिहिंसासु	to go,to grow,to kill, to destroy	P	A
+1196	2	30	णु	Ru	स्तुतौ	to praise, to worship	P	S
+1197	2	31	टुक्षु	wukzu	शब्दे	to sneeze, to cough	P	S
+1198	2	32	क्ष्णु	kzRu	तेजने	to whet, to sharpen	P	S
+1199	2	33	ष्णु	zRu	प्रस्रवणे	to ooze, to drip	P	S
+1200	2	34	ऊर्णुञ्	UrRuY	आच्छादने	to cover	U	S
+1201	2	35	द्यु	dyu	अभिगमने	to assail,to attack, to advance towards	P	A
+1202	2	36	षु	zu	प्रसवैश्वर्ययोः	to give birth, to procreate, to become pregnant, to possess power, to possess supremacy	P	A
+1203	2	37	कु	ku	शब्दे	to hum,to moan,to sound	P	A
+1204	2	38	ष्टुञ्	zwuY	स्तुतौ	to pray, to worship, to glorify, to praise	U	A
+1205	2	39	ब्रूञ्	brUY	व्यक्तायां वाचि	to speak, to tell, to explain	U	S
+1206	2	40	इण्	iR	गतौ	to go	P	A
+1207	2	41	इङ्	iN	अध्ययने	to study, to learn	A	A
+1208	2	42	इक्	ik	स्मरणे	to memorize, to think	P	A
+1209	2	43	वी	vI	गतिव्याप्तिप्रजनकान्त्यसनखादनेषु	to go, to pervade, to surround, to attack, to be pregnant, to conceive, to glow, to shine, to throw, to eat	P	A
+1210	2	44	या	yA	प्रापणे	to go, to pass	P	A
+1211	2	45	वा	vA	गतिगन्धनयोः	to go,to blow, to move rapidly	P	A
+1212	2	46	भा	BA	दीप्तौ	to glow, to shine, to look attractive, to look beautiful	P	A
+1213	2	47	ष्णा	zRA	शौचे	to bathe, to cleanse, to purify	P	A
+1214	2	48	श्रा	SrA	पाके	to cook, to boil, to exude, to sweat	P	A
+1215	2	49	द्रा	drA	कुत्सायां गतौ	to be spoiled, to act crucked, to fly, to run away, to sleep	P	A
+1216	2	50	प्सा	psA	भक्षणे	to devour,to eat	P	A
+1217	2	51	पा	pA	रक्षणे	to protect, to preserve	P	A
+1218	2	52	रा	rA	दाने	to give, to grant	P	A
+1219	2	53	ला	lA	आदाने	to accept, to obtain	P	A
+1220	2	54	दाप्	dAp	लवने	to cut	P	A
+1221	2	55	ख्या	KyA	प्रकथने	to explain, to make famous, to elocute	P	A
+1222	2	56	प्रा	prA	पूरणे	to fill, to be satisfied, to be content	P	A
+1223	2	57	मा	mA	माने	to measure,to weigh,to limit,to compare in size	P	A
+1224	2	58	वचँ	vc~	परिभाषणे	to speak,to tell, to talk	P	A
+1225	2	59	विदँ	vid~	ज्ञाने	to understand, to learn, to know, to realize, to experience, to be sad, to meditate, to think	P	S
+1226	2	60	असँ	as~	भुवि	to be, to exist	P	S
+1227	2	61	मृजूँ	mfjU~	शुद्धौ	to cleanse, to purify	P	V
+1228	2	62	रुदिँर्	rudi~r	अश्रुविमोचने	to shed tears,to cry,to weep,to lament	P	S
+1229	2	63	ञिष्वपँ	Yizvp~	शये	to sleep	P	A
+1230	2	64	श्वसँ	Svs~	प्राणने	to breathe,to live, to inhale	P	S
+1231	2	65	अनँ	an~	प्राणने	to breathe,to live, to inhale, to be able	P	S
+1232	2	66	जक्षँ	jkz~	भक्षहसनयोः	to eat,to consume,to laugh	P	S
+1233	2	67	जागृ	jAgf	निद्राक्षये	to be awake, to abandon sleep, to be watchful	P	S
+1234	2	68	दरिद्रा	dridrA	दुर्गतौ	to be poor,to be distressed, to be sad	P	S
+1235	2	69	चकासृँ	ckAsf~	दीप्तौ	to shine,to be bright, to be prosperous, to glow	P	S
+1236	2	70	शासुँ	SAsu~	अनुशिष्टौ	to order, to tell, to explain, to educate, to inform, to rule, to command to punish	P	S
+1237	2	71	दीधीङ्	dIDIN	दीप्तिदेवनयोः	to glow, to shine, to play, to enjoy	A	S
+1238	2	72	वेवीङ्	vevIN	गतिव्याप्तिप्रजनकान्त्यसनस्वादनेषु	to go, to walk to pervade, to become pregnant, to conceive, to wish, to desire, to send, to eat, to taste	A	S
+1239	2	73	षसँ	zs~	स्वप्ने	to sleep	P	S
+1240	2	74	षस्तिँ	zsti~	स्वप्ने	to sleep	P	S
+1241	2	75	वशँ	vS~	कान्तौ	to wish,to long for, to desire	P	S
+1242	2	76	-	-			-	-
+1243	2	77	ह्नुङ्	hnuN	अपनयने	to hide, to conceal,to take away,to deny	A	A
+1244	3	1	हु	hu	दानादानयोः आदाने प्रीणने च	to sacrifice,to eat, to consume	P	A
+1245	3	2	ञिभी	YiBI	भये	to fear,to be afraid of,to be anxious about	P	A
+1246	3	3	ह्री	hrI	लज्जायाम्	to shy, to be ashamed	P	A
+1247	3	4	पॄ	p	पालनपूरणयोः	to take care, to nurture, to nourish, o provide, to fill	P	S
+1248	3	5	पृ	pf	पालनपूरणयोः	to take care, to nurture, to nourish, o provide, to fill	P	S
+1249	3	6	डुभृञ्	quBfY	धारणपोषणयोः	to wear, to bear,to support,to nourish,to protect	U	A
+1250	3	7	माङ्	mAN	माने शब्दे च	to measure,to weigh,to limit,to compare in size,to shine,to appear,to sound	A	A
+1251	3	8	ओँहाङ्	o~hAN	गतौ	to go	A	A
+1252	3	9	ओँहाक्	o~hAk	त्यागे	to abandon,to leave,to desert,to omit,to neglect	P	A
+1253	3	10	डुदाञ्	qudAY	दाने	to give, to provide, to donate, to handover	U	A
+1254	3	11	डुधाञ्	quDAY	धारणपोषणयोः	to wear, to obey, to wear, to bear,to support,to nourish,to protect	U	A
+1255	3	12	णिजिँर्	Riji~r	शौचपोषणयोः	to wash,to purify,to cleanse,to nourish, to support	U	A
+1256	3	13	विजिँर्	viji~r	पृथग्भावे	to split, to separate,to divide,to distinguish,to discern	U	A
+1257	3	14	विषॢँ	viz~	व्याप्तौ	to pervade,to spread	U	A
+1258	3	15	घृ	Gf	क्षरणदीप्त्योः	to sprinkle,to ooze out, to drip, to shine,to glow	P	A
+1259	3	16	हृ	hf	प्रसह्यकरणे	to take forcibly, to rape	P	A
+1260	3	17	ऋ	f	गतौ	to go	P	A
+1261	3	18	सृ	sf	गतौ	to go	P	A
+1262	3	19	भसँ	Bs~	भर्त्सनदीप्त्योः	to frighten, to censure,to blame,to shine, to insult	P	S
+1263	3	20	कि	ki	ज्ञाने	to know, to understand	P	A
+1264	3	21	कितँ	kit~	ज्ञाने	to know, to understand	P	A
+1265	3	22	तुरँ	tur~	त्वरणे	to make haste,to be quick	P	S
+1266	3	23	धिषँ	Diz~	शब्दे	to sound	P	S
+1267	3	24	धनँ	Dn~	धान्ये	to bear fruit,to produce crops	P	S
+1268	3	25	जनँ	jn~	जनने	to create, to procreate, to make	P	S
+1269	3	26	गा	gA	स्तुतौ	to praise,to acclaim	P	A
+1270	4	1	दिवुँ	divu~	क्रीडाविजिगीषाव्यवहारद्युतिस्तुतिमोदमदस्वप्नकान्तिगतिषु	to play, to gamble, to dice, to desire to win, to transact, to glow, to shine, to praise, to please, to boast, to sleep, to wish, to go	P	S
+1271	4	2	षिवुँ	zivu~	तन्तुसन्ताने	to weave, to sew	P	S
+1272	4	3	स्रिवुँ	srivu~	गतिशोषणयोः	to go, to dry up	P	S
+1273	4	4	ष्ठिवुँ	zWivu~	निरसने	to spit, to rinse the mouth	P	S
+1274	4	5	ष्णुसुँ	zRusu~	अदने आदाने अदर्शने च	to eat, to swallow, to consume, to take, to disappear, to be invisible	P	S
+1275	4	6	ष्णसुँ	zRsu~	अदने निरसने च	to spit, to rinse the mouth	P	S
+1276	4	7	क्नसुँ	knsu~	ह्वरणदीप्त्योः	to be crooked,to shine, to glow	P	S
+1277	4	8	व्युषँ	vyuz~	दाहे	to burn, to set on fire, to fry, to split	P	S
+1278	4	9	प्लुषँ	pluz~	दाहे	to burn, to set on fire, to fry, to split	P	S
+1279	4	10	नृतीँ	nftI~	गात्रविक्षेपे	to dance,to gesticulate, to enact	P	S
+1280	4	11	त्रसीँ	trsI~	उद्वेगे	to fear,to tremble	P	S
+1281	4	12	कुथँ	kuT~	पूतीभावे	to have rotten smell, to have bad smell	P	S
+1282	4	13	पुथँ	puT~	हिंसायाम्	to kill, to destroy, to hurt	P	S
+1283	4	14	गुधँ	guD~	परिवेष्टने	to surround, to cover	P	S
+1284	4	15	क्षिपँ	kzip~	प्रेरणे	to throw	P	A
+1285	4	16	पुष्पँ	puzp~	विकसने	to blossom, to flourish, to flower	P	S
+1286	4	17	तिमँ	tim~	आर्द्रीभावे	to be wet,to be moist	P	S
+1287	4	18	तीमँ	tIm~	आर्द्रीभावे	to be wet,to be moist	P	S
+1288	4	19	ष्टिमँ	zwim~	आर्द्रीभावे	to be wet,to be moist	P	S
+1289	4	20	ष्टीमँ	zwIm~	आर्द्रीभावे	to be wet,to be moist	P	S
+1290	4	21	व्रीडँ	vrIq~	चोदने लज्जायां च	to be shy, to inspire	P	S
+1291	4	22	इषँ	iz~	गतौ	to go	P	S
+1292	4	23	षहँ	zh~	चक्यर्थे	to be satisfied, to be patient, to tolerate, to resist	P	S
+1293	4	24	षुहँ	zuh~	चक्यर्थे	to be satisfied, to be patient, to tolerate, to resist	P	S
+1294	4	25	जॄष्	jz	वयोहानौ	to grow old	P	S
+1295	4	26	झॄष्	Jz	वयोहानौ	to grow old	P	S
+1296	4	27	षूङ्	zUN	प्राणिप्रसवे	to procreate, to conceive, to give birth	A	V
+1297	4	28	दूङ्	dUN	परितापे	to feel sad	A	S
+1298	4	29	दीङ्	dIN	क्षये	to perish,to decay, to deteriorate	A	A
+1299	4	30	डीङ्	qIN	विहायसा गतौ	to pass through air, to fly	A	S
+1300	4	31	धीङ्	DIN	आधारे आदाने अनादरे च	to support,to hold,to take, to despise, to become hidden, to disappear	A	A
+1301	4	32	मीङ्	mIN	हिंसायाम्	to kill, to die, to leave body	A	A
+1302	4	33	रीङ्	rIN	स्रवणे	to ooze,to flow	A	A
+1303	4	34	लीङ्	lIN	श्लेषणे	to adhere,to be absorbed,to dissolve, to unite	A	A
+1304	4	35	व्रीङ्	vrIN	वृणोत्यर्थे	to choose,to select,to find, to glean	A	A
+1305	4	36	पीङ्	pIN	पाने	to drink	A	A
+1306	4	37	माङ्	mAN	माने	to measure,to weigh,to limit,to compare in size	A	A
+1307	4	38	ईङ्	IN	गतौ	to go	A	A
+1308	4	39	प्रीङ्	prIN	प्रीतौ	to please,to love, to show affection	A	A
+1309	4	40	शो	So	तनूकरणे	to whet,to sharpen	P	A
+1310	4	41	छो	Co	छेदने	to cut,to mow	P	A
+1311	4	42	षो	zo	अन्तकर्मणि	to kill, to destroy, to terminate, to  finish, to end	P	A
+1312	4	43	दो	do	अवखण्डने	to cut,to mow	P	A
+1313	4	44	जनीँ	jnI~	प्रादुर्भावे	to be born,to become, to come to existence	A	S
+1314	4	45	दीपीँ	dIpI~	दीप्तौ	to shine,to burn,to be illustrious, to glow	A	S
+1315	4	46	पूरीँ	pUrI~	आप्यायने	to fill,to complete, to fullfill	A	S
+1316	4	47	तूरीँ	tUrI~	गतित्वरणहिंसनयोः	to hurry, to destroy, to irritate	A	S
+1317	4	48	धूरीँ	DUrI~	हिंसागत्योः	to kill, to destroy, to go	A	S
+1318	4	49	गूरीँ	gUrI~	हिंसागत्योः	to kill, to destroy, to go	A	S
+1319	4	50	घूरीँ	GUrI~	हिंसावयोहान्योः	to kill,to torture, to become old	A	S
+1320	4	51	जूरीँ	jUrI~	हिंसावयोहान्योः	to kill,to torture, to become old	A	S
+1321	4	52	शूरीँ	SUrI~	हिंसास्तम्भनयोः	to kill,to torture, to become old	A	S
+1322	4	53	चूरीँ	cUrI~	दाहे	to burn to ashes	A	S
+1323	4	54	तपँ	tp~	ऐश्वर्ये	to be powerful	A	A
+1324	4	55	वृतुँ	vftu~	वरणे	to choose, to like, to serve, to do employment	A	S
+1325	4	56	वावृतुँ	vAvftu~	वरणे	to choose, to like, to serve, to do employment	A	S
+1326	4	57	क्लिशँ	kliS~	उपतापे	to be ill, to be sad, to suffer	A	S
+1327	4	58	काशृँ	kASf~	दीप्तौ	to glow, to shine	A	S
+1328	4	59	वाशृँ	vASf~	शब्दे	to howl,to growl,to roar	A	S
+1329	4	60	मृषँ	mfz~	तितिक्षायाम्	to tolerate,to bear,to endure,to suffer,to forgive	U	S
+1330	4	61	ईँशुचिँर्	I~Suci~r	पूतीभावे	to be wet,to be clean,to be purified	U	S
+1331	4	62	णहँ	Rh~	बन्धने	to tie	U	A
+1332	4	63	रन्जँ	rnj~	रागे	to color, to be involved in, to be attracted to	U	A
+1333	4	64	शपँ	Sp~	आक्रोशे	to swear, to take oath, to curse	U	A
+1334	4	65	पदँ	pd~	गतौ	to go,to attain	A	A
+1335	4	66	खिदँ	Kid~	दैन्ये	to be sad, to be displeased, to be distressed	A	A
+1336	4	67	विदँ	vid~	सत्तायाम्	to exist	A	A
+1337	4	68	बुधँ	buD~	अवगमने	to know, to understand	A	A
+1338	4	69	युधँ	yuD~	सम्प्रहारे	to fight	A	A
+1339	4	70	रुधँ	ruD~	कामे	to pitty, to be compassionate, to agree, to approve, to mourn, to grieve, to desire, to wish	A	A
+1340	4	71	अणँ	aR~	प्राणने	to live, to breath	A	S
+1341	4	72	अनँ	an~	प्राणने	to breath,to breathe	A	S
+1342	4	73	मनँ	mn~	ज्ञाने	to believe, to know, to understand, to consider, to think	A	A
+1343	4	74	युजँ	yuj~	समाधौ	to concentrate, to focus, to abstain from senses, to meditate	A	A
+1344	4	75	सृजँ	sfj~	विसर्गे	to discharge, to let loose, to let off	A	A
+1345	4	76	लिशँ	liS~	अल्पीभावे	to decrease,to reduce	A	A
+1346	4	77	राधँ	rAD~	वृद्धिसिद्धिद्रोहदैवपर्यालोचनादिषु च	to grow	P	A
+1347	4	78	व्यधँ	vyD~	ताडने	to strike,to hurt,to stab,to pierce, to hit, to cause pain, to pinch	P	A
+1348	4	79	पुषँ	puz~	पुष्टौ	to nurture, to nourish, to maintain,to promote,to bring up,to support	P	A
+1349	4	80	शुषँ	Suz~	शोषणे	to become dry	P	A
+1350	4	81	तुषँ	tuz~	प्रीतौ	to be pleased, to be delighted, to be happy	P	A
+1351	4	82	दुषँ	duz~	वैकृत्ये	to sin, to soil, to make impure, to cause pain, to hurt	P	A
+1352	4	83	श्लिषँ	Sliz~	आलिङ्गने	to hug,to embrace	P	A
+1353	4	84	शकँ	Sk~	मर्षणे	to be able,to be possible	U	S
+1354	4	85	ष्विदाँ	zvidA~	गात्रप्रक्षरणे	to sweat, to perspire	P	A
+1355	4	86	क्रुधँ	kruD~	क्रोधे	to be angry	P	A
+1356	4	87	क्षुधँ	kzuD~	बुभुक्षायाम्	to be hungry	P	A
+1357	4	88	शुधँ	SuD~	शौचे	to become pure	P	A
+1358	4	89	षिधुँ	ziDu~	संराद्धौ	to be thoroughly prepared,to be accomplished,to be achieved, to be ready	P	A
+1359	4	90	रधँ	rD~	हिंसासंराद्ध्योः	to kill,to injure,to hurt, to be ripen, to be ready	P	V
+1360	4	91	णशँ	RS~	अदर्शने	to disappear,to perish,to get destroyed, to be invisible	P	V
+1361	4	92	तृपँ	tfp~	प्रीणने	to satisfy, to be satisfied, to please, to be pleased	P	V
+1362	4	93	दृपँ	dfp~	हर्षमोहनयोः	to be glad,to be proud	P	V
+1363	4	94	द्रुहँ	druh~	जिघांसायाम्	to hate, to try to hurt	P	V
+1364	4	95	मुहँ	muh~	वैचित्त्ये	to lose senses,to faint, to be foolish, to err	P	V
+1365	4	96	ष्णुहँ	zRuh~	उद्गिरणे	to vomit	P	V
+1366	4	97	ष्णिहँ	zRih~	प्रीतौ	to feel affection for,to love,to be kind to	P	V
+1367	4	98	शमुँ	Smu~	उपशमे	to be calm, to be pacified, to be quiet	P	S
+1368	4	99	तमुँ	tmu~	काङ्क्षायाम्	to desire, to wish, to be sad	P	S
+1369	4	100	दमुँ	dmu~	उपशमे	to be calm, to be pacified, to be quiet	P	S
+1370	4	101	श्रमुँ	Srmu~	तपसि खेदे च	to do penance, to be fatigued, to be tired	P	S
+1371	4	102	भ्रमुँ	Brmu~	अनवस्थाने	to be unsteady,to wander to roam	P	S
+1372	4	103	क्षमूँ	kzmU~	सहने	to endure, to suffer, to tolerate, to forgive	P	V
+1373	4	104	क्लमुँ	klmu~	ग्लानौ	to be fatigued, to be tired	P	S
+1374	4	105	मदीँ	mdI~	हर्षे ग्लेपने च	to be happy, to be tired, to be intoxicated	P	S
+1375	4	106	असुँ	asu~	क्षेपणे	to throw, to be disappointed	P	S
+1376	4	107	यसुँ	ysu~	प्रयत्ने	to endeavour,to strive, to try	P	S
+1377	4	108	जसुँ	jsu~	मोक्षणे	to leave, to set free	P	S
+1378	4	109	तसुँ	tsu~	उपक्षये	to throw, to bounce, to fly away	P	S
+1379	4	110	दसुँ	dsu~	उपक्षये	to throw, to bounce, to fly away	P	S
+1380	4	111	वसुँ	vsu~	स्तम्भे	to be firm to be fixed, to be straight	P	S
+1381	4	112	बसुँ	bsu~	स्तम्भे	to be firm to be fixed, to be straight	P	S
+1382	4	113	युसँ	yus~	विभागे	to split, to divide, to separate, to partition, to burn, to fry	P	S
+1383	4	114	व्युषँ	vyuz~	विभागे	to split, to divide, to separate, to partition, to burn, to fry	P	S
+1384	4	115	व्युसँ	vyus~	विभागे	to split, to divide, to separate, to partition, to burn, to fry	P	S
+1385	4	116	ब्युसँ	byus~	विभागे	to split, to divide, to separate, to partition, to burn, to fry	P	S
+1386	4	117	बुसँ	bus~	विभागे	to split, to divide,to separate	P	S
+1387	4	118	वुसँ	vus~	विभागे	to split, to divide, to separate, to partition	P	S
+1388	4	119	प्युषँ	pyuz~	विभागे	to split, to divide, to separate, to partition	P	S
+1389	4	120	प्युसँ	pyus~	विभागे	to split, to divide, to separate, to partition	P	S
+1390	4	121	पुषँ	puz~	विभागे	to partition, to divide	P	A
+1391	4	122	प्लुषँ	pluz~	दाहे	to burn	P	S
+1392	4	123	विसँ	vis~	प्रेरणे	to inspire	P	S
+1393	4	124	बिसँ	bis~	प्रेरणे	to inspire	P	S
+1394	4	125	कुसँ	kus~	संश्लेषणे	to embrace,to surround, to get together	P	S
+1395	4	126	कुशँ	kuS~	संश्लेषणे	to embrace,to surround, to get together	P	S
+1396	4	127	ञिष्विदाँ	YizvidA~	गात्रप्रक्षरणे	to sweat, to perspire	P	A
+1397	4	128	क्षमूँष्	kzmU~z	सहने	to endure, to suffer, to tolerate, to forgive	P	V
+1398	4	129	बुसँ	bus~	उत्सर्गे	to discharge,to emit	P	S
+1399	4	130	मुसँ	mus~	खण्डने	to piece, to cut, to petition	P	S
+1400	4	131	मसीँ	msI~	परिणामे	to transform, to shape	P	S
+1401	4	132	समीँ	smI~	परिणामे	to transform, to shape	P	S
+1402	4	133	लुटँ	luw~	विलोडने	to churn,to agitate,to shake, to move	P	S
+1403	4	134	लुठँ	luW~	विलोडने	to churn,to agitate,to shake, to move	P	S
+1404	4	135	उचँ	uc~	समवाये	to be gather, to be collected	P	S
+1405	4	136	भृशुँ	BfSu~	अधःपतने	to churn,to agitate,to shake, to move	P	S
+1406	4	137	स्तिमँ	stim~	आर्द्रीभावे	to be wet,to be moist	P	S
+1407	4	138	भ्रन्शुँ	BrnSu~	अधःपतने	to churn,to agitate,to shake, to move	P	S
+1408	4	139	वृशँ	vfS~	आवरणे	to cover	P	S
+1409	4	140	कृशँ	kfS~	तनूकरणे	to be thin	P	S
+1410	4	141	ञितृषाँ	YitfzA~	पिपासायाम्	to be thirsty, to be desirous	P	S
+1411	4	142	हृषँ	hfz~	तुष्टौ	to be delighted , to rejoice , to be happy, to fill with pleasure	P	S
+1412	4	143	रुषँ	ruz~	हिंसायाम्	to be angry	P	S
+1413	4	144	रिषँ	riz~	हिंसायाम्	to be angry	P	S
+1414	4	145	डिपँ	qip~	क्षेपे	to throw, to make fly	P	S
+1415	4	146	कुपँ	kup~	क्रोधे	to be angry	P	S
+1416	4	147	गुपँ	gup~	व्याकुलत्वे	to be confused, to be disturbed,to be distressed	P	S
+1417	4	148	युपँ	yup~	विमोहने	to be confused, to be afraid	P	S
+1418	4	149	रुपँ	rup~	विमोहने	to be confused, to be afraid	P	S
+1419	4	150	लुपँ	lup~	विमोहने	to be confused, to be afraid	P	S
+1420	4	151	ष्टुपँ	zwup~	समुच्छ्राये	to grow, to rise, to escalate, to accumulate	P	S
+1421	4	152	ष्टूपँ	zwUp~	समुच्छ्राये	to grow, to rise, to escalate, to accumulate	P	S
+1422	4	153	लुभँ	luB~	गार्द्ध्ये	to long for, to wish, to be greedy, to desire	P	S
+1423	4	154	क्षुभँ	kzuB~	सञ्चलने	to agitate, to be agitated,to shake,to be disturbed,to tremble	P	S
+1424	4	155	णभँ	RB~	हिंसायाम्	to kill, to destroy	P	S
+1425	4	156	तुभँ	tuB~	हिंसायाम्	to kill, to destroy	P	S
+1426	4	157	क्लिदूँ	klidU~	आर्द्रीभावे	to be wet, to be moist	P	V
+1427	4	158	ञिमिदाँ	YimidA~	स्नेहने	to be greasy,to be soft,to melt	P	S
+1428	4	159	ञिक्ष्विदाँ	YikzvidA~	स्नेहनमोचनयोः	to massage, to set free	P	S
+1429	4	160	ऋधुँ	fDu~	वृद्धौ	to increase,to prosper,to grow	P	S
+1430	4	161	गृधुँ	gfDu~	अभिकाङ्क्षायाम्	to desire, to long	P	S
+1431	4	162	-	-			-	-
+1432	4	163	-	-			-	-
+1433	5	1	षुञ्	zuY	अभिषवे	to bathe, to extract, to distill, to juice, to agitate, to churn	U	A
+1434	5	2	षिञ्	ziY	बन्धने	to tie,to bind, to quill, to interlock	U	A
+1435	5	3	शिञ्	SiY	निशाने	to sharpen, to whet	U	A
+1436	5	4	डुमिञ्	qumiY	प्रक्षेपणे	to throw,to scatter	U	A
+1437	5	5	चिञ्	ciY	चयने	to collect, to select, to pick	U	A
+1438	5	6	स्तृञ्	stfY	आच्छादने	to cover,to eclipse, to spread, to expand	U	A
+1439	5	7	कृञ्	kfY	हिंसायाम्	to kill, to destroy, to irritate	U	A
+1440	5	8	वृञ्	vfY	वरणे	to choose,to select,to marry,to finalize	U	S
+1441	5	9	धुञ्	DuY	कम्पने	to shake,to tremble	U	A
+1442	5	10	धूञ्	DUY	कम्पने	to shake,to tremble	U	V
+1443	5	11	टुदु	wudu	उपतापे	to give pain,to burn,to heat, to set on fire	P	A
+1444	5	12	हि	hi	गतौ वृद्धौ च	to go,to grow	P	A
+1445	5	13	पृ	pf	प्रीतौ	to satisfy, to please	P	A
+1446	5	14	स्पृ	spf	प्रीतिपालनयोः प्रीतिचलनयोश्च	to satisfy, to please, to nurture, to nourish, to go	P	A
+1447	5	15	स्मृ	smf	प्रीतिबलनयोः	to satisfy, to please, to force	P	A
+1448	5	16	आपॢँ	Ap~	व्याप्तौ	to obtain,to pervade,to occupy,to reach, to get	P	A
+1449	5	17	शकॢँ	Sk~	शक्तौ	to be able,to be powerful	P	A
+1450	5	18	राधँ	rAD~	संसिद्धौ	to accomplish, to attain, to fulfill, to achieve	P	A
+1451	5	19	साधँ	sAD~	संसिद्धौ	to accomplish, to attain, to fulfill,  to achieve	P	A
+1452	5	20	अशूँ	aSU~	व्याप्तौ सङ्घाते च	to pervade,to heap,to pile up	A	V
+1453	5	21	ष्टिघँ	zwiG~	आस्कन्दने	to attack, to hate, to kill, to destroy	A	S
+1454	5	22	तिकँ	tik~	आस्कन्दने गतौ च	to attack, to hate, to kill, to destroy, to go	P	S
+1455	5	23	तिगँ	tig~	आस्कन्दने गतौ च	to attack, to hate, to kill, to destroy, to go	P	S
+1456	5	24	षघँ	zG~	हिंसायाम्	to kill, to destroy	P	S
+1457	5	25	ञिधृषाँ	YiDfzA~	प्रागल्भ्ये	to boast, to be proud, to show off	P	S
+1458	5	26	दन्भुँ	dnBu~	दम्भने	to deceive,to cheat	P	S
+1459	5	27	ऋधुँ	fDu~	वृद्धौ	to increase,to prosper	P	S
+1460	5	28	तृपँ	tfp~	प्रीणने	to satisfy, to please	P	S
+1461	5	29	अहँ	ah~	व्याप्तौ	to pervade, to expand, to spread	P	S
+1462	5	30	दघँ	dG~	घातने पालने च	to kill, to destroy, to protect	P	S
+1463	5	31	चमुँ	cmu~	भक्षणे	to eat,to drink	P	S
+1464	5	32	रि	ri	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	A
+1465	5	33	क्षि	kzi	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	A
+1466	5	34	चिरि	ciri	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	S
+1467	5	35	जिरि	jiri	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	S
+1468	5	36	दाशँ	dAS~	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	S
+1469	5	37	दृ	df	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	A
+1470	5	38	ऋक्षि	fkzi	हिंसायाम्	to kill, to destroy, to damage, to hurt	P	A
+1471	6	1	तुदँ	tud~	व्यथने	to wound,to strike,to pain,to irritate, to hurt, to cause pain, to attack	U	A
+1472	6	2	णुदँ	Rud~	प्रेरणे	to inspire	U	A
+1473	6	3	दिशँ	diS~	अतिसर्जने	to give, to donate, to grant, to leave	U	A
+1474	6	4	भ्रस्जँ	Brsj~	पाके	to fry,to roast,to parch	U	A
+1475	6	5	क्षिपँ	kzip~	प्रेरणे	to throw, to send, to make fly	U	A
+1476	6	6	कृषँ	kfz~	विलेखने	to plow, to furrow, to cultivate	U	A
+1477	6	7	ऋषीँ	fzI~	गतौ	to go	P	S
+1478	6	8	जुषीँ	juzI~	प्रीतिसेवनयोः	to serve, to please, to satisfy	A	S
+1479	6	9	ओँविजीँ	o~vijI~	भयचलनयोः	to fear,to tremble, to shiver, to have disaster	A	S
+1480	6	10	ओँलजीँ	o~ljI~	व्रीडायाम्	to be ashamed,to be shy	A	S
+1481	6	11	ओँलस्जीँ	o~lsjI~	व्रीडायाम्	to be ashamed,to be shy	A	S
+1482	6	12	ओँव्रस्चूँ	o~vrscU~	छेदने	to cut,to make a hole, to tear	P	V
+1483	6	13	व्यचँ	vyc~	व्याजीकरणे	to deceive,to cheat	P	S
+1484	6	14	उछिँ	uCi~	उञ्छे	to collect, to gather, to glean	P	S
+1485	6	15	उछीँ	uCI~	विवासे	to dwell abroad,to retire, to exile	P	S
+1486	6	16	ऋछँ	fC~	गतीन्द्रियप्रलयमूर्तिभावेषु	to go, to become weak, to lose power of senses, to harden	P	S
+1487	6	17	मिछँ	miC~	उत्क्लेशे	to annoy,to hurt,to obstruct	P	S
+1488	6	18	जर्जँ	jrj~	परिभाषणभर्त्सनयोः	to say,to kill, to blame, to abuse	P	S
+1489	6	19	चर्चँ	crc~	परिभाषणभर्त्सनयोः	to say,to kill, to blame, to abuse	P	S
+1490	6	20	झर्झँ	JrJ~	परिभाषणभर्त्सनयोः	to say,to kill, to blame, to abuse	P	S
+1491	6	21	त्वचँ	tvc~	संवरणे	to cover	P	S
+1492	6	22	ऋचँ	fc~	स्तुतौ दीप्तौ च	to praise, to pray, to glow, to shine	P	S
+1493	6	23	उब्जँ	ubj~	आर्जवे	to be straight (non-twisted)	P	S
+1494	6	24	उज्झँ	ujJ~	उत्सर्गे	to abandon,to leave	P	S
+1495	6	25	लुभँ	luB~	विमोहने	to be confused, to lose senses, to act weird	P	S
+1496	6	26	रिफँ	riP~	कत्थनयुद्धनिन्दाहिंसादानेषु	to speak, to boast, to fight, to insult, to give	P	S
+1497	6	27	रिहँ	rih~	कत्थनयुद्धनिन्दाहिंसादानेषु	to speak, to boast, to fight, to insult, to give	P	S
+1498	6	28	तृपँ	tfp~	तृप्तौ	to satisfy, to be satisfied, to please, to be pleased	P	S
+1499	6	29	ऋहँ	fh~	कत्थनयुद्धनिन्दाहिंसादानेषु	to speak, to boast, to fight, to insult, to give	P	S
+1500	6	30	तृफँ	tfP~	तृप्तौ	to satisfy, to be satisfied, to please, to be pleased	P	S
+1501	6	31	तृन्फँ	tfnP~	तृप्तौ	to satisfy, to be satisfied, to please, to be pleased	P	S
+1502	6	32	तुपँ	tup~	हिंसायाम्	to kill, to injure, to destroy	P	S
+1503	6	33	तुन्पँ	tunp~	हिंसायाम्	to kill, to injure, to destroy	P	S
+1504	6	34	तुफँ	tuP~	हिंसायाम्	to kill, to injure, to destroy	P	S
+1505	6	35	तुन्फँ	tunP~	हिंसायाम्	to kill, to injure, to destroy	P	S
+1506	6	36	दृपँ	dfp~	उत्क्लेशे	to give pain, to injure, to torment	P	S
+1507	6	37	स्तृन्हूँ	stfnhU~	हिंसायाम्	to kill, to destroy, to hurt, to strike	P	V
+1508	6	38	दृफँ	dfP~	उत्क्लेशे	to give pain, to injure, to torment	P	S
+1509	6	39	दृन्फँ	dfnP~	उत्क्लेशे	to give pain, to injure, to torment	P	S
+1510	6	40	ऋफँ	fP~	हिंसायाम्	to kill, to destroy	P	S
+1511	6	41	ऋन्फँ	fnP~	हिंसायाम्	to kill, to destroy	P	S
+1512	6	42	गुफँ	guP~	ग्रन्थे	to string together, to tie together	P	S
+1513	6	43	गुन्फँ	gunP~	ग्रन्थे	to string together, to tie together	P	S
+1514	6	44	उभँ	uB~	पूरणे	to fill	P	S
+1515	6	45	उन्भँ	unB~	पूरणे	to fill	P	S
+1516	6	46	शुभँ	SuB~	शोभायाम्	to shine, to look beautiful	P	S
+1517	6	47	शुन्भँ	SunB~	शोभायाम्	to shine, to look beautiful	P	S
+1518	6	48	दृभीँ	dfBI~	ग्रन्थे	to string together, to tie together	P	S
+1519	6	49	चृतीँ	cftI~	हिंसाग्रन्थनयोः	to kill, to destroy, to hurt, to string together, to tie together, to collect	P	S
+1520	6	50	विधँ	viD~	विधाने	to mention, to make a rule, to state	P	S
+1521	6	51	जुडँ	juq~	गतौ बन्धने च	to go, to bind	P	S
+1522	6	52	जुनँ	jun~	गतौ बन्धने च	to go, to bind	P	S
+1523	6	53	मृडँ	mfq~	सुखने	to make happy,to rejoice,to be happy	P	S
+1524	6	54	पृडँ	pfq~	सुखने	to make happy,to rejoice,to be happy	P	S
+1525	6	55	पृणँ	pfR~	प्रीणने	to be happy, to be contented	P	S
+1526	6	56	वृणँ	vfR~	प्रीणने	to be happy, to be contented	P	S
+1527	6	57	मृणँ	mfR~	हिंसायाम्	to kill	P	S
+1528	6	58	तुणँ	tuR~	कौटिल्ये	to be crooked, to tilt, to curve, to bend, to ill-behave	P	S
+1529	6	59	पुणँ	puR~	कर्मणि शुभे	to be pure, to be virtuous,to do a holy work	P	S
+1530	6	60	मुणँ	muR~	प्रतिज्ञाने	to promise, to vow	P	S
+1531	6	61	कुणँ	kuR~	शब्दोपकरणयोः	to sound, to gift, to support financially, to take care	P	S
+1532	6	62	शुनँ	Sun~	गतौ	to go	P	S
+1533	6	63	द्रुणँ	druR~	हिंसागतिकौटिल्येषु	to kill, to destroy, to bend, to curve, to tilt, to go	P	S
+1534	6	64	घुणँ	GuR~	भ्रमणे	to move, to roam around	P	S
+1535	6	65	घूर्णँ	GUrR~	भ्रमणे	to move, to roam around	P	S
+1536	6	66	षुरँ	zur~	ऐश्वर्यदीप्त्योः	to rule, to be powerful, to shine	P	S
+1537	6	67	कुरँ	kur~	शब्दे	to sound	P	S
+1538	6	68	खुरँ	Kur~	छेदने खण्डने च	to cut, to break	P	S
+1539	6	69	मुरँ	mur~	संवेष्टने परिवेष्टने च	to surround, to cover	P	S
+1540	6	70	क्षुरँ	kzur~	विलेखने	to cut, to split, to scratch, to divide, to delineate	P	S
+1541	6	71	घुरँ	Gur~	भीमार्थशब्दयोः	to frighten,to sound, to snore	P	S
+1542	6	72	पुरँ	pur~	अग्रगमने	to proceed,to lead, to go ahead	P	S
+1543	6	73	वृहूँ	vfhU~	उद्यमने	to try, to put effort	P	V
+1544	6	74	बृहूँ	bfhU~	उद्यमने	to try, to put effort	P	V
+1545	6	75	तृहूँ	tfhU~	हिंसायाम्	to kill, to destroy, to hurt, to strike	P	V
+1546	6	76	स्तृहूँ	stfhU~	हिंसायाम्	to kill, to destroy, to hurt, to strike	P	V
+1547	6	77	तृन्हूँ	tfnhU~	हिंसायाम्	to kill, to destroy, to hurt, to strike	P	V
+1548	6	78	इषुँ	izu~	इच्छायाम्	to wish, to desire, to want	P	S
+1549	6	79	मिषँ	miz~	स्पर्धायाम्	to compete, to contend, to rival	P	S
+1550	6	80	किलँ	kil~	श्वैत्यक्रीडनयोः	to become white,to play	P	S
+1551	6	81	तिलँ	til~	स्नेहने	to oil, to be greasy, to anoint	P	S
+1552	6	82	चिलँ	cil~	वसने	to dress	P	S
+1553	6	83	चलँ	cl~	विलसने विकसने च	to foster,to cherish,to play	P	S
+1554	6	84	इलँ	il~	स्वप्नक्षेपणयोः	to sleep, to throw, to cast, to throw in air	P	S
+1555	6	85	विलँ	vil~	संवरणे	to cover,to conceal,to cut, to make a hole	P	S
+1556	6	86	बिलँ	bil~	भेदने	to break,to split,to divide	P	S
+1557	6	87	णिलँ	Ril~	गहने	to misunderstand,to solidify, to hide, to precipitate	P	S
+1558	6	88	हिलँ	hil~	भावकरणे	to act, to show tantrums, to enact	P	S
+1559	6	89	शिलँ	Sil~	उञ्छे	to glean	P	S
+1560	6	90	षिलँ	zil~	उञ्छे	to glean	P	S
+1561	6	91	मिलँ	mil~	श्लेषणे	to join, to unite, to meet	P	S
+1562	6	92	लिखँ	liK~	अक्षरविन्यासे	to write,to scratch,to draw, to scribble	P	S
+1563	6	93	कुटँ	kuw~	कौटिल्ये	to be crooked,to bend, to grow, to cheat	P	S
+1564	6	94	पुटँ	puw~	संश्लेषणे	to hug, to embrace	P	S
+1565	6	95	कुचँ	kuc~	सङ्कोचने	to contract,to shrink, to shorten	P	S
+1566	6	96	गुजँ	guj~	शब्दे	to hum, to buzz,to sound inarticulately,to sound	P	S
+1567	6	97	गुडँ	guq~	रक्षायाम्	to protect, to create	P	S
+1568	6	98	डिपँ	qip~	क्षेपे	to throw, to throw in air	P	S
+1569	6	99	छुरँ	Cur~	छेदने	to cut,to engrave	P	S
+1570	6	100	स्फुटँ	sPuw~	विकसने	to blow,to blossom, to burst,to break open	P	S
+1571	6	101	मुटँ	muw~	आक्षेपमर्दनयोः	to object, to insult, to blame, to crush, to grid	P	S
+1572	6	102	त्रुटँ	truw~	छेदने	to cut,to break	P	S
+1573	6	103	तुटँ	tuw~	कलहकर्मणि	to quarrel,to argue, to fight	P	S
+1574	6	104	चुटँ	cuw~	छेदने	to cut, to pierce	P	S
+1575	6	105	छुटँ	Cuw~	छेदने	to cut, to pierce	P	S
+1576	6	106	जुडँ	juq~	बन्धने	to join, to tie	P	S
+1577	6	107	जुटँ	juw~	बन्धने	to join, to tie	P	S
+1578	6	108	कडँ	kq~	मदे	to be involved in sorrow, to be invoked in happiness	P	S
+1579	6	109	लुटँ	luw~	संश्लेषणे	to join,to unite, to bring together, to connect	P	S
+1580	6	110	लुठँ	luW~	संश्लेषणे	to join,to unite, to bring together, to connect	P	S
+1581	6	111	कडँ	kq~	घसने	to join,to unite, to bring together, to connect	P	S
+1582	6	112	कृडँ	kfq~	घनत्वे	to thicken, to solidify	P	S
+1583	6	113	कुडँ	kuq~	बाल्ये	to act as a child,to kid, to heap, to collect	P	S
+1584	6	114	पुडँ	puq~	उत्सर्गे	to leave, to quit	P	S
+1585	6	115	घुटँ	Guw~	प्रतिघाते	to strike against,to strike back, to combat, to oppose	P	S
+1586	6	116	तुडँ	tuq~	तोडने	to split,to cut, to to hurt	P	S
+1587	6	117	थुडँ	Tuq~	संवरणे	to cover	P	S
+1588	6	118	स्थुडँ	sTuq~	संवरणे	to cover	P	S
+1589	6	119	खुडँ	Kuq~	संवरणे	to cover	P	S
+1590	6	120	छुडँ	Cuq~	संवरणे	to cover	P	S
+1591	6	121	स्फुरँ	sPur~	सञ्चलने	to throb, to pulse, to move, to palpitate	P	S
+1592	6	122	स्फुलँ	sPul~	सञ्चलने	to throb, to pulse, to move, to palpitate	P	S
+1593	6	123	स्फरँ	sPr~	सञ्चलने	to throb, to pulse, to move, to palpitate	P	S
+1594	6	124	स्फलँ	sPl~	सञ्चलने	to throb, to pulse, to move, to palpitate	P	S
+1595	6	125	स्फुडँ	sPuq~	संवरणे	to cover, to conceal	P	S
+1596	6	126	चुडँ	cuq~	संवरणे	to cover, to conceal	P	S
+1597	6	127	व्रुडँ	vruq~	संवरणे	to cover, to conceal	P	S
+1598	6	128	क्रुडँ	kruq~	निमज्जने	to sink	P	S
+1599	6	129	भृडँ	Bfq~	निमज्जने	to sink	P	S
+1600	6	130	हुडँ	huq~	सङ्घाते	to collect,to heap, to pile up	P	S
+1601	6	131	गुरीँ	gurI~	उद्यमने	to try, to make effort	A	S
+1602	6	132	णू	RU	स्तवने	to praise	P	S
+1603	6	133	धू	DU	विधूनने	to shake,to agitate, to tremble	P	S
+1604	6	134	गु	gu	पुरीषोत्सर्गे	to excrete	P	A
+1605	6	135	ध्रु	Dru	गतिस्थैर्ययोः	to be firm,to be fixed, to go	P	A
+1606	6	136	कुङ्	kuN	शब्दे	to speak loudly, to shout, to chirp	A	A
+1607	6	137	कूङ्	kUN	शब्दे	to hum,to moan,to speak inarticulately, to sound	A	S
+1608	6	138	पृङ्	pfN	व्यायामे	to try, to put effort	A	A
+1609	6	139	मृङ्	mfN	प्राणत्यागे	to die	A	A
+1610	6	140	रि	ri	गतौ	to go	P	A
+1611	6	141	पि	pi	गतौ	to go	P	A
+1612	6	142	धि	Di	धारणे	to hold,to possess, to become	P	A
+1613	6	143	क्षि	kzi	निवासगत्योः	to dwell, to stay, to go	P	A
+1614	6	144	षू	zU	प्रेरणे	to inspire, to put to work, to make something fly	P	S
+1615	6	145	कॄ	k	विक्षेपे	to discard, to throw away	P	S
+1616	6	146	गॄ	g	निगरणे	to eat, to swallow	P	S
+1617	6	147	दृङ्	dfN	आदरे	to respect, to praise, to honor	A	A
+1618	6	148	धृङ्	DfN	अवस्थाने	to be,to exist,to be steady, to wear	A	A
+1619	6	149	प्रछँ	prC~	ज्ञीप्सायाम्	to ask, to seek, to question	P	A
+1620	6	150	सृजँ	sfj~	विसर्गे	to create, to generate, to produce	P	A
+1621	6	151	टुमस्जोँ	wumsjo~	शुद्धौ	to bathe, to submerge	P	A
+1622	6	152	रुजोँ	rujo~	भङ्गे	to have pain, to be ill, to bend, to break	P	A
+1623	6	153	भुजोँ	Bujo~	कौटिल्ये	to bend,to curve,to be crooked	P	A
+1624	6	154	छुपँ	Cup~	स्पर्शे	to touch	P	A
+1625	6	155	रुशँ	ruS~	हिंसायाम्	to kill, to destroy	P	A
+1626	6	156	रिशँ	riS~	हिंसायाम्	to kill, to destroy	P	A
+1627	6	157	लिशँ	liS~	गतौ	to go	P	A
+1628	6	158	स्पृशँ	spfS~	संस्पर्शने	to touch	P	A
+1629	6	159	विछँ	viC~	गतौ	to go	P	S
+1630	6	160	विशँ	viS~	प्रवेशने	to enter	P	A
+1631	6	161	मृशँ	mfS~	आमर्शने	to touch	P	A
+1632	6	162	णुदँ	Rud~	प्रेरणे	to inspire, to urge	P	A
+1633	6	163	षदॢँ	zd~	विशरणगत्यवसादनेषु	to go, to lose energy, to move, to be sad	P	A
+1634	6	164	शदॢँ	Sd~	शातने	to go, to lose energy, to move, to be sad	P	A
+1635	6	165	मिलँ	mil~	सङ्गमे	to unite, to join, to get together	U	S
+1636	6	166	मुचॢँ	muc~	मोक्षणे	to free,to liberate,to leave, to release,to loosen,to abandon	U	A
+1637	6	167	लुपॢँ	lup~	छेदने	to cut, to break, to slice	U	A
+1638	6	168	विदॢँ	vid~	लाभे	to obtain, to receive	U	A
+1639	6	169	लिपँ	lip~	उपदेहे	to anoint,to besmear,to cover,to spread over,to stain	U	A
+1640	6	170	षिचँ	zic~	क्षरणे	to sprinkle,to moisten	U	A
+1641	6	171	कृतीँ	kftI~	छेदने	to cut, to break, to slice	P	S
+1642	6	172	खिदँ	Kid~	परिघाते	to distress, to irritate	P	A
+1643	6	173	पिशँ	piS~	अवयवे	to rip off, to grind, to cut into small parts	P	S
+1644	6	174	फुलँ	Pul~	सञ्चलने	to throb, to pulse, to move, to palpitate	P	S
+1645	7	1	रुधिँर्	ruDi~r	आवरणे	to obstruct, to surround, to besiege, to enclose, to obscure	U	A
+1646	7	2	भिदिँर्	Bidi~r	विदारणे	to cut, to break, to divide	U	A
+1647	7	3	छिदिँर्	Cidi~r	द्वैधीकरणे	to cut,to grind, to truncate, to incise	U	A
+1648	7	4	रिचिँर्	rici~r	विरेचने	to separate, to abort, to purify the body, to sweep, to cleanse the body	U	A
+1649	7	5	विचिँर्	vici~r	पृथग्भावे	to divide,to separate,to remove from	U	A
+1650	7	6	क्षुदिँर्	kzudi~r	सम्पेषणे	to crush, to grind, to powder	U	A
+1651	7	7	युजिँर्	yuji~r	योगे	to bind,to restrain,to join,to unite,to apply, to combine	U	A
+1652	7	8	उँछृदिँर्	u~Cfdi~r	दीप्तिदेवनयोः	to glow, to shine,to play	U	S
+1653	7	9	उँतृदिँर्	u~tfdi~r	हिंसानादरयोः	to kill,to destroy, to disregard, to insult	U	S
+1654	7	10	कृतीँ	kftI~	वेष्टने	to surround, to cover	P	S
+1655	7	11	ञिइन्धीँ	YiinDI~	दीप्तौ	to shine, to glow	A	S
+1656	7	12	खिदँ	Kid~	दैन्ये	to be sad, to be distressed, to have sorrow	A	A
+1657	7	13	विदँ	vid~	विचारणे	to think, to meditate, to analyze, to reason upon	A	A
+1658	7	14	शिषॢँ	Siz~	विशेषणे	to distinguish,to criticize, to characterize	P	A
+1659	7	15	पिषॢँ	piz~	सञ्चूर्णने हिंसायाम् च	to grind,to powder,to crush, to kill, to destroy	P	A
+1660	7	16	भन्जोँ	Bnjo~	आमर्दने	to destroy	P	A
+1661	7	17	भुजँ	Buj~	पालनाभ्यवहारयोः	to protect, to preserve, to eat, to consume	P	A
+1662	7	18	तृहँ	tfh~	हिंसायाम्	to kill to destroy, to give pain	P	S
+1663	7	19	हिसिँ	hisi~	हिंसायाम्	to kill to destroy, to give pain	P	S
+1664	7	20	उन्दीँ	undI~	क्लेदने	to moisten, to be wet	P	S
+1665	7	21	अन्जूँ	anjU~	व्यक्तिम्रक्षणकान्तिगतिषु	to anoint, to polish, to smear	P	V
+1666	7	22	तन्चूँ	tncU~	सङ्कोचने	to contract, to reduce, to constrict	P	V
+1667	7	23	ओँविजीँ	o~vijI~	भयचलनयोः	to fear,to tremble, to shiver, to be distressed, to move	P	S
+1668	7	24	वृजीँ	vfjI~	वर्जने	to avoid,to abandon, to leave behind	P	S
+1669	7	25	पृचीँ	pfcI~	सम्पर्के	to contact, to touch, to join, to unite	P	S
+1670	8	1	तनुँ	tnu~	विस्तारे	to spread, to stretch, to expand, to increase	U	S
+1671	8	2	षणुँ	zRu~	दाने	to give, to donate	U	S
+1672	8	3	क्षणुँ	kzRu~	हिंसायाम्	to kill, to destroy, to irritate, to cause pain, to hurt, to break	U	S
+1673	8	4	क्षिणुँ	kziRu~	हिंसायाम्	to kill, to destroy, to irritate, to cause pain, to hurt, to break	U	S
+1674	8	5	ऋणुँ	fRu~	गतौ	to go	U	S
+1675	8	6	तृणुँ	tfRu~	अदने	to eat,to graze	U	S
+1676	8	7	घृणुँ	GfRu~	दीप्तौ	to shine,to glow	U	S
+1677	8	8	वनुँ	vnu~	याचने	to act,to beg,to request,to seek	A	S
+1678	8	9	मनुँ	mnu~	अवबोधने	to understand, to regard, to think, to believe, to assume	A	S
+1679	8	10	डुकृञ्	qukfY	करणे	to do, to act, to make	U	A
+1680	9	1	डुक्रीञ्	qukrIY	द्रव्यविनिमये	to buy, to purchase	U	A
+1681	9	2	प्रीञ्	prIY	तर्पणे कान्तौ च	to love, to satisfy, to wish, to desire, to show kindness	U	A
+1682	9	3	श्रीञ्	SrIY	पाके	to cook	U	A
+1683	9	4	मीञ्	mIY	हिंसायाम्	to tie, to bind, to kill, to destroy, to hurt	U	A
+1684	9	5	षिञ्	ziY	बन्धने	to tie, to bind, to string, to catch with a stick	U	A
+1685	9	6	स्कुञ्	skuY	आप्रवणे	to jump, to leap, to make something fly, to pull up, to cover	U	A
+1686	9	7	स्तन्भुँ	stnBu~	रोधने स्तम्भने च	to stop,to hinder,to become stiff, to obstruct	P	S
+1687	9	8	स्तुन्भुँ	stunBu~	रोधने निष्कोषणे च	to stop,to hinder,to become stiff, to obstruct	P	S
+1688	9	9	स्कन्भुँ	sknBu~	रोधने स्तम्भने च	to stop,to hinder,to become stiff, to obstruct	P	S
+1689	9	10	स्कुन्भुँ	skunBu~	रोधने धारणे च	to stop,to hinder,to become stiff, to obstruct	P	S
+1690	9	11	युञ्	yuY	बन्धने	to tie, to bind	U	A
+1691	9	12	क्नूञ्	knUY	शब्दे	to sound	U	S
+1692	9	13	द्रूञ्	drUY	हिंसायाम्	to kill, to destroy	U	S
+1693	9	14	पूञ्	pUY	पवने	to purify, to cleanse	U	S
+1694	9	15	शॄञ्	SY	हिंसायाम्	to kill, to destroy	U	S
+1695	9	16	लूञ्	lUY	छेदने	to cut, to pluck, to destroy, to dissolve	U	S
+1696	9	17	स्तॄञ्	stY	आच्छादने	to wrap, to cover, to clothe	U	S
+1697	9	18	कॄञ्	kY	हिंसायाम्	to kill, to destroy	U	S
+1698	9	19	वॄञ्	vY	वरणे	to marry, to accept, to own, to choose	U	S
+1699	9	20	धूञ्	DUY	कम्पने	to shake,to agitate, to tremble, to cause to shake, to cause to agigate, to tremble	U	V
+1700	9	21	शॄ	S	हिंसायाम्	to kill, to destroy	P	S
+1701	9	22	पॄ	p	पालनपूरणयोः	to protect, to take care, to nurture, to complete, to fill, to fulfill	P	S
+1702	9	23	वॄ	v	वरणे	to marry, to accept, to own, to choose	P	S
+1703	9	24	भॄ	B	भर्त्सने	to hate, to insult	P	S
+1704	9	25	मॄ	m	हिंसायाम्	to kill, to destroy, to hurt	P	S
+1705	9	26	दॄ	d	विदारणे	to break apart, to tear off, to cut	P	S
+1706	9	27	जॄ	j	वयोहानौ	to grow old	P	S
+1707	9	28	झॄ	J	वयोहानौ	to grow old	P	S
+1708	9	29	धॄ	D	वयोहानौ		P	S
+1709	9	30	नॄ	n	नये	to take away, to carry	P	S
+1710	9	31	कॄ	k	हिंसायाम्	to kill, to destroy	P	S
+1711	9	32	ॠ	F	गतौ	to go	P	S
+1712	9	33	गॄ	g	शब्दे	to sound, to talk	P	S
+1713	9	34	ज्या	jyA	वयोहानौ	to become old,to decay	P	A
+1714	9	35	री	rI	गतिरेषणयोः	to go, to howl, to kill, to destroy, to hurt	P	A
+1715	9	36	ली	lI	श्लेषणे	to adhere to, to be absorbed,to get dissolved	P	A
+1716	9	37	व्ली	vlI	वरणे	to choose,to select,to find, to marry, to cover, to glean	P	A
+1717	9	38	ब्ली	blI	वरणे	to choose,to select,to find, to marry, to cover, to glean	P	A
+1718	9	39	प्ली	plI	गतौ	to go	P	A
+1719	9	40	व्री	vrI	वरणे	to choose,to select,to find, to marry, to cover, to glean	P	A
+1720	9	41	भ्री	BrI	भये	to fear,to support, to wear, to obey	P	A
+1721	9	42	क्षीष्	kzIz	हिंसायाम्	to kill, to destroy, to cause pain, to hurt	P	A
+1722	9	43	ज्ञा	jYA	अवबोधने	to know, to realize, to understand	P	A
+1723	9	44	बन्धँ	bnD~	बन्धने	to tie, to bind	P	A
+1724	9	45	वृङ्	vfN	सम्भक्तौ	to serve, to worship, to care	A	S
+1725	9	46	श्रन्थँ	SrnT~	विमोचनप्रतिहर्षयोः	to leave, to liberate, to set free, to be happy	P	S
+1726	9	47	मन्थँ	mnT~	विलोडने	to churn,to shake,to agitate	P	S
+1727	9	48	श्रन्थँ	SrnT~	सन्दर्भे	to arrange, to put in sequence	P	S
+1728	9	49	ग्रन्थँ	grnT~	सन्दर्भे	to arrange, to put in sequence	P	S
+1729	9	50	कुन्थँ	kunT~	संश्लेषणे	to stay together	P	S
+1730	9	51	मृदँ	mfd~	क्षोदे	to powder, to cut, to grind	P	S
+1731	9	52	मृडँ	mfq~	क्षोदे सुखे च	to powder, to cut, to grind, to make happy	P	S
+1732	9	53	गुधँ	guD~	रोषे	to be angry	P	S
+1733	9	54	कुषँ	kuz~	निष्कर्षे	to take out, to extract, to examine a metal, to investigate purity of a metal	P	S
+1734	9	55	क्षुभँ	kzuB~	सञ्चलने	to tremble, to shake, to agitate	P	S
+1735	9	56	णभँ	RB~	हिंसायाम्	to kill, to destroy	P	S
+1736	9	57	तुभँ	tuB~	हिंसायाम्	to kill, to detroy	P	S
+1737	9	58	क्लिशूँ	kliSU~	विबाधने	to torment, to distress, to hurt, to suffer, to misbehave	P	V
+1738	9	59	अशँ	aS~	भोजने	to eat, to consume	P	S
+1739	9	60	उँध्रसँ	u~Drs~	उञ्छे	to gather, to pick, to glean	P	S
+1740	9	61	इषँ	iz~	आभीक्ष्ण्ये	to repeat	P	S
+1741	9	62	विषँ	viz~	विप्रयोगे	to remove, to throw away, to separate the undesired part	P	A
+1742	9	63	प्रुषँ	pruz~	स्नेहनसेवनपूरणेषु	to soften, to be greasy, to irrigate, to complete, to fill	P	S
+1743	9	64	प्लुषँ	pluz~	स्नेहनसेवनपूरणेषु	to soften, to be greasy, to irrigate, to complete, to fill	P	S
+1744	9	65	पुषँ	puz~	पुष्टौ	to nourish,to bring up,to support	P	S
+1745	9	66	मुषँ	muz~	स्तेये	to steal	P	S
+1746	9	67	खचँ	Kc~	भूतप्रादुर्भावे	to occur in abundance	P	S
+1747	9	68	खवँ	Kv~	भूतप्रादुर्भावे	to occur in abundance	P	S
+1748	9	69	हेठँ	heW~	भूतप्रादुर्भावे	to occur in abundance	P	S
+1749	9	70	स्वॄ	sv	वरणे	to marry, to accept, to own, to choose	P	S
+1750	9	71	ग्रहँ	grh~	उपादाने	to take, to accept, to obtain	U	S
+1751	10	1	चुरँ	cur~	स्तेये	to steal	U	S
+1752	10	2	चितिँ	citi~	स्मृत्याम्	to contemplate,to think,to discuss,to remember, to worry	U	S
+1753	10	3	यत्रिँ	ytri~	सङ्कोचे	to restrain,to shy	U	S
+1754	10	4	स्फुडिँ	sPuqi~	परिहासे	to make fun of, to laugh at, to joke	U	S
+1755	10	5	स्फुटिँ	sPuwi~	परिहासे	to make fun of, to laugh at, to joke	U	S
+1756	10	6	लक्षँ	lkz~	दर्शनाङ्कनयोः	to observe,to see,to look, to mark, to point, to deliberate	U	S
+1757	10	7	कुद्रिँ	kudri~	अनृतभाषणे	to tell a lie	U	S
+1758	10	8	कुदृँ	kudf~	अनृतभाषणे	to tell a lie	U	S
+1759	10	9	स्पुडिँ	spuqi~	परिहासे	to make fun of, to laugh at, to joke	U	S
+1760	10	10	लडँ	lq~	उपसेवायाम्	to serve, to obey, to desire, to wish	U	S
+1761	10	11	मिदिँ	midi~	स्नेहने	to soften, to melt, to become greasy, to love	U	S
+1762	10	12	मिदँ	mid~	स्नेहने	to soften, to melt, to become greasy, to love	U	S
+1763	10	13	ओँलडिँ	o~lqi~	उत्क्षेपणे	to throw up	U	S
+1764	10	14	ओलडिँ	olqi~	उत्क्षेपणे	to throw up	U	S
+1765	10	15	जलँ	jl~	अपवारणे	to cover,to hide, to cover by net	U	S
+1766	10	16	लजँ	lj~	अपवारणे	to cover,to hide, to cover by net	U	S
+1767	10	17	पीडँ	pIq~	अवगाहने	to harass,to annoy,to irritate,to give pain	U	S
+1768	10	18	नटँ	nw~	अवस्पन्दने	to enact, to dance, to act, to show	U	S
+1769	10	19	श्रथँ	SrT~	प्रयत्ने	to make effort, to try, to set out	U	S
+1770	10	20	बधँ	bD~	संयमने	to bind,to restrain,to control	U	S
+1771	10	21	बन्धँ	bnD~	संयमने	to bind,to restrain,to control	U	S
+1772	10	22	पॄ	p	पूरणे	to fill, to complete	U	S
+1773	10	23	उर्जँ	urj~	बलप्राणनयोः	to be strong,to live with energy, to win	U	S
+1774	10	24	पक्षँ	pkz~	परिग्रहे	to seize,to accept,to take side	U	S
+1775	10	25	वर्णँ	vrR~	प्रेरणे	to order, to motivate, to inspire, to paint, to color	U	S
+1776	10	26	चुर्णँ	curR~	प्रेरणे 	to order, to motivate, to inspire, to paint, to color, to pull	U	S
+1777	10	27	प्रथँ	prT~	प्रख्याने	to expand scope, to spread	U	S
+1778	10	28	पृथँ	pfT~	प्रक्षेपे	to throw,to send,to direct, to inspire	U	S
+1779	10	29	पथँ	pT~	प्रक्षेपे	to throw,to send,to direct, to inspire	U	S
+1780	10	30	षन्बँ	znb~	सम्बन्धने	to join, to articulate	U	S
+1781	10	31	शन्बँ	Snb~	सम्बन्धने	to join, to articulate	U	S
+1782	10	32	सान्बँ	sAnb~	सम्बन्धने	to join, to articulate	U	S
+1783	10	33	भक्षँ	Bkz~	अदने	to eat	U	S
+1784	10	34	कुट्टँ	kuww~	छेदनभर्त्सनयोः	to cut, to criticise, to blame	U	S
+1785	10	35	पुट्टँ	puww~	अल्पीभावे	to decrease,to diminish, to reduce, to shrink	U	S
+1786	10	36	चुट्टँ	cuww~	अल्पीभावे	to decrease,to diminish, to reduce, to shrink	U	S
+1787	10	37	अट्टँ	aww~	अनादरे	to insult, to dishonor, to disrespect	U	S
+1788	10	38	षुट्टँ	zuww~	अनादरे	to insult, to dishonor, to disrespect	U	S
+1789	10	39	लुन्टँ	lunw~	स्तेये	to steal, to loot	U	S
+1790	10	40	लुन्ठँ	lunW~	स्तेये	to steal, to loot	U	S
+1791	10	41	शठँ	SW~	असंस्कारगत्योः	to cheat,to fraud, to leave unfinished, to leave unattended, to ill-behave	U	S
+1792	10	42	श्वठँ	SvW~	असंस्कारगत्योः	to cheat,to fraud, to leave unfinished, to leave unattended, to ill-behave	U	S
+1793	10	43	श्वठिँ	SvWi~	असंस्कारगत्योः	to cheat,to fraud, to leave unfinished, to leave unattended, to ill-behave	U	S
+1794	10	44	तुजँ	tuj~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1795	10	45	तुजिँ	tuji~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1796	10	46	पिजँ	pij~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1797	10	47	पिजिँ	piji~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1798	10	48	लजिँ	lji~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1799	10	49	लुजिँ	luji~	हिंसाबलादाननिकेतनेषु	to kill, to destroy, to hurt, to injure, to become powerful, to take, to dwell, to stay	U	S
+1800	10	50	पिसँ	pis~	गतौ	to go	U	S
+1801	10	51	षान्त्वँ	zAntv~	सामप्रयोगे	to pacify, to appease, to console	U	S
+1802	10	52	सान्त्वँ	sAntv~	सामप्रयोगे	to pacify, to appease, to console	U	S
+1803	10	53	श्वल्कँ	Svlk~	परिभाषणे	to speak, to tell, to narrate	U	S
+1804	10	54	वल्कँ	vlk~	परिभाषणे	to speak, to tell, to narrate, to see	U	S
+1805	10	55	ष्णिहँ	zRih~	स्नेहने	to love, to be kind	U	S
+1806	10	56	स्फिटँ	sPiw~	हिंसायाम्	to kill, to destroy	U	S
+1807	10	57	स्मिटँ	smiw~	अनादरे	to insult, to disrespect, to dishonor	U	S
+1808	10	58	ष्मिङ्	zmiN	अनादरे	to smile,to expand,to bloom	A	S
+1809	10	59	श्लिषँ	Sliz~	श्लेषणे	to hug,to embrace,to stay attached	U	S
+1810	10	60	पथिँ	pTi~	गतौ	to go	U	S
+1811	10	61	पिछँ	piC~	कुट्टने	to cut, to split, to tamp, to slice, to torture	U	S
+1812	10	62	छदिँ	Cdi~	संवरणे	to cover	U	S
+1813	10	63	श्रणँ	SrR~	दाने	to give	U	S
+1814	10	64	तडँ	tq~	आघाते	to strike,to beat, to hit	U	S
+1815	10	65	खडँ	Kq~	भेदने	to break	U	S
+1816	10	66	खडिँ	Kqi~	भेदने	to break in pieces,to break,to cut,to tear to pieces	U	S
+1817	10	67	कडिँ	kqi~	भेदने	to break in pieces,to break,to cut,to tear to pieces	U	S
+1818	10	68	कुडिँ	kuqi~	रक्षणे	to protect	U	S
+1819	10	69	गुडिँ	guqi~	वेष्टने	to enclose,to cover,to envelope, to protect, to powder	U	S
+1820	10	70	कुठिँ	kuWi~	रक्षणे	to protect	U	S
+1821	10	71	गुठिँ	guWi~	रक्षणे	to protect	U	S
+1822	10	72	खुडिँ	Kuqi~	खण्डने	to cut,to slice, to break into pieces	U	S
+1823	10	73	वटिँ	vwi~	विभाजने	to divide, to separate, to isolate, to partition	U	S
+1824	10	74	वडिँ	vqi~	विभाजने	to divide, to separate, to isolate, to partition	U	S
+1825	10	75	चडिँ	cqi~	कोपे	to be angry	U	S
+1826	10	76	मडिँ	mqi~	भूषायां हर्षे च	to adorn,to decorate, to be happy	U	S
+1827	10	77	भडिँ	Bqi~	कल्याणे	to do auspicious work	U	S
+1828	10	78	छर्दँ	Crd~	वमने	to vomit	U	S
+1829	10	79	पुस्तँ	pust~	आदरानादरयोः	to honour,to dishonour,to respect,to disrespect	U	S
+1830	10	80	बुस्तँ	bust~	आदरानादरयोः	to honour,to dishonour,to respect,to disrespect	U	S
+1831	10	81	चुदँ	cud~	सञ्चोदने	to inspire, to question, to ask, to request	U	S
+1832	10	82	नक्कँ	nkk~	नाशने	to kill, to destroy, to uproot	U	S
+1833	10	83	धक्कँ	Dkk~	नाशने	to kill, to destroy, to uproot	U	S
+1834	10	84	चक्कँ	ckk~	व्यथने	to suffer,to give pain	U	S
+1835	10	85	चुक्कँ	cukk~	व्यथने	to suffer,to give pain	U	S
+1836	10	86	क्षलँ	kzl~	शौचकर्मणि	to wash,to cleanse, to purify	U	S
+1837	10	87	तलँ	tl~	प्रतिष्ठायाम्	to establish, to make someone sit, to complete	U	S
+1838	10	88	तुलँ	tul~	उन्माने	to weigh,to measure	U	S
+1839	10	89	दुलँ	dul~	उत्क्षेपे	to uproot, to remove, to throw, to shake, to move, to swing	U	S
+1840	10	90	पुलँ	pul~	महत्त्वे	to be great, to be large, to rise up, to be heaped up	U	S
+1841	10	91	चुलँ	cul~	समुच्छ्राये	to raise,to elevate, to make something sink, to make wet	U	S
+1842	10	92	मूलँ	mUl~	रोहणे	to crop, to root, to plant, to sow	U	S
+1843	10	93	कलँ	kl~	क्षेपे	to throw, to  make something fly	U	S
+1844	10	94	विलँ	vil~	क्षेपे	to throw, to  make something fly	U	S
+1845	10	95	बिलँ	bil~	भेदने	to break,to split,to divide, to cut	U	S
+1846	10	96	तिलँ	til~	स्नेहने	to oil, to become greasy, to anoint	U	S
+1847	10	97	चलँ	cl~	भृतौ	to foster,to bring up, to cherish	U	S
+1848	10	98	पालँ	pAl~	रक्षणे	to protect,to govern	U	S
+1849	10	99	पलँ	pl~	रक्षणे	to protect,to govern	U	S
+1850	10	100	लूषँ	lUz~	हिंसायाम्	to kill, to destroy	U	S
+1851	10	101	शुल्बँ	Sulb~	माने	to weigh, to measure	U	S
+1852	10	102	शूर्पँ	SUrp~	माने	to weigh, to measure	U	S
+1853	10	103	चुटँ	cuw~	छेदने	to cut, to strike	U	S
+1854	10	104	मुटँ	muw~	सञ्चूर्णने	to crush,to grind,to powder	U	S
+1855	10	105	उलडिँ	ulqi~	उत्क्षेपणे	to throw up	U	S
+1856	10	106	पडिँ	pqi~	नाशने	to destroy	U	S
+1857	10	107	पसिँ	psi~	नाशने	to destroy	U	S
+1858	10	108	मार्ग	mArg	संस्कारगत्योः	to do cultural rites, to cultivate, to complete, to prepare, to turn, to go	U	S
+1859	10	109	व्रजँ	vrj~	संस्कारगत्योः	to do cultural rites, to cultivate, to complete, to prepare, to turn, to go	U	S
+1860	10	110	शुल्कँ	Sulk~	अतिस्पर्शने	to tax, to pay tax, to produce goods	U	S
+1861	10	111	चपिँ	cpi~	गत्याम्	to go	U	S
+1862	10	112	क्षपिँ	kzpi~	क्षान्त्याम्	to endure,to tolerate, to forgive, to shine	U	S
+1863	10	113	क्षजिँ	kzji~	कृच्छ्रजीवने	to live miserably, to live hard life	U	S
+1864	10	114	छजिँ	Cji~	कृच्छ्रजीवने	to live miserably, to live hard life	U	S
+1865	10	115	श्वर्तँ	Svrt~	गत्याम्	to go	U	S
+1866	10	116	स्वर्तँ	svrt~	कृच्छ्रजीवने, गत्याम्	to live miserably, to live hard life, to go	U	S
+1867	10	117	श्वभ्रँ	SvBr~	गत्याम्	to go	U	S
+1868	10	118	ज्ञपँ	jYp~	ज्ञाने ज्ञापने च	to know, to understand, to teach, to educate, to explain, to clarify, to make happy, to hit, to sharpen	U	S
+1869	10	119	यमँ	ym~	परिवेषणे	to keep under control, to nourish, to nurture, to serve food	U	S
+1870	10	120	चहँ	ch~	परिकल्कने	to cheat, to do misdeed	U	S
+1871	10	121	चपँ	cp~	परिकल्पने	to cheat, to do misdeed	U	S
+1872	10	122	रहँ	rh~	त्यागे	to abandon,to quit, to leave	U	S
+1873	10	123	बलँ	bl~	प्राणने	to have power, to gain power, to explain	U	S
+1874	10	124	चिञ्	ciY	चयने	to find, to gather, to collect	U	S
+1875	10	125	घट्टँ	Gww~	चलने	to go, to change places	U	S
+1876	10	126	मुस्तँ	must~	सङ्घाते	to collect, to pile, to make a heap	U	S
+1877	10	127	खट्टँ	Kww~	संवरणे	to cover, to hide	U	S
+1878	10	128	षट्टँ	zww~	हिंसायाम्	to kill, to destroy, to hurt, to irritate	U	S
+1879	10	129	स्फिट्टँ	sPiww~	हिंसायाम्	to kill, to destroy	U	S
+1880	10	130	चुबिँ	cubi~	हिंसायाम्	to kill, to destroy, to hurt, to irritate	U	S
+1881	10	131	पुलँ	pul~	सङ्घाते	to be great, to be large, to rise up, to be heaped up	U	S
+1882	10	132	पूर्णँ	pUrR~	सङ्घाते	to collect, to make a heap, to make a pile	U	S
+1883	10	133	पुणँ	puR~	सङ्घाते	to collect, to make a heap, to make a pile	U	S
+1884	10	134	पुन्सँ	puns~	अभिवर्धने	to grow, to prosper	U	S
+1885	10	135	टकिँ	wki~	बन्धने	to bind,to build	U	S
+1886	10	136	व्यपँ	vyp~	क्षये	to throw	U	S
+1887	10	137	व्ययँ	vyy~	क्षये	to throw	U	S
+1888	10	138	पूलँ	pUl~	सङ्घाते	to be great, to be large, to rise up, to be heaped up	U	S
+1889	10	139	धूसँ	DUs~	कान्तिकरणे	to be decorated	U	S
+1890	10	140	धूषँ	DUz~	कान्तिकरणे	to be decorated	U	S
+1891	10	141	धूशँ	DUS~	कान्तिकरणे	to be decorated	U	S
+1892	10	142	कीटँ	kIw~	वर्णे	to tinge,to color	U	S
+1893	10	143	चूर्णँ	cUrR~	सङ्कोचने	to hestitate	U	S
+1894	10	144	पूजँ	pUj~	पूजायाम्	to worship, to pray, to honor, to respect	U	S
+1895	10	145	अर्कँ	ark~	स्तवने	to praise,to heat	U	S
+1896	10	146	शुठँ	SuW~	आलस्ये	to be lazy	U	S
+1897	10	147	शुठिँ	SuWi~	शोषणे	to dry,to become dry, to extract, to exploit	U	S
+1898	10	148	जुडँ	juq~	प्रेरणे	to direct, to inspire	U	S
+1899	10	149	गजँ	gj~	शब्दार्थे	to sound	U	S
+1900	10	150	मार्जँ	mArj~	शब्दार्थे	to sound	U	S
+1901	10	151	मर्चँ	mrc~	शब्दार्थे	to sound	U	S
+1902	10	152	घृ	Gf	प्रस्रवणे	to sprinkle,to drip, to ooze	U	S
+1903	10	153	पचिँ	pci~	विस्तारवचने	to spread, to expand	U	S
+1904	10	154	तिजँ	tij~	निशाने	to sharpen, to whet	U	S
+1905	10	155	कॄतँ	kt~	संशब्दने	to make famous, to be famous	U	S
+1906	10	156	वर्धँ	vrD~	छेदनपूरणयोः	to cut,to fill, to complete	U	S
+1907	10	157	कुबिँ	kubi~	आच्छादने	to cover	U	S
+1908	10	158	कुभिँ	kuBi~	आच्छादने	to cover	U	S
+1909	10	159	लुबिँ	lubi~	अदर्शने	to be invisible,to be hidden, to be destroyed	U	S
+1910	10	160	तुबिँ	tubi~	अदर्शने	to be invisible,to be hidden, to be destroyed	U	S
+1911	10	161	ह्लपँ	hlp~	व्यक्तायां वाचि	to speak articulately, to talk clearly	U	S
+1912	10	162	क्लपँ	klp~	व्यक्तायां वाचि	to speak articulately, to talk clearly	U	S
+1913	10	163	ह्रपँ	hrp~	व्यक्तायां वाचि	to speak articulately, to talk clearly	U	S
+1914	10	164	चुटिँ	cuwi~	छेदने	to cut, to prick	U	S
+1915	10	165	ब्रीसँ	brIs~	हिंसायाम्	to kill, to destroy, to hurt	U	S
+1916	10	166	दहिँ	dhi~	रक्षणे मोक्षणे च	to protect,to release	U	S
+1917	10	167	इलँ	il~	प्रेरणे	to inspire, to motivate	U	S
+1918	10	168	म्रक्षँ	mrkz~	म्लेच्छने	to mix, to make impure	U	S
+1919	10	169	अस्तँ	ast~	सङ्घाते	to collect, to pile, to make a heap	U	S
+1920	10	170	म्लेछँ	mleC~	अव्यक्तायां वाचि	to speak inarticulately, to speak uncultured, to talk rude, to talk indescent	U	S
+1921	10	171	छपिँ	Cpi~	गत्याम्	to go	U	S
+1922	10	172	ब्रूसँ	brUs~	हिंसायाम्	to kill, to destroy, to hurt	U	S
+1923	10	173	बर्हँ	brh~	हिंसायाम्	to kill, to destroy, to hurt	U	S
+1924	10	174	श्रणुँ	SrRu~	दाने	to give	U	S
+1925	10	175	पिच्चँ	picc~	कुट्टने	to cut, to split, to tamp, to slice, to torture	U	S
+1926	10	176	बुलँ	bul~	निमज्जने	to immerse	U	S
+1927	10	177	गर्जँ	grj~	शब्दे	to roar,to growl,to thunder	U	S
+1928	10	178	गर्दँ	grd~	शब्दे	to roar,to growl,to thunder	U	S
+1929	10	179	गर्धँ	grD~	अभिकाङ्क्षायाम्	to desire, to wish	U	S
+1930	10	180	गुर्दँ	gurd~	पूर्वनिकेतने	to dwell, to reside, to stay, to invite	U	S
+1931	10	181	पूर्वँ	pUrv~	निकेतने	to dwell, to reside, to stay, to invite	U	S
+1932	10	182	जसिँ	jsi~	रक्षणे मोक्षणे च	to protect,to release	U	S
+1933	10	183	ईडँ	Iq~	स्तुतौ	to praise	U	S
+1934	10	184	जसुँ	jsu~	हिंसायाम्	to kill, to hurt, to hit, to strike, to injure	U	S
+1935	10	185	पिडिँ	piqi~	सङ्घाते	to heap,to unite, to pile up	U	S
+1936	10	186	पर्थँ	prT~	प्रक्षेपे	to throw,to send,to direct, to inspire	U	S
+1937	10	187	रुषँ	ruz~	रोषे	to be angry	U	S
+1938	10	188	रुटँ	ruw~	रोषे	to be angry	U	S
+1939	10	189	डिपँ	qip~	क्षेपे	to throw, to hit, to collect	U	S
+1940	10	190	ष्टुपँ	zwup~	समुच्छ्राये	to heap,to unite, to pile up	U	S
+1941	10	191	ष्टूपँ	zwUp~	समुच्छ्राये	to heap,to unite, to pile up	U	S
+1942	10	192	चितँ	cit~	सञ्चेतने	to think to perceive, to meditate, to remember, to memorize	A	S
+1943	10	193	दशिँ	dSi~	दंशने	to bite,to sting	A	S
+1944	10	194	दसिँ	dsi~	दर्शनदंशनयोः	to see, to bite,to sting	A	S
+1945	10	195	दसँ	ds~	दर्शनदंशनयोः	to see, to bite,to sting	A	S
+1946	10	196	डपँ	qp~	सङ्घाते	to collect, to bring together, to pile up, to heap	A	S
+1947	10	197	डिपँ	qip~	सङ्घाते	to collect, to bring together, to pile up, to heap	A	S
+1948	10	198	तत्रिँ	ttri~	कुटुम्बधारणे	to support the family, to govern, to lead	A	S
+1949	10	199	मत्रिँ	mtri~	गुप्तपरिभाषणे	to consult, to advise, to discuss privately	A	S
+1950	10	200	स्पशँ	spS~	ग्रहणसंश्लेषणयोः	to take, to join, to unite	A	S
+1951	10	201	तर्जँ	trj~	तर्जने	to hate, to insult, to ignore, to blame, to criticize, to frighten	A	S
+1952	10	202	भर्त्सँ	Brts~	तर्जने	to hate, to insult, to ignore, to blame, to criticize, to frighten	A	S
+1953	10	203	बस्तँ	bst~	अर्दने	to kill, to destroy, to hit, to cause pain	A	S
+1954	10	204	गन्धँ	gnD~	अर्दने	to kill, to destroy, to hit, to cause pain	A	S
+1955	10	205	किलँ	kil~	क्षेपे	to throw, to  make something fly	U	S
+1956	10	206	पिलँ	pil~	क्षेपे	to throw, to  make something fly	U	S
+1957	10	207	विष्कँ	vizk~	हिंसायाम्	to kill, to destroy	A	S
+1958	10	208	हिष्कँ	hizk~	हिंसायाम्	to kill, to destroy	A	S
+1959	10	209	निष्कँ	nizk~	परिमाणे	to measure,to weigh	A	S
+1960	10	210	ललँ	ll~	ईप्सायाम्	to desire,to seek,to play, to enjoy, to delight	A	S
+1961	10	211	कूणँ	kUR~	सङ्कोचे	to constrict, to contract	A	S
+1962	10	212	तूणँ	tUR~	पूरणे	to complete, to fill, to fulfill	A	S
+1963	10	213	भ्रूणँ	BrUR~	आशाविशङ्कयोः	to hope, to believe, to doubt, to question, to become pregnant	A	S
+1964	10	214	शठँ	SW~	श्लाघायाम्	to praise	A	S
+1965	10	215	यक्षँ	ykz~	पूजायाम्	to pray, to worship, to respect	A	S
+1966	10	216	स्यमँ	sym~	वितर्के	to consider,to think,to sound,to shout	A	S
+1967	10	217	गूरँ	gUr~	उद्यमने	to make an effort, to try	A	S
+1968	10	218	शमँ	Sm~	आलोचने	to publish, to advertise, to explain, to clarify	A	S
+1969	10	219	लक्षँ	lkz~	आलोचने	to criticize	A	S
+1970	10	220	कुत्सँ	kuts~	अवक्षेपणे निन्दने च	to insult, to criticize, to blame, to hate	A	S
+1971	10	221	त्रुटँ	truw~	छेदने	to cut,to break	A	S
+1972	10	222	कुटँ	kuw~	छेदने	to cut,to break	A	S
+1973	10	223	गलँ	gl~	स्रवणे	to drip, to flow, to ooze out	A	S
+1974	10	224	भलँ	Bl~	आभण्डने	to analyze, to argue	A	S
+1975	10	225	कूटँ	kUw~	आप्रदाने अवसादने च	to avoid giving, to cheat, to do indistinctly, to collect	A	S
+1976	10	226	कुट्टँ	kuww~	प्रतापने	to heat	A	S
+1977	10	227	वन्चुँ	vncu~	प्रलम्भने	to cheat	A	S
+1978	10	228	वृषँ	vfz~	शक्तिबन्धने	to be impregnated, to show great courage, to be capable of bearing offsprings	A	S
+1979	10	229	मदँ	md~	तृप्तियोगे	to please, satisfy	A	S
+1980	10	230	दिवुँ	divu~	परिकूजने	to irritate, to cause pain, to mourn to grieve	A	S
+1981	10	231	गृ	gf	विज्ञाने	to know, to understand	A	S
+1982	10	232	विदँ	vid~	चेतनाख्याननिवासेषु	to improve body, to know, to understand	A	S
+1983	10	233	मानँ	mAn~	स्तम्भे	to boast, to be egoistic, to be proud, to stabilize	A	S
+1984	10	234	मनँ	mn~	स्तम्भे	to boast, to be egoistic, to be proud, to stabilize	A	S
+1985	10	235	यु	yu	जुगुप्सायाम्	to insult, to blame, to criticise	A	S
+1986	10	236	कुस्मँ	kusm~	कुत्सितस्मये	to smile inappropriately, to smile with an insult	A	S
+1987	10	237	चर्चँ	crc~	अध्ययने	to learn, to study	U	S
+1988	10	238	बुक्कँ	bukk~	भषणे	to bark	U	S
+1989	10	239	शब्दँ	Sbd~	आविष्कारे, भषणे	to utter, to sound, to explain	U	S
+1990	10	240	कणँ	kR~	निमीलने	to wink	U	S
+1991	10	241	जभिँ	jBi~	नाशने	to kill, to destroy	U	S
+1992	10	242	षूदँ	zUd~	क्षरणे आस्रवणे आप्रवणे घाते च	to drip, to ooze, to kill, to try to kill, to wound	U	S
+1993	10	243	जसुँ	jsu~	ताडने	to kill, to strike, to hit, to ignore	U	S
+1994	10	244	पशँ	pS~	बन्धने	to lockup, to bind, to hang till death	U	S
+1995	10	245	अमँ	am~	रोगे	to be ill,to be sick, to have stomach ache	U	S
+1996	10	246	चटँ	cw~	भेदने	to kill, to injure, to break	U	S
+1997	10	247	स्फुटँ	sPuw~	भेदने	to cut, to split, to crack, to open, to trouble	U	S
+1998	10	248	घटँ	Gw~	सङ्घाते	to crush, to chop, to gather	U	S
+1999	10	249	दिवुँ	divu~	मर्दने	to rub, to massage	U	S
+2000	10	250	अर्जँ	arj~	प्रतियत्ने	to earn, to do business, to prepare	U	S
+2001	10	251	घुषिँर्	Guzi~r	विशब्दने	to announce, to speak loudly	U	S
+2002	10	252	क्रन्दँ	krnd~	सातत्ये	to call out	U	S
+2003	10	253	लसँ	ls~	शिल्पयोगे	to be skilled, to be expert, to know art	U	S
+2004	10	254	तसिँ	tsi~	अलङ्करणे	to adorn, to decorate	U	S
+2005	10	255	भूषँ	BUz~	अलङ्करणे	to adorn, to decorate	U	S
+2006	10	256	मोक्षँ	mokz~	मोचने	to leave, to abandon	U	S
+2007	10	257	अर्हँ	arh~	पूजायाम्	to be worthty, to be eligible, to have merit	U	S
+2008	10	258	ज्ञा	jYA	नियोगे	to order	U	S
+2009	10	259	भजँ	Bj~	विश्राणने	to give, to donate, to cook, to make readm to prepare food, to segregate	U	S
+2010	10	260	शृधुँ	SfDu~	प्रहसने प्रसहने च	to tolerate, to insert, to disrespect, to defeat	U	S
+2011	10	261	यतँ	yt~	निकारोपस्कारयोः	to cause pain, to kill, to irritate, to disallow,  to stop	U	S
+2012	10	262	रकँ	rk~	आस्वादने	to taste	U	S
+2013	10	263	लगँ	lg~	आस्वादने	to taste	U	S
+2014	10	264	रघँ	rG~	आस्वादने	to taste	U	S
+2015	10	265	रगँ	rg~	आस्वादने	to taste	U	S
+2016	10	266	अन्चुँ	ancu~	विशेषणे	to characterise, to honor, to remove, to separate	U	S
+2017	10	267	लिगिँ	ligi~	चित्रीकरणे	to paint in various colors	U	S
+2018	10	268	मुदँ	mud~	संसर्गे	to mix, to unite	U	S
+2019	10	269	त्रसँ	trs~	धारणे ग्रहणे वारणे च	to catch, to steal, to take forcefully, to disobey, to frighten	U	S
+2020	10	270	उँध्रसँ	u~Drs~	उञ्छे	to pick, to glean	U	S
+2021	10	271	उध्रसँ	uDrs~	उञ्छे	to pick, to glean	U	S
+2022	10	272	मुचँ	muc~	प्रमोचने मोदने च	to free,to liberate,to release,to loosen,to abandon,to grant,to give money	U	S
+2023	10	273	वसँ	vs~	स्नेहच्छेदापहरणेषु	to love, to cut, to destroy, to kidnap, to desire	U	S
+2024	10	274	चरँ	cr~	संशये	to doubt	U	S
+2025	10	275	च्यु	cyu	सहने हसने च	to endure, to tolerate, to laugh	U	S
+2026	10	276	च्युसँ	cyus~	सहने हसने च	to endure, to tolerate, to laugh	U	S
+2027	10	277	भू	BU	अवकल्कने	to mix, to think	U	S
+2028	10	278	कृपँ	kfp~	अवकल्कने	to mix, to think, to imagine, to paint	U	S
+2029	10	279	ग्रसँ	grs~	ग्रहणे	to seize, to catch, to steal	U	S
+2030	10	280	पुषँ	puz~	धारणे	to wear, to obey	U	S
+2031	10	281	दलँ	dl~	विदारणे	to break, to cut, to slice, to do pieces	U	S
+2032	10	282	पटँ	pw~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2033	10	283	पुटँ	puw~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2034	10	284	लुटँ	luw~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2035	10	285	तुजिँ	tuji~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2036	10	286	मिजिँ	miji~	भाषायाम्	to speak, to talk	U	S
+2037	10	287	पिजिँ	piji~	भाषायाम्	to speak, to talk	U	S
+2038	10	288	लकँ	lk~	आस्वादने	to taste	U	S
+2039	10	289	लुजिँ	luji~	भाषायाम्	to speak, to talk	U	S
+2040	10	290	भजिँ	Bji~	भाषायाम्	to speak, to talk	U	S
+2041	10	291	लघिँ	lGi~	भाषायाम्	to speak, to talk	U	S
+2042	10	292	त्रसिँ	trsi~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2043	10	293	पिसिँ	pisi~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2044	10	294	कुसिँ	kusi~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2045	10	295	दशिँ	dSi~	भाषायाम्	to speak, to talk	U	S
+2046	10	296	कुशिँ	kuSi~	भाषायाम्	to speak, to talk	U	S
+2047	10	297	घटँ	Gw~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2048	10	298	घटिँ	Gwi~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2049	10	299	बृहिँ	bfhi~	भाषायाम्	to speak, to talk	U	S
+2050	10	300	बर्हँ	brh~	भाषायाम्	to speak, to talk	U	S
+2051	10	301	बल्हँ	blh~	भाषायाम्	to speak, to talk	U	S
+2052	10	302	गुपँ	gup~	भाषायाम्	to speak, to talk	U	S
+2053	10	303	धूपँ	DUp~	भाषायाम्	to speak, to talk	U	S
+2054	10	304	विछँ	viC~	भाषायाम्	to speak, to talk	U	S
+2055	10	305	चीवँ	cIv~	भाषायाम्	to speak, to talk	U	S
+2056	10	306	पुथँ	puT~	भाषायाम्	to speak, to talk	U	S
+2057	10	307	लोकृँ	lokf~	भाषायाम्	to speak, to talk	U	S
+2058	10	308	लोचृँ	locf~	भाषायाम्	to speak, to talk	U	S
+2059	10	309	णदँ	Rd~	भाषायाम्	to speak, to talk	U	S
+2060	10	310	कुपँ	kup~	भाषायाम्	to speak, to talk, to be angry	U	S
+2061	10	311	तर्कँ	trk~	भाषायाम्	to speak, to talk	U	S
+2062	10	312	वृतुँ	vftu~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2063	10	313	वृधुँ	vfDu~	भाषायाम्	to speak, to talk	U	S
+2064	10	314	रुटँ	ruw~	भाषायाम्	to speak, to talk	U	S
+2065	10	315	लजिँ	lji~	भाषायाम्	to speak, to talk	U	S
+2066	10	316	अजिँ	aji~	भाषायाम्	to speak, to talk	U	S
+2067	10	317	दसिँ	dsi~	भाषायाम्	to speak, to talk	U	S
+2068	10	318	भृशिँ	BfSi~	भाषायाम्	to speak, to talk	U	S
+2069	10	319	रुशिँ	ruSi~	भाषायाम्	to speak, to talk	U	S
+2070	10	320	शीकँ	SIk~	भाषायाम्	to speak, to talk	U	S
+2071	10	321	रुसिँ	rusi~	भाषायाम्	to speak, to talk	U	S
+2072	10	322	नटिँ	nwi~	भाषायाम्	to speak, to talk	U	S
+2073	10	323	पुटिँ	puwi~	भाषायाम्	to speak, to talk	U	S
+2074	10	324	जि	ji	भाषायाम्	to speak, to talk	U	S
+2075	10	325	चि	ci	भाषायाम्	to speak, to talk	U	S
+2076	10	326	रधिँ	rDi~	भाषायाम्	to speak, to talk	U	S
+2077	10	327	लघिँ	lGi~	भाषायाम्	to shine, to glow	U	S
+2078	10	328	अहिँ	ahi~	भाषायाम्	to speak, to talk	U	S
+2079	10	329	रहिँ	rhi~	भाषायाम्	to speak, to talk	U	S
+2080	10	330	महिँ	mhi~	भाषायाम्	to speak, to talk	U	S
+2081	10	331	लडिँ	lqi~	भाषायाम्	to speak, to talk	U	S
+2082	10	332	तडँ	tq~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2083	10	333	नलँ	nl~	भाषायाम्	to speak, to talk	U	S
+2084	10	334	पूरीँ	pUrI~	आप्यायने	to satisfy, to complete, to fullfull, to fill	U	S
+2085	10	335	रुजँ	ruj~	हिंसायाम्	to kill, to destroy, to cause pain	U	S
+2086	10	336	ष्वदँ	zvd~	आस्वादने	to taste	U	S
+2087	10	337	स्वादँ	svAd~	आस्वादने	to taste	U	S
+2088	10	338	युजँ	yuj~	संयमने	to restrain, to control, to bind	U	S
+2089	10	339	पृचँ	pfc~	संयमने	to touch, to hold, to control, to restrain	U	S
+2090	10	340	अर्चँ	arc~	पूजायाम्	to pray, to worship	U	S
+2091	10	341	षहँ	zh~	मर्षणे	to bear, to tolerate, to be powerful, to be satisfied	U	S
+2092	10	342	ईरँ	Ir~	क्षेपे	to throw	U	S
+2093	10	343	ली	lI	द्रवीकरणे	to melt, to make thin	U	S
+2094	10	344	वृजीँ	vfjI~	वर्जने	to leave, to abandon	U	S
+2095	10	345	वृञ्	vfY	आवरणे	to cover	U	S
+2096	10	346	जॄ	j	वयोहानौ	to grow old	U	S
+2097	10	347	ज्रि	jri	वयोहानौ	to grow old	U	S
+2098	10	348	रिचँ	ric~	वियोजनसम्पर्चनयोः	to mix, to join, to tie, to separate, to spread, to take laxative	U	S
+2099	10	349	शिषँ	Siz~	असर्वोपयोगे	to retain, to save	U	S
+2100	10	350	तपँ	tp~	दाहे	to become hot, to glow, to burn, to be jealous	U	S
+2101	10	351	तृपँ	tfp~	तृप्तौ सन्दीपने प्रीणने च	to be satisfied, to be happy to satisfy, to make happy	U	S
+2102	10	352	छृदीँ	CfdI~	सन्दीपने	to ignite, to set on fire	U	S
+2103	10	353	चृपँ	cfp~	सन्दीपने	to ignite, to set on fire	U	S
+2104	10	354	छृपँ	Cfp~	सन्दीपने	to ignite, to set on fire	U	S
+2105	10	355	तृपँ	tfp~	दीपने सन्दीपने	to glow, to shine	U	S
+2106	10	356	दृपँ	dfp~	सन्दीपने	to ignite, to set on fire	U	S
+2107	10	357	दृभीँ	dfBI~	भये	to relate, to give reference, to be afraid	U	S
+2108	10	358	दृभँ	dfB~	सन्दर्भे	to relate, to give reference	U	S
+2109	10	359	लटँ	lw~	भाषायाम्	to speak, to talk, to shine, to glow	U	S
+2110	10	360	श्रथँ	SrT~	मोक्षणे हिंसायां च	to set free, to  leave, to kill, to destroy, to hurt	U	S
+2111	10	361	मी	mI	गतौ	to go	U	S
+2112	10	362	ग्रन्थँ	grnT~	बन्धने	to tie, to bind	U	S
+2113	10	363	शीकँ	SIk~	आमर्षणे	to touch, to be quiet, to tolerate, to suffer	U	S
+2114	10	364	चीकँ	cIk~	आमर्षणे	to tolerate, to suffer, to be eager, to be hasty, to be intolerant	U	S
+2115	10	365	अर्दँ	ard~	हिंसायाम्	to kill, to detroy, to irritate, to cause pain	U	S
+2116	10	366	हिसिँ	hisi~	हिंसायाम्	to kill, to destroy, to irritate, to cause pain	U	S
+2117	10	367	अर्हँ	arh~	पूजायाम्	to be worthty, to be eligible, to have merit	U	S
+2118	10	368	षदँ	zd~	पद्यर्थे	to attack, to climb, to go	U	S
+2119	10	369	शुन्धँ	SunD~	शौचकर्मणि	to cleanse, to purify	U	S
+2120	10	370	छदँ	Cd~	अपवारणे	to remove, to get rid of, to hide, to keep out of sight	U	S
+2121	10	371	जुषँ	juz~	परितर्कणे परितर्पणे च	to think, to wish, to kill, to destroy, to guess, to make happy, to satisfy, to be satisfied	U	S
+2122	10	372	धूञ्	DUY	कम्पने	to shake, to move, to decorate	U	S
+2123	10	373	प्रीञ्	prIY	तर्पणे कान्तौ च	to love, to satisfy, to desire, to wish, to be radiant	U	S
+2124	10	374	श्रन्थँ	SrnT~	सन्दर्भे	to compose, to order, to intertwine	U	S
+2125	10	375	ग्रन्थँ	grnT~	सन्दर्भे	to refer, to reference	U	S
+2126	10	376	आपॢँ	Ap~	लम्भने	to obtain, to get, to receive	U	S
+2127	10	377	तनुँ	tnu~	श्रद्धोपकरणयोः	to believe, to have faith, to provide shelter, to help, to sound, to kill, to destroy, to hurt	U	S
+2128	10	378	चनँ	cn~	श्रद्धोपहननयोः	to believe, to have faith, to provide shelter, to help, to sound, to kill, to destroy, to hurt	U	S
+2129	10	379	वदँ	vd~	सन्देशवचने	to inform,to communicate,to speak,to tell,to describe,to utter, to read	U	S
+2130	10	380	वचँ	vc~	परिभाषणे	to inform,to communicate,to speak,to tell,to describe,to utter, to read	U	S
+2131	10	381	मानँ	mAn~	पूजायाम्	to respect, to believe	U	S
+2132	10	382	भू	BU	प्राप्तौ	to obtain, to receive, to get, to think	A	S
+2133	10	383	गर्हँ	grh~	विनिन्दने	to blame, to criticize	U	S
+2134	10	384	मार्गँ	mArg~	अन्वेषणे	to investigate, to search, to cleanse, to purify	U	S
+2135	10	385	कठिँ	kWi~	शोके	to be excited, to mourn, to grieve	U	S
+2136	10	386	मृजूँ	mfjU~	शौचालङ्कारयोः	to cleanse, to purify, to  to decorate	U	S
+2137	10	387	मृषँ	mfz~	तितिक्षायाम्	to tolerate	U	S
+2138	10	388	धृषँ	Dfz~	प्रसहने	to conquer, to win, to be eager, to be afraid	U	S
+2139	10	389	कथ	kT	वाक्यप्रबन्धे	to speak, to tell, to state, to explain, to narrate	U	S
+2140	10	390	वर	vr	ईप्सायाम्	to wish, to desire, to hope	U	S
+2141	10	391	गण	gR	सङ्ख्याने	to count, to enumerate	U	S
+2142	10	392	शठ	SW	सम्यगवभाषणे	to ill-speak, to abuse, to tell lies, to keep quiet	U	S
+2143	10	393	श्वठ	SvW	सम्यगवभाषणे	to ill-speak, to abuse, to tell lies, to keep quiet	U	S
+2144	10	394	पठ	pW	ग्रन्थे वेष्टने च	to clothe, to knead, to cover, to make parts	U	S
+2145	10	395	वठ	vW	ग्रन्थे	to tie, to join	U	S
+2146	10	396	रह	rh	त्यागे	to leave, to abandon	U	S
+2147	10	397	रन्ह्	rnh	गतौ	to go	U	S
+2148	10	398	स्तन	stn	देवशब्दे	to have thunderstorm, to have cloud collision	U	S
+2149	10	399	गद	gd	देवशब्दे	to have thunderstorm, to have cloud collision	U	S
+2150	10	400	पत	pt	गतौ	to fall down, to go down, to descend, to go	U	S
+2151	10	401	पष	pz	गतौ	to go	U	S
+2152	10	402	स्वर	svr	आक्षेपे	to sound, to blame, to insult, to object	U	S
+2153	10	403	रच	rc	प्रतियत्ने	to create, to craft, to compose	U	S
+2154	10	404	कल	kl	गतौ सङ्ख्याने च	to go, to count, to enumerate	U	S
+2155	10	405	चह	ch	परिकल्कने	to grind	U	S
+2156	10	406	मह	mh	पूजायाम्	to worship, to pray, to honor, to respect	U	S
+2157	10	407	सार	sAr	दौर्बल्ये	to be weak	U	S
+2158	10	408	कृप	kfp	दौर्बल्ये	to be weak	U	S
+2159	10	409	श्रथ	SrT	दौर्बल्ये	to be weak	U	S
+2160	10	410	स्पृह	spfh	ईप्सायाम्	to desire, to wish	U	S
+2161	10	411	भाम	BAm	क्रोधे	to reject, to be angry	U	S
+2162	10	412	सूच	sUc	पैशुन्ये	to indicate, to do favor, to explain, to point mistakes	U	S
+2163	10	413	खेट	Kew	भक्षणे	to eat	U	S
+2164	10	414	खेडँ	Keq~	भक्षणे	to eat	U	S
+2165	10	415	खोट	Kow	भक्षणे	to eat	U	S
+2166	10	416	क्षोट	kzow	क्षेपे	to project, to throw	U	S
+2167	10	417	गोम	gom	उपलेपने	to coat, to put a layer	U	S
+2168	10	418	कुमार	kumAr	क्रीडायाम्	to play like a child	U	S
+2169	10	419	शील	SIl	उपधारणे	to wear, to recognize	U	S
+2170	10	420	साम	sAm	सान्त्वप्रयोगे	to consolidate, to make happy, to pacify	U	S
+2171	10	421	वेल	vel	कालोपदेशे	to measure time, to preach, to explain on time	U	S
+2172	10	422	काल	kAl	कालोपदेशे	to measure time, to preach, to explain on time	U	S
+2173	10	423	पल्पूल	plpUl	लवनवपनयोः	to cut, to purify, to cleanse, to drop	U	S
+2174	10	424	वात	vAt	सुखसेवनयोः	to be happy, to rejoice, to serve, to love to go	U	S
+2175	10	425	गवेष	gvez	मार्गणे	to search, to investigate, to find	U	S
+2176	10	426	वास	vAs	उपसेवायाम्	to make someone stay, to make something fragrant, to burn incense sticks	U	S
+2177	10	427	निवास	nivAs	आच्छादने	to cover, to surround	U	S
+2178	10	428	भाज	BAj	पृथक्कर्मणि	to cut into pieces	U	S
+2179	10	429	सभाज	sBAj	प्रीतिदर्शनयोः प्रीतिसेवनयोः च	to love, to show affection, to serve, to see	U	S
+2180	10	430	ऊन	Un	परिहाणे	to reduce, to shorten	U	S
+2181	10	431	ध्वन	Dvn	शब्दे	to sound	U	S
+2182	10	432	कूट	kUw	परितापे परिदाहे च	to irritate, to cause pain, to set on fire, to make something burn	U	S
+2183	10	433	सन्केत	snket	आमन्त्रणे	to invite, to call, to sign	U	S
+2184	10	434	ग्राम	grAm	आमन्त्रणे	to invite, to call, to sign, to speak intelligently	U	S
+2185	10	435	कुण	kuR	आमन्त्रणे	to invite, to call, to sign,  to speak intelligently	U	S
+2186	10	436	गुण	guR	आमन्त्रणे	to invite, to call, to sign,  to speak intelligently	U	S
+2187	10	437	केत	ket	श्रावणे आमन्त्रणे च	to call, to invite, to hear	U	S
+2188	10	438	कूणँ	kUR~	सङ्कोचने	to contract, to shrink	U	S
+2189	10	439	स्तेन	sten	चौर्ये	to steal	U	S
+2190	10	440	पद	pd	गतौ	to go, to change places	A	S
+2191	10	441	गृह	gfh	ग्रहणे	to take, to accept	A	S
+2192	10	442	मृग	mfg	अन्वेषणे	to investigate, to search, to prey, to kill an animal	A	S
+2193	10	443	कुह	kuh	विस्मापने	to show miracle	A	S
+2194	10	444	शूर	SUr	विक्रान्तौ	to be powerful, to be courageous, to be brave, to have victory	A	S
+2195	10	445	वीर	vIr	विक्रान्तौ	to be powerful, to be courageous, to be brave, to have victory	A	S
+2196	10	446	स्थूल	sTUl	परिबृहणे	to become fat, to become obese, to gain weight, to be healthy	A	S
+2197	10	447	अर्थ	arT	उपयाच्ञायाम्	to beg, to request	A	S
+2198	10	448	सत्र	str	सन्तानक्रियायाम्	to spread, to extend, to contact, to be connected	A	S
+2199	10	449	गर्व	grv	माने	to boast, to be egoistic, to be proud	A	S
+2200	10	450	सूत्र	sUtr	वेष्टने विमोचने ग्रन्थने च	to put in thread, to cover with thread	U	S
+2201	10	451	मूत्र	mUtr	प्रस्रवणे	to urinate	U	S
+2202	10	452	रूक्ष	rUkz	पारुष्ये	to become hard, to become dry, to speak harshly, to be dull	U	S
+2203	10	453	पार	pAr	कर्मसमाप्तौ	to end, to complete	U	S
+2204	10	454	तीर	tIr	कर्मसमाप्तौ	to end, to complete	U	S
+2205	10	455	पुट	puw	संसर्गे	to come in contact, to embrace, to hug, to join, to lock in	U	S
+2206	10	456	कत्र	ktr	शैथिल्ये	to loosen, to leave, to abandon	U	S
+2207	10	457	कर्तँ	krt~	शैथिल्ये	to loosen, to leave, to abandon	U	S
+2208	10	458	वल्क	vlk	दर्शने	to see	U	S
+2209	10	459	चित्र	citr	चित्रीकरणे	to paint, to draw, to create a portrait	U	S
+2210	10	460	अन्स	ans	समाघाते	to kill, to destroy, to hurt	U	S
+2211	10	461	वट	vw	विभाजने	to divide, to separate, to split, to isolate, to partition	U	S
+2212	10	462	छुटँ	Cuw~	छेदने	to cut, to strike	U	S
+2213	10	463	लज	lj	प्रकाशने	to appear, to be clear	U	S
+2214	10	464	वटिँ	vwi~	प्रकाशने	to appear, to be clear	U	S
+2215	10	465	लजिँ	lji~	प्रकाशने	to appear, to be clear	U	S
+2216	10	466	मिश्र	miSr	सम्पर्के	to mix, to add together, to combine	U	S
+2217	10	467	सन्ग्राम	sngrAm	युद्धे	to have war, to fight	A	S
+2218	10	468	स्तोम	stom	श्लाघायाम्	to praise, to boast, to cheer	U	S
+2219	10	469	छिद्र	Cidr	कर्णभेदने	to pierce ears	U	S
+2220	10	470	कर्णँ	krR~	भेदने	to pierce ears	U	S
+2221	10	471	अन्ध	anD	दृष्ट्युपघाते	to be blind, to lose vision	U	S
+2222	10	472	दन्ड	dnq	दण्डनिपाते	to punish, to fine	U	S
+2223	10	473	अन्क	ank	पदे लक्षणे च	to mark, to count, to roam around, to limp, to take in lap	U	S
+2224	10	474	अन्ग	ang	पदे लक्षणे च	to mark, to count, to roam around, to limp, to take in lap	U	S
+2225	10	475	सुख	suK	तत्क्रियायाम्	to make happy, to be happy	U	S
+2226	10	476	दुःख	duHK	तत्क्रियायाम्	to make sad, to be sad	U	S
+2227	10	477	रस	rs	आस्वादनस्नेहनयोः	to tastem to love, to have affection	U	S
+2228	10	478	व्यय	vyy	वित्तसमुत्सर्गे	to spend, to expense	U	S
+2229	10	479	रूप	rUp	रूपक्रियायाम्	to create a shape, to formulate, to create a mental picture	U	S
+2230	10	480	छेद	Ced	द्वैधीकरणे	to cut	U	S
+2231	10	481	छद	Cd	अपवारणे	to remove, to hide, to conceal	U	S
+2232	10	482	लाभ	lAB	प्रेरणे	to inspire	U	S
+2233	10	483	व्रण	vrR	गात्रविचूर्णने	to attack, to hurt, to damage someone, to wound	U	S
+2234	10	484	वर्ण	vrR	वर्णक्रियाविस्तारगुणवचनेषु	to explain, to elaborate, to spread, to praise, to glow, to shine	U	S
+2235	10	485	पर्ण	prR	हरितभावे	to become green, to color green	U	S
+2236	10	486	विष्क	vizk	दर्शने	to see	U	S
+2237	10	487	क्षिप	kzip	प्रेरणे	to inspire	U	S
+2238	10	488	वस	vs	निवासे	to live, to dwell, to stay	U	S
+2239	10	489	तुत्थ	tutT	आवरणे	to cover	U	S
+2240	10	490	पल्यूल	plyUl	लवनवपनयोः	to cut, to purify, to cleanse, to drop	U	S
+2241	10	491	रुठँ	ruW~	भाषायाम्	to speak, to talk	U	S
+2242	10	492	धेक	Dek	दर्शने	to see	U	S
+2243	10	493	-	-			-	-
+2244	10	494	-	-			-	-
+2245	10	495	-	-			-	-
+2246	10	496	-	-			-	-
+2247	10	497	-	-			-	-
+2248	10	498	-	-			-	-
+2249	10	499	-	-			-	-
+2250	10	500	-	-			-	-
+2251	10	501	-	-			-	-
+2252	10	502	-	-			-	-
+2253	10	503	-	-			-	-
+2254	10	504	-	-			-	-
+2255	10	505	-	-			-	-
+2256	10	506	-	-			-	-
+2257	10	507	-	-			-	-
+2258	10	508	-	-			-	-
+2259	10	509	-	-			-	-

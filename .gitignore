@@ -41,3 +41,16 @@ cmake_install.cmake
 CTestTestfile.cmake
 Makefile  # in build dirs only; root Makefile is tracked
 install_manifest.txt
+
+# Track generated data files (needed by C library at runtime)
+!data/*.tsv
+!data/*.md
+
+# Vendor fallbacks are committed (offline support)
+!vendor/sutra_fallback.json
+!vendor/dhatupatha_fallback.json
+!vendor/ganapatha_fallback.json
+!vendor/shivasutra_fallback.json
+!vendor/pratyahara_fallback.json
+!vendor/sutras_count.h
+!vendor/dhatupatha_count.h

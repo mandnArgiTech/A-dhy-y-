@@ -111,6 +111,8 @@ add_custom_target(validate-phase0
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_source.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_dhatupatha.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_ganapatha.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_pratyahara.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_pratyahara.py --validate
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   COMMENT "Phase 0: Validating data ingestion"
 )
