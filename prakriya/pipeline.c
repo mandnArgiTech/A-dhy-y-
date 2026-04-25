@@ -4,6 +4,8 @@
 #include "pratyahara.h"
 #include "varna.h"
 #include "sandhi_vowel.h"
+#include "sandhi_hal.h"
+#include "sandhi_visarga.h"
 #include "tinanta/lat_bhvadi.h"
 #include "tinanta/vikaranas.h"
 #include "subanta/a_stem.h"
@@ -13,6 +15,7 @@
 #include "krit/krit_primary.h"
 #include "taddhita/taddhita.h"
 #include "samasa.h"
+#include "dhatupatha/dhatupatha.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -65,7 +68,17 @@ void ash_form_free(ASH_Form *f) {
 
 /* ── Phonology utilities ─────────────────────────────────────────────────── */
 const char **ash_pratyahara_expand(const char *label) {
-  (void)label; return NULL; /* stub */
+  static const char *expanded[PRATYAHARA_MAX_MEMBERS];
+  static char slots[PRATYAHARA_MAX_MEMBERS - 1][2];
+  const Pratyahara *p = pratyahara_get(label);
+  if (!p) return NULL;
+  for (int i = 0; i < p->count && i < PRATYAHARA_MAX_MEMBERS - 1; i++) {
+    slots[i][0] = p->members[i];
+    slots[i][1] = '\0';
+    expanded[i] = slots[i];
+  }
+  expanded[p->count] = NULL;
+  return expanded;
 }
 bool ash_in_pratyahara(char phoneme, const char *label) {
   return pratyahara_contains(label, phoneme);
@@ -76,11 +89,72 @@ char ash_vrddhi(char v) { return varna_vrddhi(v); }
 /* ── Sandhi ──────────────────────────────────────────────────────────────── */
 bool ash_sandhi_apply(const char *a, const char *b,
                        char *out, size_t out_len, ASH_Encoding enc) {
-  (void)enc;
-  return sandhi_vowel_join(a, b, out, out_len);
+  char joined_slp1[512];
+  bool changed = false;
+  if (!a || !b || !out || out_len == 0) return false;
+  joined_slp1[0] = '\0';
+
+  if (a[0] == '\0' || b[0] == '\0') {
+    snprintf(joined_slp1, sizeof(joined_slp1), "%s%s", a ? a : "", b ? b : "");
+  } else {
+    size_t la = strlen(a);
+    char a_final = a[la - 1];
+    char b_initial = b[0];
+    if (a_final == 'H') {
+      SandhiResult r = sandhi_visarga_apply(la > 1 ? a[la - 2] : 'a', b_initial);
+      snprintf(joined_slp1, sizeof(joined_slp1), "%.*s%s%s",
+               (int)(la - 1), a, r.result_slp1, b + 1);
+      changed = r.changed;
+    } else if (varna_is_vowel(a_final) && varna_is_vowel(b_initial)) {
+      changed = sandhi_vowel_join(a, b, joined_slp1, sizeof(joined_slp1));
+      if (!changed && joined_slp1[0] == '\0') {
+        snprintf(joined_slp1, sizeof(joined_slp1), "%s%s", a, b);
+      }
+    } else {
+      changed = sandhi_hal_join(a, b, joined_slp1, sizeof(joined_slp1));
+      if (!changed && joined_slp1[0] == '\0') {
+        snprintf(joined_slp1, sizeof(joined_slp1), "%s%s", a, b);
+      }
+    }
+  }
+
+  if (enc == ASH_ENC_SLP1) {
+    strncpy(out, joined_slp1, out_len - 1);
+    out[out_len - 1] = '\0';
+    return changed;
+  }
+
+  {
+    char *converted = ash_encode(joined_slp1, ASH_ENC_SLP1, enc);
+    if (!converted) return false;
+    strncpy(out, converted, out_len - 1);
+    out[out_len - 1] = '\0';
+    free(converted);
+  }
+  return changed;
 }
 int ash_sandhi_split(const char *joined, char **splits, int max_splits) {
-  (void)joined;(void)splits;(void)max_splits; return 0;
+  int count = 0;
+  size_t n;
+  char recombined[512];
+  if (!joined || !splits || max_splits <= 0) return 0;
+  n = strlen(joined);
+  if (n < 2) return 0;
+  for (size_t i = 1; i < n && count < max_splits; i++) {
+    char left[256];
+    char right[256];
+    char candidate[512];
+    snprintf(left, sizeof(left), "%.*s", (int)i, joined);
+    snprintf(right, sizeof(right), "%s", joined + i);
+    ash_sandhi_apply(left, right, recombined, sizeof(recombined), ASH_ENC_SLP1);
+    if (strcmp(recombined, joined) != 0) continue;
+    snprintf(candidate, sizeof(candidate), "%s|%s", left, right);
+    splits[count] = malloc(strlen(candidate) + 1);
+    if (!splits[count]) break;
+    strcpy(splits[count], candidate);
+    count++;
+  }
+  return count;
 }
 
 /* ── Derivation (stubs — fleshed out in Stories 3-5) ──────────────────── */
@@ -140,11 +214,32 @@ ASH_Form ash_samasa(const ASH_DB *db, const char *purva, const char *uttara,
 
 /* ── Pipeline internals ──────────────────────────────────────────────────── */
 int pipeline_init(Pipeline *p, const char *data_dir) {
+  DhatupathaDB dh_db = {0};
   if (!p || !data_dir) return -1;
   memset(p, 0, sizeof(*p));
   char path[512];
   snprintf(path, sizeof(path), "%s/sutras.tsv", data_dir);
   sutra_db_load(&p->sutras, path);  /* ok if absent — ingestion handles it */
+  snprintf(path, sizeof(path), "%s/dhatupatha.tsv", data_dir);
+  if (dhatupatha_db_load(&dh_db, path) == 0 && dh_db.count > 0) {
+    p->dhatus = calloc((size_t)dh_db.count, sizeof(*p->dhatus));
+    if (!p->dhatus) {
+      dhatupatha_db_free(&dh_db);
+      return -1;
+    }
+    p->dhatu_count = dh_db.count;
+    for (int i = 0; i < dh_db.count; i++) {
+      strncpy(p->dhatus[i].upadesa_slp1, dh_db.entries[i].upadesa_slp1,
+              sizeof(p->dhatus[i].upadesa_slp1) - 1);
+      strncpy(p->dhatus[i].clean_slp1, dh_db.entries[i].upadesa_slp1,
+              sizeof(p->dhatus[i].clean_slp1) - 1);
+      p->dhatus[i].gana = dh_db.entries[i].gana;
+      p->dhatus[i].pada_flag = dh_db.entries[i].pada_flag;
+      strncpy(p->dhatus[i].meaning_en, dh_db.entries[i].meaning_en,
+              sizeof(p->dhatus[i].meaning_en) - 1);
+    }
+  }
+  dhatupatha_db_free(&dh_db);
   return 0;
 }
 void pipeline_free(Pipeline *p) {

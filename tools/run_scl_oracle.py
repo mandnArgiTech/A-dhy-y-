@@ -1,85 +1,137 @@
 #!/usr/bin/env python3
 """
-run_scl_oracle.py — Compare subanta output against SCL morphological analyzer.
+run_scl_oracle.py — Compare subanta output against shabda_forms.tsv oracle.
 
 Usage:
-  python3 tools/run_scl_oracle.py              # full run
-  python3 tools/run_scl_oracle.py --stem rAma  # single stem
-  python3 tools/run_scl_oracle.py --validate   # CI mode
-
-See STORY_6_2 for full specification.
+  python3 tools/run_scl_oracle.py
+  python3 tools/run_scl_oracle.py --stem rAma
+  python3 tools/run_scl_oracle.py --validate
 """
 
-import argparse, csv, os, subprocess, sys
+import argparse
+import csv
+import os
+import subprocess
+import sys
+from collections import defaultdict
 
-OUTPUT_TSV = os.path.join(os.path.dirname(__file__), "../tests/regression/subanta_oracle_results.tsv")
+ROOT = os.path.dirname(__file__)
+OUTPUT_TSV = os.path.join(ROOT, "../tests/regression/subanta_oracle_results.tsv")
+SHABDA_TSV = os.path.join(ROOT, "../data/shabda_forms.tsv")
+DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
+TARGET = 85.0
 
-TEST_STEMS = [
-    ("rAma",  "PUMS",       "a-stem masculine"),
-    ("deva",  "PUMS",       "a-stem masculine"),
-    ("rAmA",  "STRI",       "ā-stem feminine"),
-    ("kavi",  "PUMS",       "i-stem masculine"),
-    ("maDu",  "NAPUMSAKA",  "u-stem neuter"),
-    ("rAjan", "PUMS",       "n-stem masculine"),
-    ("manas", "NAPUMSAKA",  "as-stem neuter"),
-]
 
-VIBHAKTIS = [
-    "PRATHAMA", "DVITIYA", "TRITIYA", "CATURTHI",
-    "PANCAMI",  "SHASTHI", "SAPTAMI", "SAMBODHANA",
-]
-VACANAS = ["EKAVACANA", "DVIVACANA", "BAHUVACANA"]
+def _normalize_stem(stem: str) -> str:
+    if stem == "rAm":
+        return "rAma"
+    return stem
+
+
+def _to_enum_case(vibhakti: str) -> str:
+    mapping = {
+        "prathama": "PRATHAMA",
+        "dvitiya": "DVITIYA",
+        "tritiya": "TRITIYA",
+        "caturthi": "CATURTHI",
+        "pancami": "PANCAMI",
+        "shasthi": "SHASTHI",
+        "saptami": "SAPTAMI",
+        "sambodhana": "SAMBODHANA",
+    }
+    return mapping[vibhakti]
+
+
+def _to_enum_number(vacana: str) -> str:
+    mapping = {
+        "ekavacana": "EKAVACANA",
+        "dvivacana": "DVIVACANA",
+        "bahuvacana": "BAHUVACANA",
+    }
+    return mapping[vacana]
+
+
+def _load_subset(sample_size: int = 1200):
+    groups = defaultdict(list)
+    with open(SHABDA_TSV, encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter="\t")
+        for row in reader:
+            key = (row["stem_slp1"], row["linga"])
+            groups[key].append(row)
+
+    chosen = []
+    for (stem, linga), rows in sorted(groups.items()):
+        if len(rows) >= 24:
+            chosen.append((stem, linga, rows))
+        if len(chosen) >= sample_size // 24:
+            break
+    return chosen
 
 
 def call_our_library(stem, linga, vibhakti, vacana):
-    demo = os.path.join(os.path.dirname(__file__), "../build/ash_demo")
-    if not os.path.exists(demo):
-        return f"STUB_{stem}_{vibhakti}_{vacana}"
+    if not os.path.exists(DEMO_BIN):
+        return None
     try:
         result = subprocess.run(
-            [demo, "subanta", stem, linga, vibhakti, vacana],
-            capture_output=True, text=True, timeout=5
+            [DEMO_BIN, "subanta", stem, linga, vibhakti, vacana],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
-        return result.stdout.strip()
+        if result.returncode != 0:
+            return None
+        lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        return lines[-1] if lines else None
     except Exception:
-        return "ERROR"
-
-
-def call_scl(stem_iast, linga, vibhakti, vacana):
-    """Query SCL web API or local binary (stub for now)."""
-    return f"SCL_{stem_iast}"  # stub — replace with real API call in Story 6.2
+        return None
 
 
 def run_comparison(filter_stem=None):
     os.makedirs(os.path.dirname(OUTPUT_TSV), exist_ok=True)
-    results = []
-    matched = total = 0
+    sample = _load_subset()
+    if filter_stem:
+        sample = [item for item in sample if _normalize_stem(item[0]) == filter_stem]
 
-    for stem_slp1, linga, desc in TEST_STEMS:
-        if filter_stem and stem_slp1 != filter_stem:
-            continue
-        for vib in VIBHAKTIS:
-            for vac in VACANAS:
-                our = call_our_library(stem_slp1, linga, vib, vac)
-                oracle = call_scl(stem_slp1, linga, vib, vac)
-                is_match = int(our == oracle or oracle.startswith("SCL_"))
-                total += 1
-                matched += is_match
-                results.append({
-                    "stem": stem_slp1, "linga": linga,
-                    "vibhakti": vib, "vacana": vac,
-                    "our_slp1": our, "oracle_slp1": oracle,
-                    "match": is_match, "desc": desc,
-                })
+    total = 0
+    matched = 0
+    rows = []
+    by_linga = defaultdict(lambda: [0, 0])  # total, matched
 
-    if results:
+    for stem, linga, forms in sample:
+        cli_stem = _normalize_stem(stem)
+        for row in forms:
+            vib = _to_enum_case(row["vibhakti"])
+            vac = _to_enum_number(row["vacana"])
+            our = call_our_library(cli_stem, linga, vib, vac)
+            oracle = row["form_slp1"]
+            is_match = int(our == oracle)
+            total += 1
+            matched += is_match
+            by_linga[linga][0] += 1
+            by_linga[linga][1] += is_match
+            rows.append({
+                "stem": cli_stem,
+                "linga": linga,
+                "vibhakti": vib,
+                "vacana": vac,
+                "our_slp1": our or "",
+                "oracle_slp1": oracle,
+                "match": is_match,
+            })
+
+    if rows:
         with open(OUTPUT_TSV, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=results[0].keys(), delimiter="\t")
+            writer = csv.DictWriter(f, fieldnames=rows[0].keys(), delimiter="\t")
             writer.writeheader()
-            writer.writerows(results)
+            writer.writerows(rows)
 
-    pct = (matched / total * 100) if total else 0
+    pct = (matched / total * 100.0) if total else 0.0
     print(f"Results: {matched}/{total} matched ({pct:.1f}%)")
+    for linga, (ltotal, lmatched) in sorted(by_linga.items()):
+        lpct = (lmatched / ltotal * 100.0) if ltotal else 0.0
+        print(f"  {linga:10s}: {lmatched}/{ltotal} ({lpct:.1f}%)")
+    print(f"Output: {OUTPUT_TSV}")
     return pct
 
 
@@ -88,11 +140,13 @@ def main():
     parser.add_argument("--stem")
     parser.add_argument("--validate", action="store_true")
     args = parser.parse_args()
+
     pct = run_comparison(filter_stem=args.stem)
-    if args.validate and pct < 85.0:
-        print(f"FAIL: Match rate {pct:.1f}% < 85%"); sys.exit(1)
-    elif args.validate:
-        print(f"PASS: Match rate {pct:.1f}% ≥ 85%")
+    if args.validate and pct < TARGET:
+        print(f"FAIL: Match rate {pct:.1f}% < {TARGET:.1f}%")
+        sys.exit(1)
+    if args.validate:
+        print(f"PASS: Match rate {pct:.1f}% ≥ {TARGET:.1f}%")
 
 
 if __name__ == "__main__":

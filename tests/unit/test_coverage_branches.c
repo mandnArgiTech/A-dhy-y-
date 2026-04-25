@@ -496,7 +496,11 @@ void test_guna_vikaranas_lakara_misc_branches(void) {
   TEST_ASSERT_NULL(pratyahara_get("zzz"));
   TEST_ASSERT_FALSE(pratyahara_contains("zzz", 'a'));
   TEST_ASSERT_NOT_NULL(pratyahara_all(NULL));
-  TEST_ASSERT_NULL(ash_pratyahara_expand("ac"));
+  {
+    const char **expanded = ash_pratyahara_expand("ac");
+    TEST_ASSERT_NOT_NULL(expanded);
+    TEST_ASSERT_EQUAL_STRING("a", expanded[0]);
+  }
   TEST_ASSERT_TRUE(ash_in_pratyahara('a', "ac"));
 
   vbuf[0] = ash_guna('i');
