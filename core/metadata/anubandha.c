@@ -17,14 +17,6 @@
 /* Return length of upadesa in bytes (SLP1 is ASCII so bytes == chars) */
 static inline int slen(const char *s) { return s ? (int)strlen(s) : 0; }
 
-/* Is this a nasalized vowel marker (SLP1 '~' modifier or trailing M)? */
-static bool is_nasal_vowel_marker(char c, char next) {
-  /* In our SLP1 encoding we use '~' after a vowel for nasalization.
-     Also "aM" sequences are NOT it unless in suffix context. */
-  (void)next;
-  return c == '~';
-}
-
 /* Check if a char is an "it-able" consonant per Pāṇini's rules:
  * Any final consonant in upadesa is a candidate for it-status (1.3.3). */
 static bool is_candidate_final_it(char c) {

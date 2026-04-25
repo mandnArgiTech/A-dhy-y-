@@ -1,6 +1,9 @@
 /* pipeline.c — unified pipeline + public ASH_DB API; Story 5.1 */
 #include "pipeline.h"
 #include "encoding.h"
+#include "pratyahara.h"
+#include "varna.h"
+#include "sandhi_vowel.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -183,6 +186,7 @@ static ASH_Form ctx_to_form(const PrakriyaCtx *ctx) {
 
 ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
                             ASH_Lakara l, ASH_Purusha pu, ASH_Vacana v, ASH_Pada pd) {
+  (void)p;
   PrakriyaCtx ctx = {0};
   prakriya_init_tinanta(&ctx, root_slp1, gana, l, pu, v, pd);
   /* Stub: just return root as the form with a note */
@@ -191,6 +195,7 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
 }
 ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
                             ASH_Vibhakti vib, ASH_Vacana v) {
+  (void)p;
   PrakriyaCtx ctx = {0};
   prakriya_init_subanta(&ctx, stem_slp1, li, vib, v);
   prakriya_log(&ctx, 0, "stub — Story 4.2 implements a-stem declension");

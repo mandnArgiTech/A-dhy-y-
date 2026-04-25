@@ -6,7 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Compiler flags
 add_compile_options(-Wall -Wextra -Werror -pedantic)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+option(ASH_ENABLE_SANITIZERS "Enable address/UB sanitizers in debug-like builds" OFF)
+if(ASH_ENABLE_SANITIZERS)
   add_compile_options(-g -fsanitize=address,undefined)
   add_link_options(-fsanitize=address,undefined)
 endif()
@@ -121,33 +122,33 @@ add_custom_target(validate-phase0
 )
 
 add_custom_target(validate-phase1
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_varna|test_pratyahara|test_encoding|test_sandhi"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_varna\\|test_pratyahara\\|test_encoding\\|test_sandhi"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 1: Validating phonology engine"
 )
 
 add_custom_target(validate-phase2
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_sutra|test_samjna|test_anubandha|test_adhikara|test_anuvrtti|test_paribhasha"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_sutra\\|test_samjna\\|test_anubandha\\|test_adhikara\\|test_anuvrtti\\|test_paribhasha"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 2: Validating sutra engine"
 )
 
 add_custom_target(validate-phase3
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_term|test_conflict|test_lakara|test_guna|test_lat"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_term\\|test_conflict\\|test_lakara\\|test_guna\\|test_lat"
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_vyakarana_oracle.py --validate
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 3: Validating tinanta derivation"
 )
 
 add_custom_target(validate-phase4
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_vibhakti|test_a_stem|test_aaiu|test_consonant|test_karaka"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_vibhakti\\|test_a_stem\\|test_aaiu\\|test_consonant\\|test_karaka"
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_scl_oracle.py --validate
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 4: Validating subanta declension"
 )
 
 add_custom_target(validate-phase5
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline|test_samasa|test_krit|test_taddhita|test_unadi"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline\\|test_samasa\\|test_krit\\|test_taddhita\\|test_unadi"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 5: Validating pipeline and derivatives"
 )

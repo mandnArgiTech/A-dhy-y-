@@ -4,6 +4,9 @@
 #include "ashtadhyayi.h"
 #include "context.h"
 #include "sutra.h"
+#include "pratyahara.h"
+#include "varna.h"
+#include "sandhi_vowel.h"
 typedef struct {
   char  upadesa_slp1[64];
   char  clean_slp1[32];
