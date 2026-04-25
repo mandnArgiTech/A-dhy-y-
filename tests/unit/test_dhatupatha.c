@@ -1,17 +1,13 @@
 #include "unity.h"
 #include "dhatupatha/dhatupatha.h"
+#include "test_paths.h"
 
 void setUp(void) {}
 void tearDown(void) {}
 
-/* Return a data path that works under both ctest and direct execution. */
 static const char *dhatu_data_path(void) {
-  FILE *f = fopen("data/dhatupatha.tsv", "r");
-  if (f) {
-    fclose(f);
-    return "data/dhatupatha.tsv";
-  }
-  return "../data/dhatupatha.tsv";
+  static char path[256];
+  return test_resolve_data_file("dhatupatha.tsv", path, sizeof(path));
 }
 
 void test_dhatupatha_load_and_find(void) {

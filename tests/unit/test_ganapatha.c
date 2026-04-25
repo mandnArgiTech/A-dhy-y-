@@ -1,18 +1,10 @@
 #include "unity.h"
 #include "ganapatha/ganapatha.h"
+#include "test_paths.h"
 
 static const char *locate_ganapatha_path(void) {
-  FILE *fp = fopen("data/ganapatha.tsv", "r");
-  if (fp) {
-    fclose(fp);
-    return "data/ganapatha.tsv";
-  }
-  fp = fopen("../data/ganapatha.tsv", "r");
-  if (fp) {
-    fclose(fp);
-    return "../data/ganapatha.tsv";
-  }
-  return "data/ganapatha.tsv";
+  static char path[256];
+  return test_resolve_data_file("ganapatha.tsv", path, sizeof(path));
 }
 
 void setUp(void) {}
