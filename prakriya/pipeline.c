@@ -10,6 +10,9 @@
 #include "subanta/aaiu_stems.h"
 #include "subanta/consonant_stems.h"
 #include "subanta/vibhakti.h"
+#include "krit/krit_primary.h"
+#include "taddhita/taddhita.h"
+#include "samasa.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -126,21 +129,13 @@ void ash_subanta_paradigm(const ASH_DB *db, const char *stem_slp1,
 }
 
 ASH_Form ash_krit(const ASH_DB *db, const char *root_slp1, int gana, ASH_KritType krit) {
-  (void)db;(void)gana;(void)krit;
-  return make_error_form("krit not yet implemented (Story 5.3)");
-  (void)root_slp1;
+  if (!db) return make_error_form("db is NULL");
+  return krit_derive(root_slp1, gana, krit);
 }
 ASH_Form ash_samasa(const ASH_DB *db, const char *purva, const char *uttara,
                      ASH_SamasaType type, ASH_Linga linga) {
-  (void)db;(void)type;(void)linga;
-  if (!purva||!uttara) return make_error_form("NULL input");
-  /* Stub: concatenate with vowel sandhi */
-  ASH_Form f = {0};
-  f.valid = true;
-  sandhi_vowel_join(purva, uttara, f.slp1, sizeof(f.slp1));
-  char *iast = enc_slp1_to_iast(f.slp1);
-  if (iast) { strncpy(f.iast, iast, sizeof(f.iast)-1); free(iast); }
-  return f;
+  if (!db) return make_error_form("db is NULL");
+  return samasa_derive(&db->pipeline.sutras, purva, uttara, type, linga, NULL);
 }
 
 /* ── Pipeline internals ──────────────────────────────────────────────────── */
