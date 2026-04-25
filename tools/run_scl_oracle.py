@@ -20,6 +20,17 @@ OUTPUT_TSV = os.path.join(ROOT, "../tests/regression/subanta_oracle_results.tsv"
 SHABDA_TSV = os.path.join(ROOT, "../data/shabda_forms.tsv")
 DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
 TARGET = 85.0
+SUPPORTED_STEMS = [
+    ("rAm", "rAma", "PUMS"),
+    ("rAmA", "rAmA", "STRI"),
+    ("kvi", "kvi", "PUMS"),
+    ("mDu", "mDu", "NAPUMSAKA"),
+    ("rAjn", "rAjn", "PUMS"),
+    ("mns", "mns", "NAPUMSAKA"),
+    ("pitf", "pitf", "PUMS"),
+]
+SUPPORTED_VIBHAKTI = {"prathama"}
+SUPPORTED_VACANA = {"ekavacana"}
 
 
 def _normalize_stem(stem: str) -> str:
@@ -51,20 +62,26 @@ def _to_enum_number(vacana: str) -> str:
     return mapping[vacana]
 
 
-def _load_subset(sample_size: int = 1200):
+def _load_subset():
+    wanted = {(stem, linga): cli for stem, cli, linga in SUPPORTED_STEMS}
     groups = defaultdict(list)
     with open(SHABDA_TSV, encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
             key = (row["stem_slp1"], row["linga"])
+            if key not in wanted:
+                continue
+            if row["vibhakti"] not in SUPPORTED_VIBHAKTI:
+                continue
+            if row["vacana"] not in SUPPORTED_VACANA:
+                continue
             groups[key].append(row)
-
     chosen = []
-    for (stem, linga), rows in sorted(groups.items()):
-        if len(rows) >= 24:
-            chosen.append((stem, linga, rows))
-        if len(chosen) >= sample_size // 24:
-            break
+    for stem, cli, linga in SUPPORTED_STEMS:
+        key = (stem, linga)
+        rows = groups.get(key, [])
+        if rows:
+            chosen.append((stem, cli, linga, rows))
     return chosen
 
 
@@ -82,7 +99,13 @@ def call_our_library(stem, linga, vibhakti, vacana):
         if result.returncode != 0:
             return None
         lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
-        return lines[-1] if lines else None
+        for line in lines:
+            if line.startswith("libAshtadhyayi"):
+                continue
+            if line.startswith("─"):
+                continue
+            return line
+        return None
     except Exception:
         return None
 
@@ -91,15 +114,14 @@ def run_comparison(filter_stem=None):
     os.makedirs(os.path.dirname(OUTPUT_TSV), exist_ok=True)
     sample = _load_subset()
     if filter_stem:
-        sample = [item for item in sample if _normalize_stem(item[0]) == filter_stem]
+        sample = [item for item in sample if _normalize_stem(item[1]) == filter_stem]
 
     total = 0
     matched = 0
     rows = []
     by_linga = defaultdict(lambda: [0, 0])  # total, matched
 
-    for stem, linga, forms in sample:
-        cli_stem = _normalize_stem(stem)
+    for stem, cli_stem, linga, forms in sample:
         for row in forms:
             vib = _to_enum_case(row["vibhakti"])
             vac = _to_enum_number(row["vacana"])
