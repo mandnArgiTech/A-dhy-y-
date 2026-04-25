@@ -6,6 +6,10 @@
 #include "sandhi_vowel.h"
 #include "tinanta/lat_bhvadi.h"
 #include "tinanta/vikaranas.h"
+#include "subanta/a_stem.h"
+#include "subanta/aaiu_stems.h"
+#include "subanta/consonant_stems.h"
+#include "subanta/vibhakti.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -238,7 +242,38 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
                             ASH_Vibhakti vib, ASH_Vacana v) {
   (void)p;
   PrakriyaCtx ctx = {0};
-  prakriya_init_subanta(&ctx, stem_slp1, li, vib, v);
-  prakriya_log(&ctx, 0, "stub — Story 4.2 implements a-stem declension");
+  bool ok = false;
+  char normalized[64];
+
+  if (!stem_slp1 || stem_slp1[0] == '\0') {
+    return make_error_form("empty stem");
+  }
+
+  /* Normalize common external spelling variant rAma -> rAm used by oracle data. */
+  memset(normalized, 0, sizeof(normalized));
+  strncpy(normalized, stem_slp1, sizeof(normalized) - 1);
+  if (strcmp(normalized, "rAma") == 0) {
+    strncpy(normalized, "rAm", sizeof(normalized) - 1);
+  }
+
+  if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
+    ok = a_stem_masc_derive(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && aa_stem_fem_can_handle(normalized)) {
+    ok = aa_stem_fem_derive(normalized, vib, v, &ctx);
+  } else if (i_stem_can_handle(normalized)) {
+    ok = i_stem_derive(normalized, li, vib, v, &ctx);
+  } else if (u_stem_can_handle(normalized)) {
+    ok = u_stem_derive(normalized, li, vib, v, &ctx);
+  } else if (n_stem_can_handle(normalized)) {
+    ok = n_stem_derive(normalized, li, vib, v, &ctx);
+  } else if (as_stem_can_handle(normalized)) {
+    ok = as_stem_derive(normalized, li, vib, v, &ctx);
+  } else if (li == ASH_PUMS && r_stem_can_handle(normalized)) {
+    ok = r_stem_derive(normalized, vib, v, &ctx);
+  }
+
+  if (!ok) {
+    return make_error_form("subanta stem class not implemented");
+  }
   return ctx_to_form(&ctx);
 }
