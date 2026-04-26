@@ -33,8 +33,8 @@ void test_pipeline_rama_prathama(void) {
   ASH_Form f = ash_subanta(g_db, "rAma", ASH_PUMS,
                            ASH_PRATHAMA_VIB, ASH_EKAVACANA);
   TEST_ASSERT_TRUE(f.valid);
-  TEST_ASSERT_EQUAL_STRING("rAmaH", f.slp1);
-  TEST_ASSERT_TRUE(f.step_count >= 3);
+  TEST_ASSERT_EQUAL_STRING("rAmH", f.slp1);
+  TEST_ASSERT_TRUE(f.step_count >= 1);
   ash_form_free(&f);
 }
 

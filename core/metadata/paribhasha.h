@@ -1,4 +1,4 @@
-/* paribhasha.h — stub; Story 2.6 */
+/* paribhasha.h — paribhAShA metadata and predicates; Story 2.6 */
 #ifndef PARIBHASHA_H
 #define PARIBHASHA_H
 #include <stdbool.h>

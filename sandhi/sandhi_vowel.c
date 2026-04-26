@@ -15,9 +15,7 @@
 #include <string.h>
 
 /* Traditional addresses of the sandhi sūtras (for rule_applied field).
- * These are GLOBAL IDs within our sequential numbering.
- * TODO: resolve via sutra_get_by_addr() once db is accessible; for now,
- * use traditional-address encoded as uint32: adhyaya*10000 + pada*100 + num */
+ * Stored in adhyAya/pAda/sUtra packed format: a*100000 + p*1000 + n. */
 #define SUTRA_6_1_66  610066
 #define SUTRA_6_1_77  610077
 #define SUTRA_6_1_78  610078
@@ -184,7 +182,53 @@ bool sandhi_vowel_join(const char *a, const char *b, char *out, size_t len) {
 }
 
 int sandhi_vowel_split(char junction, SandhiSplit *splits, int max_splits) {
-  (void)junction; (void)splits; (void)max_splits;
-  /* TODO: Phase 6 — for now we don't split; return 0 */
-  return 0;
+  int count = 0;
+  if (!splits || max_splits <= 0) return 0;
+#define ADD_SPLIT(A, B, R)                          \
+  do {                                              \
+    if (count < max_splits) {                       \
+      splits[count].a_end = (A);                    \
+      splits[count].b_start = (B);                  \
+      splits[count].rule = (R);                     \
+      count++;                                      \
+    }                                               \
+  } while (0)
+
+  switch (junction) {
+    case 'A':
+      ADD_SPLIT('a', 'a', SUTRA_6_1_101);
+      ADD_SPLIT('A', 'a', SUTRA_6_1_101);
+      ADD_SPLIT('a', 'A', SUTRA_6_1_101);
+      break;
+    case 'I':
+      ADD_SPLIT('i', 'i', SUTRA_6_1_101);
+      ADD_SPLIT('I', 'i', SUTRA_6_1_101);
+      ADD_SPLIT('i', 'I', SUTRA_6_1_101);
+      break;
+    case 'U':
+      ADD_SPLIT('u', 'u', SUTRA_6_1_101);
+      ADD_SPLIT('U', 'u', SUTRA_6_1_101);
+      ADD_SPLIT('u', 'U', SUTRA_6_1_101);
+      break;
+    case 'e':
+      ADD_SPLIT('a', 'i', SUTRA_6_1_87);
+      ADD_SPLIT('a', 'I', SUTRA_6_1_87);
+      break;
+    case 'o':
+      ADD_SPLIT('a', 'u', SUTRA_6_1_87);
+      ADD_SPLIT('a', 'U', SUTRA_6_1_87);
+      break;
+    case 'E':
+      ADD_SPLIT('a', 'e', SUTRA_6_1_88);
+      ADD_SPLIT('a', 'E', SUTRA_6_1_88);
+      break;
+    case 'O':
+      ADD_SPLIT('a', 'o', SUTRA_6_1_88);
+      ADD_SPLIT('a', 'O', SUTRA_6_1_88);
+      break;
+    default:
+      break;
+  }
+#undef ADD_SPLIT
+  return count;
 }
