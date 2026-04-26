@@ -47,6 +47,24 @@ void test_car_b_before_s(void) {
   TEST_ASSERT_EQUAL_STRING("ps", r.result_slp1);
 }
 
+void test_jash_additional_branches(void) {
+  TEST_ASSERT_EQUAL_STRING("ja", sandhi_hal_apply('c', 'a').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("qa", sandhi_hal_apply('w', 'a').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("qa", sandhi_hal_apply('q', 'a').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("da", sandhi_hal_apply('d', 'a').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("ba", sandhi_hal_apply('b', 'a').result_slp1);
+}
+
+void test_car_additional_branches(void) {
+  TEST_ASSERT_EQUAL_STRING("ck", sandhi_hal_apply('j', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("wk", sandhi_hal_apply('q', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("ck", sandhi_hal_apply('c', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("wk", sandhi_hal_apply('w', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("tk", sandhi_hal_apply('t', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("pk", sandhi_hal_apply('p', 'k').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("rk", sandhi_hal_apply('r', 'k').result_slp1);
+}
+
 /* ── 8.3.23 anusvāra: final m + consonant ───────────────────────────── */
 
 void test_anusvara_m_before_k(void) {
@@ -80,6 +98,12 @@ void test_nasal_t_plus_m(void) {
   /* t + m → n + m */
   SandhiResult r = sandhi_hal_apply('t', 'm');
   TEST_ASSERT_EQUAL_STRING("nm", r.result_slp1);
+}
+
+void test_nasal_additional_branches(void) {
+  TEST_ASSERT_EQUAL_STRING("Yn", sandhi_hal_apply('c', 'n').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("Rn", sandhi_hal_apply('w', 'n').result_slp1);
+  TEST_ASSERT_EQUAL_STRING("mn", sandhi_hal_apply('p', 'n').result_slp1);
 }
 
 /* ── Full-word join ──────────────────────────────────────────────────── */
@@ -151,11 +175,14 @@ int main(void) {
   RUN_TEST(test_car_g_before_t);
   RUN_TEST(test_car_d_before_k);
   RUN_TEST(test_car_b_before_s);
+  RUN_TEST(test_jash_additional_branches);
+  RUN_TEST(test_car_additional_branches);
   RUN_TEST(test_anusvara_m_before_k);
   RUN_TEST(test_anusvara_m_before_c);
   RUN_TEST(test_m_before_vowel_no_change);
   RUN_TEST(test_nasal_k_plus_n);
   RUN_TEST(test_nasal_t_plus_m);
+  RUN_TEST(test_nasal_additional_branches);
   RUN_TEST(test_join_tam_ca);
   RUN_TEST(test_join_vak_asti);
   RUN_TEST(test_join_no_change_consonant_match);

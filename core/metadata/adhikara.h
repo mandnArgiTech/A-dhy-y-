@@ -1,4 +1,4 @@
-/* adhikara.h — stub; Story 2.4 */
+/* adhikara.h — adhikAra scope tracker; Story 2.4 */
 #ifndef ADHIKARA_H
 #define ADHIKARA_H
 #include "sutra.h"

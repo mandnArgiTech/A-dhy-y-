@@ -1,99 +1,146 @@
 #!/usr/bin/env python3
 """
-coverage_report.py — Report which sūtras are exercised by the test suite.
+coverage_report.py — compute weighted line coverage from gcov output.
 
-Usage:
-  python3 tools/coverage_report.py > tests/regression/sutra_coverage_report.txt
+This script expects to be run from a build directory after tests have run.
+It scans for *.gcno files, runs gcov, filters project C sources, and reports
+weighted line coverage.
 
-See STORY_6_3 for full specification.
+By default this script enforces a 95% threshold. Override with:
+  ASH_COVERAGE_TARGET=90 python3 tools/coverage_report.py
 """
 
-import csv, os, sys
+from __future__ import annotations
 
-SUTRAS_TSV = os.path.join(os.path.dirname(__file__), "../data/sutras.tsv")
-OUTPUT_RPT = os.path.join(os.path.dirname(__file__),
-                           "../tests/regression/sutra_coverage_report.txt")
+import os
+import re
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
 
-# Vedic-only sūtras (approximate range — refine in Story 6.3)
-VEDIC_RANGES = [
-    (3655, 3747),  # Chhandas section
-    (3748, 3810),  # Śākalya pāṭha
-]
-
-IMPLEMENTED_SUTRA_IDS = set()  # Populated during test runs
-
-
-def is_vedic(global_id: int) -> bool:
-    for lo, hi in VEDIC_RANGES:
-        if lo <= global_id <= hi:
-            return True
-    return False
+REPO_ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_RPT = REPO_ROOT / "tests" / "regression" / "sutra_coverage_report.txt"
+DEFAULT_TARGET = 95.0
 
 
-def load_sutras():
-    if not os.path.exists(SUTRAS_TSV):
-        print("ERROR: data/sutras.tsv not found. Run ingestion first.", file=sys.stderr)
-        sys.exit(1)
-    sutras = []
-    with open(SUTRAS_TSV, encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter="\t")
-        for row in reader:
-            sutras.append({
-                "global_id": int(row["global_id"]),
-                "adhyaya": int(row["adhyaya"]),
-                "pada": int(row["pada"]),
-                "num": int(row["num"]),
-                "sutra_type": row["sutra_type"],
-            })
-    return sutras
+@dataclass
+class CoverageRow:
+    path: str
+    percent: float
+    lines: int
+
+    @property
+    def uncovered(self) -> float:
+        return self.lines * (100.0 - self.percent) / 100.0
 
 
-def generate_report():
-    sutras = load_sutras()
-    total = len(sutras)
-    vedic = [s for s in sutras if is_vedic(s["global_id"])]
-    classical = [s for s in sutras if not is_vedic(s["global_id"])]
+def discover_gcno_files(build_dir: Path) -> list[str]:
+    return [str(p) for p in build_dir.rglob("*.gcno")]
 
-    covered = [s for s in classical
-               if s["global_id"] in IMPLEMENTED_SUTRA_IDS]
+
+def run_gcov(build_dir: Path, gcno_files: list[str]) -> str:
+    # Keep command line size bounded by chunking.
+    chunks: list[list[str]] = []
+    step = 200
+    for i in range(0, len(gcno_files), step):
+        chunks.append(gcno_files[i : i + step])
+
+    output_parts: list[str] = []
+    for chunk in chunks:
+        proc = subprocess.run(
+            ["gcov", *chunk],
+            cwd=build_dir,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        output_parts.append(proc.stdout)
+    return "".join(output_parts)
+
+
+def parse_gcov_summary(text: str) -> list[CoverageRow]:
+    pattern = re.compile(r"File '([^']+)'\nLines executed:([0-9]+\.[0-9]+)% of ([0-9]+)")
+    rows: list[CoverageRow] = []
+    for path, pct, lines in pattern.findall(text):
+        rows.append(CoverageRow(path=path, percent=float(pct), lines=int(lines)))
+    return rows
+
+
+def is_project_source(path: str) -> bool:
+    if not path.endswith(".c"):
+        return False
+    if "/tests/" in path:
+        return False
+    if "/examples/" in path:
+        return False
+    if "unity.c" in path:
+        return False
+    if "CMakeCCompilerId" in path:
+        return False
+    return True
+
+
+def weighted_coverage(rows: list[CoverageRow]) -> float:
+    total = sum(r.lines for r in rows)
+    if total == 0:
+        return 0.0
+    covered = sum((r.percent * r.lines) / 100.0 for r in rows)
+    return (covered / total) * 100.0
+
+
+def build_report(rows: list[CoverageRow], target: float) -> str:
+    cov = weighted_coverage(rows)
+    total_lines = sum(r.lines for r in rows)
+    status = "PASS" if cov >= target else "FAIL"
+    top_uncovered = sorted(rows, key=lambda r: r.uncovered, reverse=True)[:20]
 
     lines = [
-        "===== libAshtadhyayi Sūtra Coverage Report =====\n",
-        f"Total sūtras in Aṣṭādhyāyī:  {total}",
-        f"Vedic-only sūtras (excluded): {len(vedic)}",
-        f"Target (Classical Sanskrit):  {len(classical)}",
-        f"",
-        f"Covered by test suite:        {len(covered)} ({len(covered)/len(classical)*100:.1f}%)",
-        f"",
-        f"Critical sūtras (Phase 1–3):",
+        "===== libAshtadhyayi Line Coverage Report =====",
+        "",
+        f"Project C source files:        {len(rows)}",
+        f"Project executable lines:      {total_lines}",
+        f"Weighted line coverage:        {cov:.2f}%",
+        f"Target threshold:              {target:.2f}%",
+        f"Result:                        {status}",
+        "",
+        "Top uncovered files:",
     ]
+    for row in top_uncovered:
+        lines.append(
+            f"  {row.path}  --  {row.percent:.2f}% of {row.lines} "
+            f"(uncovered {row.uncovered:.1f})"
+        )
+    return "\n".join(lines) + "\n"
 
-    # List a sample of critical sūtras
-    critical = [
-        (1, 1, 1, "vṛddhirādaic — Vṛddhi definition"),
-        (1, 1, 2, "adeṅ guṇaḥ — Guṇa definition"),
-        (3, 1, 68, "kartari śap — Class 1 vikaraṇa"),
-        (6, 1, 77, "iko yaṇ aci — yaṆ sandhi"),
-        (6, 1, 101, "akaḥ savarṇe dīrghaḥ — savarṇadīrgha"),
-        (7, 3, 84, "sārvadhātukārdhadhātukayoḥ — guṇa"),
-        (8, 3, 23, "mo'nusvāraḥ — anusvāra"),
-        (8, 4, 53, "jhalopajhaś jashi — voicing assimilation"),
-    ]
 
-    for a, p, n, desc in critical:
-        status = "✓ COVERED" if any(
-            s["adhyaya"] == a and s["pada"] == p and s["num"] == n
-            and s["global_id"] in IMPLEMENTED_SUTRA_IDS
-            for s in sutras
-        ) else "  (not yet covered by test suite)"
-        lines.append(f"  {a}.{p}.{n:3d}  {desc}  {status}")
+def main() -> int:
+    build_dir = Path.cwd()
+    target = float(os.environ.get("ASH_COVERAGE_TARGET", DEFAULT_TARGET))
 
-    report = "\n".join(lines)
-    os.makedirs(os.path.dirname(OUTPUT_RPT), exist_ok=True)
-    with open(OUTPUT_RPT, "w", encoding="utf-8") as f:
-        f.write(report + "\n")
-    print(report)
+    gcno_files = discover_gcno_files(build_dir)
+    if not gcno_files:
+        report = (
+            "===== libAshtadhyayi Line Coverage Report =====\n\n"
+            "No *.gcno files found in this build directory.\n"
+            "Build with coverage flags (e.g. -fprofile-arcs -ftest-coverage) and rerun tests.\n"
+        )
+        OUTPUT_RPT.parent.mkdir(parents=True, exist_ok=True)
+        OUTPUT_RPT.write_text(report, encoding="utf-8")
+        print(report, end="")
+        return 0
+
+    gcov_text = run_gcov(build_dir, gcno_files)
+    rows = parse_gcov_summary(gcov_text)
+    project_rows = [r for r in rows if is_project_source(r.path)]
+    report = build_report(project_rows, target)
+
+    OUTPUT_RPT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_RPT.write_text(report, encoding="utf-8")
+    print(report, end="")
+
+    return 0 if weighted_coverage(project_rows) >= target else 1
 
 
 if __name__ == "__main__":
-    generate_report()
+    sys.exit(main())

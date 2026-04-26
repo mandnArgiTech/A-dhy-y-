@@ -205,6 +205,9 @@ void test_shorten(void) {
   TEST_ASSERT_EQUAL_CHAR('a', varna_shorten('A'));
   TEST_ASSERT_EQUAL_CHAR('i', varna_shorten('I'));
   TEST_ASSERT_EQUAL_CHAR('u', varna_shorten('U'));
+  TEST_ASSERT_EQUAL_CHAR('f', varna_shorten('F'));
+  TEST_ASSERT_EQUAL_CHAR('x', varna_shorten('X'));
+  TEST_ASSERT_EQUAL_CHAR('k', varna_shorten('k'));
 }
 
 void test_savarna_rep(void) {
@@ -212,6 +215,8 @@ void test_savarna_rep(void) {
   TEST_ASSERT_EQUAL_CHAR('a', varna_savarna_rep('a'));
   TEST_ASSERT_EQUAL_CHAR('a', varna_savarna_rep('A'));
   TEST_ASSERT_EQUAL_CHAR('i', varna_savarna_rep('I'));
+  TEST_ASSERT_EQUAL_CHAR('f', varna_savarna_rep('F'));
+  TEST_ASSERT_EQUAL_CHAR('x', varna_savarna_rep('X'));
   TEST_ASSERT_EQUAL_CHAR('k', varna_savarna_rep('k'));  /* consonant — identity */
 }
 

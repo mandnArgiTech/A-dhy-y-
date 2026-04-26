@@ -4,6 +4,14 @@
 #include "ashtadhyayi.h"
 #include "context.h"
 #include "sutra.h"
+#include "pratyahara.h"
+#include "varna.h"
+#include "sandhi_vowel.h"
+#include "tinanta/lat_bhvadi.h"
+#include "tinanta/vikaranas.h"
+#include "subanta/a_stem.h"
+#include "subanta/aaiu_stems.h"
+#include "subanta/consonant_stems.h"
 typedef struct {
   char  upadesa_slp1[64];
   char  clean_slp1[32];
