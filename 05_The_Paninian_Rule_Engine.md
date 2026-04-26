@@ -1,6 +1,6 @@
 # 05 — The Paninian Rule Engine (Core Logic)
 
-This is the rule-mechanics chapter.  
+This is the rule-mechanics chapter.
 All claims here are grounded in currently implemented code paths.
 
 Related:

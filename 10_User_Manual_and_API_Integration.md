@@ -150,7 +150,7 @@ If invalid arguments are supplied, demo prints usage and exits nonzero.
 
 ## 5) Encoding integration guidance
 
-Internal processing is SLP1-centric.  
+Internal processing is SLP1-centric.
 Use `ash_encode()` at boundaries:
 
 ```cpp

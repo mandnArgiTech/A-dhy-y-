@@ -71,7 +71,7 @@ The current architecture is table + struct + procedural transforms.
 
 ### 2.4 RAII/smart pointers
 
-This codebase is C, so no RAII/smart pointers are used.  
+This codebase is C, so no RAII/smart pointers are used.
 Resource lifetime is manual and function-contract based.
 
 ---

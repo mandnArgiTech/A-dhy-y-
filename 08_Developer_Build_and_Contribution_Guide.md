@@ -81,7 +81,7 @@ cmake --build build --target validate-phase3
 
 ## 4) How to add or modify a sūtra-driven rule
 
-This codebase currently uses module-local rule coding, not one global compiler over `SutraDB`.  
+This codebase currently uses module-local rule coding, not one global compiler over `SutraDB`.
 Use this practical pattern:
 
 1. Identify the subsystem (`sandhi`, `tinanta`, `subanta`, `krit`, `taddhita`, `samasa`).

@@ -28,7 +28,7 @@ This is exactly the shape of a compiler/rewriter pipeline:
 
 ### 2.1 Śiva-sūtras and pratyāhāra
 
-Śiva-sūtras provide an indexed phonological inventory.  
+Śiva-sūtras provide an indexed phonological inventory.
 Pratyāhāra is a compressed addressing scheme over that inventory (e.g., `ac` for vowels, `hal` for consonants).
 
 Engineering analogy: a compressed feature-index and range query over phoneme classes.
