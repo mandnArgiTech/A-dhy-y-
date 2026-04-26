@@ -147,7 +147,7 @@ add_custom_target(validate-phase4
 )
 
 add_custom_target(validate-phase5
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline|test_samasa|test_krit|test_taddhita|test_unadi"
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline\\|test_samasa\\|test_krit\\|test_taddhita\\|test_unadi" --output-on-failure
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 5: Validating pipeline and derivatives"
 )

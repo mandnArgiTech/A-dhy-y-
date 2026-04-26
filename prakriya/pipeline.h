@@ -4,6 +4,7 @@
 #include "ashtadhyayi.h"
 #include "context.h"
 #include "sutra.h"
+#include "unadipatha/unadi.h"
 typedef struct {
   char  upadesa_slp1[64];
   char  clean_slp1[32];
@@ -15,6 +16,7 @@ typedef struct {
   SutraDB    sutras;
   DhatuEntry *dhatus;
   int         dhatu_count;
+  UnadiDB     unadi_db;
 } Pipeline;
 int       pipeline_init(Pipeline *p, const char *data_dir);
 void      pipeline_free(Pipeline *p);
