@@ -161,6 +161,9 @@ add_custom_target(validate-phase5
 
 add_custom_target(validate-phase6
   COMMAND ${CMAKE_CTEST_COMMAND}
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_vyakarana_oracle.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_scl_oracle.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_prakriya_oracle.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/coverage_report.py
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 6: Full validation and coverage report"

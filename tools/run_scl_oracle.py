@@ -1,174 +1,175 @@
 #!/usr/bin/env python3
-"""
-run_scl_oracle.py — Compare subanta output against shabda_forms.tsv oracle.
+"""Strict, informational subanta oracle comparison against shabda_forms.tsv."""
 
-Usage:
-  python3 tools/run_scl_oracle.py
-  python3 tools/run_scl_oracle.py --stem rAma
-  python3 tools/run_scl_oracle.py --validate
-"""
+from __future__ import annotations
 
 import argparse
 import csv
 import os
 import subprocess
 import sys
+import unicodedata
 from collections import defaultdict
+from typing import Dict, List, Optional, Tuple
+
+from devanagari_slp1 import slp1_to_devanagari
 
 ROOT = os.path.dirname(__file__)
 OUTPUT_TSV = os.path.join(ROOT, "../tests/regression/subanta_oracle_results.tsv")
 SHABDA_TSV = os.path.join(ROOT, "../data/shabda_forms.tsv")
 DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
-TARGET = 85.0
-SUPPORTED_STEMS = [
-    ("rAm", "rAma", "PUMS"),
-    ("rAmA", "rAmA", "STRI"),
-    ("kvi", "kvi", "PUMS"),
-    ("mDu", "mDu", "NAPUMSAKA"),
-    ("rAjn", "rAjn", "PUMS"),
-    ("mns", "mns", "NAPUMSAKA"),
-    ("pitf", "pitf", "PUMS"),
-]
-SUPPORTED_VIBHAKTI = {"prathama"}
-SUPPORTED_VACANA = {"ekavacana"}
+DEFAULT_SAMPLE_SIZE = 1200
 
 
-def _normalize_stem(stem: str) -> str:
-    if stem == "rAm":
-        return "rAma"
-    return stem
+def nfc(text: str) -> str:
+    return unicodedata.normalize("NFC", text or "")
 
 
 def _to_enum_case(vibhakti: str) -> str:
-    mapping = {
-        "prathama": "PRATHAMA",
-        "dvitiya": "DVITIYA",
-        "tritiya": "TRITIYA",
-        "caturthi": "CATURTHI",
-        "pancami": "PANCAMI",
-        "shasthi": "SHASTHI",
-        "saptami": "SAPTAMI",
-        "sambodhana": "SAMBODHANA",
-    }
-    return mapping[vibhakti]
+    return {
+        "prathama": "PRATHAMA", "dvitiya": "DVITIYA", "tritiya": "TRITIYA",
+        "caturthi": "CATURTHI", "pancami": "PANCAMI", "shasthi": "SHASTHI",
+        "saptami": "SAPTAMI", "sambodhana": "SAMBODHANA",
+    }[vibhakti]
 
 
 def _to_enum_number(vacana: str) -> str:
-    mapping = {
-        "ekavacana": "EKAVACANA",
-        "dvivacana": "DVIVACANA",
-        "bahuvacana": "BAHUVACANA",
-    }
-    return mapping[vacana]
+    return {"ekavacana": "EKAVACANA", "dvivacana": "DVIVACANA", "bahuvacana": "BAHUVACANA"}[vacana]
 
 
-def _load_subset():
-    wanted = {(stem, linga): cli for stem, cli, linga in SUPPORTED_STEMS}
-    groups = defaultdict(list)
-    with open(SHABDA_TSV, encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter="\t")
-        for row in reader:
-            key = (row["stem_slp1"], row["linga"])
-            if key not in wanted:
-                continue
-            if row["vibhakti"] not in SUPPORTED_VIBHAKTI:
-                continue
-            if row["vacana"] not in SUPPORTED_VACANA:
-                continue
-            groups[key].append(row)
-    chosen = []
-    for stem, cli, linga in SUPPORTED_STEMS:
-        key = (stem, linga)
-        rows = groups.get(key, [])
-        if rows:
-            chosen.append((stem, cli, linga, rows))
-    return chosen
+def stem_class(stem: str) -> str:
+    if stem.endswith("A"):
+        return "aa-stem"
+    if stem.endswith("i") or stem.endswith("I"):
+        return "i-stem"
+    if stem.endswith("u") or stem.endswith("U"):
+        return "u-stem"
+    if stem.endswith("a"):
+        return "a-stem"
+    return "consonant-stem"
 
 
-def call_our_library(stem, linga, vibhakti, vacana):
+def call_our_library(stem: str, linga: str, vibhakti: str, vacana: str) -> Tuple[str, str]:
     if not os.path.exists(DEMO_BIN):
-        return None
-    try:
-        result = subprocess.run(
-            [DEMO_BIN, "subanta", stem, linga, vibhakti, vacana],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
-        if result.returncode != 0:
-            return None
-        lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
-        for line in lines:
-            if line.startswith("libAshtadhyayi"):
-                continue
-            if line.startswith("─"):
-                continue
-            return line
-        return None
-    except Exception:
-        return None
+        return "ERROR:missing-demo", ""
+    result = subprocess.run(
+        [DEMO_BIN, "subanta", stem, linga, vibhakti, vacana],
+        capture_output=True, text=True, timeout=10, check=False,
+    )
+    if result.returncode != 0:
+        err = (result.stderr or result.stdout).strip()
+        return (f"ERROR:{err}" if err else f"ERROR:exit-{result.returncode}"), ""
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line or line.startswith("libAshtadhyayi") or line.startswith("─"):
+            continue
+        return line, nfc(slp1_to_devanagari(line))
+    return "ERROR:empty-output", ""
 
 
-def run_comparison(filter_stem=None):
+def load_sample(filter_stem: Optional[str], sample_size: int) -> List[dict]:
+    by_stem: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    with open(SHABDA_TSV, encoding="utf-8") as f:
+        for row in csv.DictReader(f, delimiter="\t"):
+            stem = row["stem_slp1"].strip()
+            linga = row["linga"].strip()
+            if linga == "ALL" or (filter_stem and stem != filter_stem):
+                continue
+            by_stem[(stem, linga)].append(row)
+    buckets: Dict[Tuple[str, str], List[Tuple[str, str]]] = defaultdict(list)
+    for key in sorted(by_stem):
+        buckets[(key[1], stem_class(key[0]))].append(key)
+    selected: List[dict] = []
+    bucket_keys = sorted(buckets)
+    while len(selected) < sample_size and bucket_keys:
+        progressed = False
+        for bucket in bucket_keys:
+            if not buckets[bucket]:
+                continue
+            key = buckets[bucket].pop(0)
+            selected.extend(by_stem[key])
+            progressed = True
+            if len(selected) >= sample_size:
+                break
+        if not progressed:
+            break
+    return selected[:sample_size]
+
+
+def pct(pair: List[int]) -> float:
+    total, matched = pair
+    return (matched / total * 100.0) if total else 0.0
+
+
+def print_breakdown(title: str, stats: Dict[str, List[int]]) -> None:
+    print(title)
+    for key in sorted(stats):
+        total, matched = stats[key]
+        print(f"  {key:16s}: {matched}/{total} ({pct(stats[key]):.2f}%)")
+
+
+def run_comparison(filter_stem: Optional[str], sample_size: int, require_rate: Optional[float]) -> float:
     os.makedirs(os.path.dirname(OUTPUT_TSV), exist_ok=True)
-    sample = _load_subset()
-    if filter_stem:
-        sample = [item for item in sample if _normalize_stem(item[1]) == filter_stem]
-
-    total = 0
-    matched = 0
+    sample = load_sample(filter_stem, sample_size)
+    total = matched = errors = 0
     rows = []
-    by_linga = defaultdict(lambda: [0, 0])  # total, matched
+    mismatches = []
+    by_linga: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_vibhakti: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_vacana: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_class: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
 
-    for stem, cli_stem, linga, forms in sample:
-        for row in forms:
-            vib = _to_enum_case(row["vibhakti"])
-            vac = _to_enum_number(row["vacana"])
-            our = call_our_library(cli_stem, linga, vib, vac)
-            oracle = row["form_slp1"]
-            is_match = int(our == oracle)
-            total += 1
-            matched += is_match
-            by_linga[linga][0] += 1
-            by_linga[linga][1] += is_match
-            rows.append({
-                "stem": cli_stem,
-                "linga": linga,
-                "vibhakti": vib,
-                "vacana": vac,
-                "our_slp1": our or "",
-                "oracle_slp1": oracle,
-                "match": is_match,
-            })
+    for row in sample:
+        vib = _to_enum_case(row["vibhakti"])
+        vac = _to_enum_number(row["vacana"])
+        ours_slp1, ours_deva = call_our_library(row["stem_slp1"], row["linga"], vib, vac)
+        is_error = ours_slp1.startswith("ERROR:")
+        is_match = int((not is_error) and nfc(ours_deva) == nfc(row["form_deva"]))
+        total += 1; matched += is_match; errors += int(is_error)
+        klass = stem_class(row["stem_slp1"])
+        for stats, key in [(by_linga, row["linga"]), (by_vibhakti, row["vibhakti"]), (by_vacana, row["vacana"]), (by_class, klass)]:
+            stats[key][0] += 1; stats[key][1] += is_match
+        result = {
+            "stem": row["stem_slp1"], "linga": row["linga"], "stem_class": klass,
+            "vibhakti": vib, "vacana": vac,
+            "our_slp1": ours_slp1, "our_deva": ours_deva,
+            "oracle_slp1": row["form_slp1"], "oracle_deva": row["form_deva"],
+            "match": is_match,
+        }
+        rows.append(result)
+        if not is_match:
+            mismatches.append(result)
 
     if rows:
         with open(OUTPUT_TSV, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=rows[0].keys(), delimiter="\t")
-            writer.writeheader()
-            writer.writerows(rows)
+            writer.writeheader(); writer.writerows(rows)
 
-    pct = (matched / total * 100.0) if total else 0.0
-    print(f"Results: {matched}/{total} matched ({pct:.1f}%)")
-    for linga, (ltotal, lmatched) in sorted(by_linga.items()):
-        lpct = (lmatched / ltotal * 100.0) if ltotal else 0.0
-        print(f"  {linga:10s}: {lmatched}/{ltotal} ({lpct:.1f}%)")
+    rate = (matched / total * 100.0) if total else 0.0
+    stems = len({(r["stem_slp1"], r["linga"]) for r in sample})
+    print(f"# of {stems} stems; compared: {total}; matched: {matched}; errors: {errors}; rate: {rate:.2f}%")
+    print_breakdown("Per-linga rate:", by_linga)
+    print_breakdown("Per-vibhakti rate:", by_vibhakti)
+    print_breakdown("Per-vacana rate:", by_vacana)
+    print_breakdown("Per-stem-class rate:", by_class)
+    print("Top mismatches:")
+    for row in mismatches[:20]:
+        print(f"  {row['stem']} {row['linga']} {row['vibhakti']}-{row['vacana']}: ours={row['our_deva'] or row['our_slp1']} oracle={row['oracle_deva']}")
     print(f"Output: {OUTPUT_TSV}")
-    return pct
+    if require_rate is not None and rate < require_rate:
+        print(f"FAIL: match rate {rate:.2f}% < {require_rate:.2f}%")
+        sys.exit(1)
+    return rate
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--stem")
-    parser.add_argument("--validate", action="store_true")
+    parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE)
+    parser.add_argument("--require-rate", type=float, default=None)
+    parser.add_argument("--validate", action="store_true", help="Informational validation mode")
     args = parser.parse_args()
-
-    pct = run_comparison(filter_stem=args.stem)
-    if args.validate and pct < TARGET:
-        print(f"FAIL: Match rate {pct:.1f}% < {TARGET:.1f}%")
-        sys.exit(1)
-    if args.validate:
-        print(f"PASS: Match rate {pct:.1f}% ≥ {TARGET:.1f}%")
+    run_comparison(args.stem, args.sample_size, args.require_rate)
 
 
 if __name__ == "__main__":

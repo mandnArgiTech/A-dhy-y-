@@ -32,33 +32,7 @@ FALLBACK   = os.path.join(os.path.dirname(__file__), "../vendor/dhatupatha_fallb
 OUTPUT_TSV = os.path.join(os.path.dirname(__file__), "../data/dhatupatha.tsv")
 OUTPUT_H   = os.path.join(os.path.dirname(__file__), "../vendor/dhatupatha_count.h")
 
-DEVA_TO_SLP1 = {
-    'अ':'a','आ':'A','इ':'i','ई':'I','उ':'u','ऊ':'U',
-    'ऋ':'f','ॠ':'F','ऌ':'x',
-    'ए':'e','ऐ':'E','ओ':'o','औ':'O',
-    'ं':'M','ः':'H','ँ':'~',
-    'क':'k','ख':'K','ग':'g','घ':'G','ङ':'N',
-    'च':'c','छ':'C','ज':'j','झ':'J','ञ':'Y',
-    'ट':'w','ठ':'W','ड':'q','ढ':'Q','ण':'R',
-    'त':'t','थ':'T','द':'d','ध':'D','न':'n',
-    'प':'p','फ':'P','ब':'b','भ':'B','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'S','ष':'z','स':'s','ह':'h',
-    'ा':'A','ि':'i','ी':'I','ु':'u','ू':'U',
-    'ृ':'f','े':'e','ै':'E','ो':'o','ौ':'O',
-    '्':'', '^':'^', '~':'~',
-}
-
-def deva_to_slp1(text: str) -> str:
-    text = unicodedata.normalize('NFC', text)
-    result = []
-    for ch in text:
-        if ch in DEVA_TO_SLP1:
-            result.append(DEVA_TO_SLP1[ch])
-        elif ord(ch) < 128:
-            result.append(ch)
-    return ''.join(result)
-
+from devanagari_slp1 import deva_to_slp1
 
 def fetch_data() -> dict:
     if os.path.exists(FALLBACK):

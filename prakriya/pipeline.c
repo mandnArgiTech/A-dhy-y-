@@ -283,8 +283,7 @@ static ASH_Form ctx_to_form(const PrakriyaCtx *ctx) {
 ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
                             ASH_Lakara l, ASH_Purusha pu, ASH_Vacana v, ASH_Pada pd) {
   (void)p;
-  char derived[128] = {0};
-  ASH_Form f = {0};
+  PrakriyaCtx ctx = {0};
 
   if (!root_slp1 || root_slp1[0] == '\0') {
     return make_error_form("empty root");
@@ -292,41 +291,10 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
   if (l != ASH_LAT) {
     return make_error_form("only LAT implemented");
   }
-  if (!lat_bhvadi_derive(root_slp1, gana, pu, v, pd, derived, sizeof(derived))) {
+  if (!lat_bhvadi_derive_ctx(root_slp1, gana, pu, v, pd, &ctx)) {
     return make_error_form("lat derivation failed");
   }
-
-  f.valid = true;
-  strncpy(f.slp1, derived, sizeof(f.slp1) - 1);
-  {
-    char *iast = enc_slp1_to_iast(f.slp1);
-    if (iast) {
-      strncpy(f.iast, iast, sizeof(f.iast) - 1);
-      free(iast);
-    }
-  }
-  {
-    char *deva = enc_slp1_to_devanagari(f.slp1);
-    if (deva) {
-      strncpy(f.devanagari, deva, sizeof(f.devanagari) - 1);
-      free(deva);
-    }
-  }
-
-  f.step_count = 4;
-  f.steps = calloc((size_t)f.step_count, sizeof(ASH_PrakriyaStep));
-  if (!f.steps) {
-    return make_error_form("oom");
-  }
-  f.steps[0].sutra_id = 301068;
-  strncpy(f.steps[0].note, "kartari Sap", sizeof(f.steps[0].note) - 1);
-  f.steps[1].sutra_id = 703084;
-  strncpy(f.steps[1].note, "sarvadhatukardhadhatukayoH", sizeof(f.steps[1].note) - 1);
-  f.steps[2].sutra_id = 304078;
-  strncpy(f.steps[2].note, "tiN assignment", sizeof(f.steps[2].note) - 1);
-  f.steps[3].sutra_id = 601077;
-  strncpy(f.steps[3].note, "iko yaN aci", sizeof(f.steps[3].note) - 1);
-  return f;
+  return ctx_to_form(&ctx);
 }
 ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
                             ASH_Vibhakti vib, ASH_Vacana v) {
@@ -339,12 +307,8 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
     return make_error_form("empty stem");
   }
 
-  /* Normalize common external spelling variant rAma -> rAm used by oracle data. */
   memset(normalized, 0, sizeof(normalized));
   strncpy(normalized, stem_slp1, sizeof(normalized) - 1);
-  if (strcmp(normalized, "rAma") == 0) {
-    strncpy(normalized, "rAm", sizeof(normalized) - 1);
-  }
 
   if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);

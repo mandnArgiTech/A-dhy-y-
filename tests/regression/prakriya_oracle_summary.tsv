@@ -1,0 +1,101 @@
+stem_deva	form_deva	vibhakti	vacana	oracle_steps	trace_status
+अ	अः	1	1	4	pending_cli_trace_export
+अ	औ	1	2	1	pending_cli_trace_export
+अ	आः	1	3	5	pending_cli_trace_export
+अ	अम्	2	1	1	pending_cli_trace_export
+अ	औ	2	2	1	pending_cli_trace_export
+अ	आन्	2	3	3	pending_cli_trace_export
+अ	एन	3	1	2	pending_cli_trace_export
+अ	आभ्याम्	3	2	1	pending_cli_trace_export
+अ	ऐः	3	3	5	pending_cli_trace_export
+अ	आय	4	1	2	pending_cli_trace_export
+अ	आभ्याम्	4	2	1	pending_cli_trace_export
+अ	एभ्यः	4	3	4	pending_cli_trace_export
+अ	आत्	5	1	2	pending_cli_trace_export
+अ	आद्	5	1	3	pending_cli_trace_export
+अ	आभ्याम्	5	2	1	pending_cli_trace_export
+अ	एभ्यः	5	3	4	pending_cli_trace_export
+अ	अस्य	6	1	1	pending_cli_trace_export
+अ	अयोः	6	2	5	pending_cli_trace_export
+अ	आनाम्	6	3	3	pending_cli_trace_export
+अ	ए	7	1	2	pending_cli_trace_export
+अ	अयोः	7	2	5	pending_cli_trace_export
+अ	एषु	7	3	2	pending_cli_trace_export
+अ	हे अ	8	1	2	pending_cli_trace_export
+अ	हे औ	8	2	1	pending_cli_trace_export
+अ	हे आः	8	3	5	pending_cli_trace_export
+देव	देवः	1	1	4	pending_cli_trace_export
+देव	देवौ	1	2	1	pending_cli_trace_export
+देव	देवाः	1	3	5	pending_cli_trace_export
+देव	देवम्	2	1	1	pending_cli_trace_export
+देव	देवौ	2	2	1	pending_cli_trace_export
+देव	देवान्	2	3	3	pending_cli_trace_export
+देव	देवेन	3	1	2	pending_cli_trace_export
+देव	देवाभ्याम्	3	2	1	pending_cli_trace_export
+देव	देवैः	3	3	5	pending_cli_trace_export
+देव	देवाय	4	1	2	pending_cli_trace_export
+देव	देवाभ्याम्	4	2	1	pending_cli_trace_export
+देव	देवेभ्यः	4	3	4	pending_cli_trace_export
+देव	देवात्	5	1	4	pending_cli_trace_export
+देव	देवाद्	5	1	3	pending_cli_trace_export
+देव	देवाभ्याम्	5	2	1	pending_cli_trace_export
+देव	देवेभ्यः	5	3	4	pending_cli_trace_export
+देव	देवस्य	6	1	1	pending_cli_trace_export
+देव	देवयोः	6	2	5	pending_cli_trace_export
+देव	देवानाम्	6	3	3	pending_cli_trace_export
+देव	देवे	7	1	2	pending_cli_trace_export
+देव	देवयोः	7	2	5	pending_cli_trace_export
+देव	देवेषु	7	3	2	pending_cli_trace_export
+देव	हे देव	8	1	2	pending_cli_trace_export
+देव	हे देवौ	8	2	1	pending_cli_trace_export
+देव	हे देवाः	8	3	5	pending_cli_trace_export
+राम	रामः	1	1	4	pending_cli_trace_export
+राम	रामौ	1	2	1	pending_cli_trace_export
+राम	रामाः	1	3	5	pending_cli_trace_export
+राम	रामम्	2	1	1	pending_cli_trace_export
+राम	रामौ	2	2	1	pending_cli_trace_export
+राम	रामान्	2	3	4	pending_cli_trace_export
+राम	रामेण	3	1	3	pending_cli_trace_export
+राम	रामाभ्याम्	3	2	1	pending_cli_trace_export
+राम	रामैः	3	3	5	pending_cli_trace_export
+राम	रामाय	4	1	2	pending_cli_trace_export
+राम	रामाभ्याम्	4	2	1	pending_cli_trace_export
+राम	रामेभ्यः	4	3	4	pending_cli_trace_export
+राम	रामात्	5	1	4	pending_cli_trace_export
+राम	रामाद्	5	1	3	pending_cli_trace_export
+राम	रामाभ्याम्	5	2	1	pending_cli_trace_export
+राम	रामेभ्यः	5	3	4	pending_cli_trace_export
+राम	रामस्य	6	1	1	pending_cli_trace_export
+राम	रामयोः	6	2	5	pending_cli_trace_export
+राम	रामाणाम्	6	3	4	pending_cli_trace_export
+राम	रामे	7	1	2	pending_cli_trace_export
+राम	रामयोः	7	2	5	pending_cli_trace_export
+राम	रामेषु	7	3	2	pending_cli_trace_export
+राम	हे राम	8	1	2	pending_cli_trace_export
+राम	हे रामौ	8	2	1	pending_cli_trace_export
+राम	हे रामाः	8	3	5	pending_cli_trace_export
+सर्व	सर्वः	1	1	4	pending_cli_trace_export
+सर्व	सर्वौ	1	2	1	pending_cli_trace_export
+सर्व	सर्वे	1	3	4	pending_cli_trace_export
+सर्व	सर्वम्	2	1	3	pending_cli_trace_export
+सर्व	सर्वौ	2	2	1	pending_cli_trace_export
+सर्व	सर्वान्	2	3	4	pending_cli_trace_export
+सर्व	सर्वेण	3	1	6	pending_cli_trace_export
+सर्व	सर्वाभ्याम्	3	2	2	pending_cli_trace_export
+सर्व	सर्वैः	3	3	9	pending_cli_trace_export
+सर्व	सर्वस्मै	4	1	4	pending_cli_trace_export
+सर्व	सर्वाभ्याम्	4	2	2	pending_cli_trace_export
+सर्व	सर्वेभ्यः	4	3	8	pending_cli_trace_export
+सर्व	सर्वस्मात्	5	1	6	pending_cli_trace_export
+सर्व	सर्वस्माद्	5	1	4	pending_cli_trace_export
+सर्व	सर्वाभ्याम्	5	2	2	pending_cli_trace_export
+सर्व	सर्वेभ्यः	5	3	8	pending_cli_trace_export
+सर्व	सर्वस्य	6	1	2	pending_cli_trace_export
+सर्व	सर्वयोः	6	2	9	pending_cli_trace_export
+सर्व	सर्वेषाम्	6	3	8	pending_cli_trace_export
+सर्व	सर्वस्मिन्	7	1	4	pending_cli_trace_export
+सर्व	सर्वयोः	7	2	9	pending_cli_trace_export
+सर्व	सर्वेषु	7	3	4	pending_cli_trace_export
+सर्व	हे सर्व	8	1	5	pending_cli_trace_export
+सर्व	हे सर्वौ	8	2	1	pending_cli_trace_export
+सर्व	हे सर्वे	8	3	4	pending_cli_trace_export

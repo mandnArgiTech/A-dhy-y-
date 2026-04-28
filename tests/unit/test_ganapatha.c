@@ -14,8 +14,8 @@ void test_ganapatha_load_and_membership(void) {
   GanapathaDB db = {0};
   TEST_ASSERT_EQUAL_INT(0, ganapatha_db_load(&db, locate_ganapatha_path()));
   TEST_ASSERT_TRUE(db.count > 1000);
-  TEST_ASSERT_TRUE(ganapatha_has_member(&db, "srvAdiH", "srv"));
-  TEST_ASSERT_TRUE(ganapatha_has_member(&db, "mAheSvarasUtra", "hl"));
+  TEST_ASSERT_TRUE(ganapatha_has_member(&db, "sarvAdiH", "sarva"));
+  TEST_ASSERT_TRUE(ganapatha_has_member(&db, "mAheSvarasUtra", "hayavaraw"));
   ganapatha_db_free(&db);
 }
 
@@ -23,9 +23,9 @@ void test_ganapatha_find_group(void) {
   GanapathaDB db = {0};
   const GanapathaEntry *e;
   TEST_ASSERT_EQUAL_INT(0, ganapatha_db_load(&db, locate_ganapatha_path()));
-  e = ganapatha_find_group(&db, "srvAdiH");
+  e = ganapatha_find_group(&db, "sarvAdiH");
   TEST_ASSERT_NOT_NULL(e);
-  TEST_ASSERT_EQUAL_STRING("srvAdiH", e->gana_name_slp1);
+  TEST_ASSERT_EQUAL_STRING("sarvAdiH", e->gana_name_slp1);
   ganapatha_db_free(&db);
 }
 

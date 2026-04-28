@@ -5,7 +5,9 @@
 
 /* Returns true when the supplied stem can be handled by this module. */
 bool a_stem_masc_can_handle(const char *stem_slp1) {
-  return stem_slp1 != NULL && stem_slp1[strlen(stem_slp1) - 1] == 'm';
+  if (!stem_slp1 || stem_slp1[0] == '\0') return false;
+  return stem_slp1[strlen(stem_slp1) - 1] == 'a' ||
+         stem_slp1[strlen(stem_slp1) - 1] == 'm';
 }
 
 /* Derives one masculine a-stem form and records the result in `ctx_out`. */
@@ -27,46 +29,44 @@ bool a_stem_masc_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   n = strlen(stem_slp1);
   if (n == 0) return false;
 
-  /*
-   * Stem normalization:
-   * - internal oracle stems are generally stored without terminal visarga.
-   * - a-stem masculine values are represented with trailing "m" in current data.
-   */
+  /* Older tests passed rāma as rAm; normalize that spelling to current rAma. */
   if (n > 0 && stem_base[n - 1] == 'm') {
-    stem_base[n - 1] = 'a';
+    if (n + 1 >= sizeof(stem_base)) return false;
+    stem_base[n] = 'a';
+    stem_base[n + 1] = '\0';
   }
 
-  if (sup_assign(ctx_out, vib, vac, ASH_PUMS) != 0) return false;
   strncpy(ctx_out->terms[0].value, stem_base, TERM_VALUE_LEN - 1);
-
-  if (vib == ASH_PRATHAMA_VIB && vac == ASH_EKAVACANA) {
-    strncpy(ctx_out->terms[0].value, "rAmH", TERM_VALUE_LEN - 1);
-    ctx_out->term_count = 1;
-    prakriya_log(ctx_out, 701009, "ato'm");
-    return true;
-  }
-  if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
-    strncpy(ctx_out->terms[0].value, "rAmAn", TERM_VALUE_LEN - 1);
-    ctx_out->term_count = 1;
-    prakriya_log(ctx_out, 601101, "akaH savarNe dIrghaH");
-    return true;
-  }
-  if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
-    strncpy(ctx_out->terms[0].value, "rAmeR", TERM_VALUE_LEN - 1);
-    ctx_out->term_count = 1;
-    prakriya_log(ctx_out, 703102, "supi ca");
-    return true;
-  }
-
-  /* Generic concatenation path for non-specialized cells. */
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  if (sup_assign(ctx_out, vib, vac, ASH_PUMS) != 0) return false;
   if (ctx_out->term_count < 2) return false;
   {
     char form[TERM_VALUE_LEN] = {0};
+    const char *suffix = ctx_out->terms[1].value;
     strncat(form, ctx_out->terms[0].value, sizeof(form) - 1);
-    strncat(form, ctx_out->terms[1].value, sizeof(form) - strlen(form) - 1);
+    if (form[0] != '\0' && form[strlen(form) - 1] == 'a') {
+      if (strcmp(suffix, "H") == 0 || strcmp(suffix, "m") == 0 ||
+          strcmp(suffix, "sya") == 0 || strcmp(suffix, "yoH") == 0 ||
+          strcmp(suffix, "e") == 0 || suffix[0] == '\0') {
+        /* These suffixes attach directly to the a-stem base. */
+      } else if (suffix[0] == 'A' || suffix[0] == 'e' || suffix[0] == 'O') {
+        form[strlen(form) - 1] = '\0';
+      }
+    }
+    strncat(form, suffix, sizeof(form) - strlen(form) - 1);
     strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+    ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
     ctx_out->term_count = 1;
   }
-  prakriya_log(ctx_out, 601101, "akaH savarNe dIrghaH");
+  if (vib == ASH_PRATHAMA_VIB &&
+      (vac == ASH_EKAVACANA || vac == ASH_BAHUVACANA)) {
+    prakriya_log(ctx_out, 803015, "KaravasAnayor visarjanIyaH");
+  } else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
+    prakriya_log(ctx_out, 701012, "wA-Nasi-NasAm inAdyAH");
+  } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
+    prakriya_log(ctx_out, 703102, "supi ca");
+  } else {
+    prakriya_log(ctx_out, 401002, "svOjasamOw");
+  }
   return true;
 }

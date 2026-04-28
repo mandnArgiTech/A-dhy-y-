@@ -26,41 +26,13 @@ Usage:
 """
 
 import argparse, csv, json, os, sys, unicodedata
+from devanagari_slp1 import deva_to_slp1
 
 RAW_BASE   = "https://raw.githubusercontent.com/ashtadhyayi-com/data/master"
 SUTRA_URL  = f"{RAW_BASE}/sutraani/data.txt"
 FALLBACK   = os.path.join(os.path.dirname(__file__), "../vendor/sutra_fallback.json")
 OUTPUT_TSV = os.path.join(os.path.dirname(__file__), "../data/sutras.tsv")
 OUTPUT_H   = os.path.join(os.path.dirname(__file__), "../vendor/sutras_count.h")
-
-# ── Devanagari → SLP1 ────────────────────────────────────────────────────────
-DEVA_TO_SLP1 = {
-    'अ':'a','आ':'A','इ':'i','ई':'I','उ':'u','ऊ':'U',
-    'ऋ':'f','ॠ':'F','ऌ':'x','ॡ':'X',
-    'ए':'e','ऐ':'E','ओ':'o','औ':'O',
-    'ं':'M','ः':'H','ँ':'~',
-    'क':'k','ख':'K','ग':'g','घ':'G','ङ':'N',
-    'च':'c','छ':'C','ज':'j','झ':'J','ञ':'Y',
-    'ट':'w','ठ':'W','ड':'q','ढ':'Q','ण':'R',
-    'त':'t','थ':'T','द':'d','ध':'D','न':'n',
-    'प':'p','फ':'P','ब':'b','भ':'B','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'S','ष':'z','स':'s','ह':'h',
-    'ा':'A','ि':'i','ी':'I','ु':'u','ू':'U',
-    'ृ':'f','ॄ':'F','े':'e','ै':'E','ो':'o','ौ':'O',
-    '्':'',  # virama — strip (halanta)
-}
-
-def deva_to_slp1(text: str) -> str:
-    text = unicodedata.normalize('NFC', text)
-    result = []
-    for ch in text:
-        if ch in DEVA_TO_SLP1:
-            result.append(DEVA_TO_SLP1[ch])
-        elif ord(ch) < 128:
-            result.append(ch)
-        # else: skip punctuation/other Devanagari glyphs
-    return ''.join(result)
 
 TYPE_MAP = {'S':'SAMJNA','P':'PARIBHASHA','A':'ADHIKARA',
             'V':'VIDHI','N':'NIYAMA','T':'ATIDESHA','I':'NISHEDHA'}

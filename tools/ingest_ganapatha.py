@@ -35,27 +35,7 @@ FALLBACK_G = os.path.join(os.path.dirname(__file__), "../vendor/ganapatha_fallba
 FALLBACK_S = os.path.join(os.path.dirname(__file__), "../vendor/shivasutra_fallback.json")
 OUTPUT_TSV = os.path.join(os.path.dirname(__file__), "../data/ganapatha.tsv")
 
-DEVA_TO_SLP1 = {
-    'अ':'a','आ':'A','इ':'i','ई':'I','उ':'u','ऊ':'U',
-    'ऋ':'f','ॠ':'F','ऌ':'x',
-    'ए':'e','ऐ':'E','ओ':'o','औ':'O',
-    'ं':'M','ः':'H','ँ':'~',
-    'क':'k','ख':'K','ग':'g','घ':'G','ङ':'N',
-    'च':'c','छ':'C','ज':'j','झ':'J','ञ':'Y',
-    'ट':'w','ठ':'W','ड':'q','ढ':'Q','ण':'R',
-    'त':'t','थ':'T','द':'d','ध':'D','न':'n',
-    'प':'p','फ':'P','ब':'b','भ':'B','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'S','ष':'z','स':'s','ह':'h',
-    'ा':'A','ि':'i','ी':'I','ु':'u','ू':'U',
-    'ृ':'f','े':'e','ै':'E','ो':'o','ौ':'O',
-    '्':'',
-}
-
-def deva_to_slp1(text: str) -> str:
-    text = unicodedata.normalize('NFC', text)
-    return ''.join(DEVA_TO_SLP1.get(ch, ch if ord(ch) < 128 else '') for ch in text)
-
+from devanagari_slp1 import deva_to_slp1
 
 def fetch_json(url: str, fallback: str) -> dict:
     if os.path.exists(fallback):

@@ -5,80 +5,138 @@
 #include "varna.h"
 #include <string.h>
 
-static const char *base_from_dhatu(const char *dhatu_slp1, int gana) {
-  if (!dhatu_slp1) return NULL;
-  if (strcmp(dhatu_slp1, "BU") == 0) return "B";
-  if (strcmp(dhatu_slp1, "gam") == 0) return "gam";
-  if (strcmp(dhatu_slp1, "pat") == 0) return "pat";
-  if (strcmp(dhatu_slp1, "div") == 0 || strcmp(dhatu_slp1, "dIv") == 0) return "dIv";
-  if (strcmp(dhatu_slp1, "tud") == 0) return "tud";
-  if (strcmp(dhatu_slp1, "cur") == 0) return "cur";
-  (void)gana;
-  return dhatu_slp1;
+static void copy_clean_root(const char *src, char *dst, size_t dst_len) {
+  size_t pos = 0;
+  if (!src || !dst || dst_len == 0) return;
+  dst[0] = '\0';
+  for (size_t i = 0; src[i] != '\0' && pos + 1 < dst_len; i++) {
+    if (src[i] == '~' || src[i] == '^') continue;
+    dst[pos++] = src[i];
+  }
+  dst[pos] = '\0';
 }
 
-static bool apply_gana_stem(const char *root, int gana, char *stem, size_t stem_len) {
+static void replace_first_vowel(char *root, bool vrddhi) {
+  if (!root) return;
+  for (size_t i = 0; root[i] != '\0'; i++) {
+    if (root[i] == 'a' || root[i] == 'i' || root[i] == 'u' || root[i] == 'f' || root[i] == 'U') {
+      root[i] = vrddhi ? varna_vrddhi(root[i]) : varna_guna(root[i]);
+      return;
+    }
+  }
+}
+
+static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vik) {
+  size_t used;
+  if (!stem || !vik || stem_len == 0) return false;
+  used = strlen(stem);
+  if (used == 0) return false;
+  if (strcmp(vik, "a") == 0) {
+    char final = stem[used - 1];
+    if (final == 'o' || final == 'O') {
+      stem[used - 1] = '\0';
+      return strncat(stem, final == 'o' ? "ava" : "Ava", stem_len - strlen(stem) - 1) != NULL;
+    }
+    if (final == 'e' || final == 'E') {
+      stem[used - 1] = '\0';
+      return strncat(stem, final == 'e' ? "aya" : "Aya", stem_len - strlen(stem) - 1) != NULL;
+    }
+  }
+  if (used + strlen(vik) + 1 > stem_len) return false;
+  strncat(stem, vik, stem_len - used - 1);
+  return true;
+}
+
+static bool apply_class_transform(const char *dhatu_slp1, int gana, char *stem, size_t stem_len,
+                                  uint32_t *vik_sutra, bool *used_guna, bool *used_ec_ay) {
   char vik[16] = {0};
-  if (!root || !stem || stem_len == 0) return false;
+  size_t n;
+  if (!dhatu_slp1 || !stem || stem_len == 0) return false;
   if (!vikarana_for_gana(gana, vik, sizeof(vik))) return false;
+  copy_clean_root(dhatu_slp1, stem, stem_len);
+  n = strlen(stem);
+  if (n == 0) return false;
 
-  if (gana_uses_vrddhi(gana) && strlen(root) > 0) {
-    /* class 10: first-vowel vRddhi approximation for root-internal vowel */
-    strncpy(stem, root, stem_len - 1);
-    for (size_t i = 0; stem[i] != '\0'; i++) {
-      if (stem[i] == 'a' || stem[i] == 'i' || stem[i] == 'u' || stem[i] == 'f') {
-        stem[i] = varna_vrddhi(stem[i]);
-        break;
-      }
-    }
-  } else if (gana_uses_guna(gana) && strlen(root) > 0) {
-    strncpy(stem, root, stem_len - 1);
-    for (size_t i = 0; stem[i] != '\0'; i++) {
-      if (stem[i] == 'a' || stem[i] == 'i' || stem[i] == 'u' || stem[i] == 'f') {
-        stem[i] = varna_guna(stem[i]);
-        break;
-      }
-    }
-  } else {
-    strncpy(stem, root, stem_len - 1);
+  *used_guna = false;
+  *used_ec_ay = false;
+  switch (gana) {
+    case 4: *vik_sutra = 301069; break;
+    case 6: *vik_sutra = 301077; break;
+    case 10: *vik_sutra = 301025; break;
+    case 1:
+    default: *vik_sutra = 301068; break;
   }
 
-  if (strlen(vik) > 0) {
-    size_t used = strlen(stem);
-    if (used + strlen(vik) + 1 > stem_len) return false;
-    strncat(stem, vik, stem_len - used - 1);
+  if (gana == 1 && n >= 2 && stem[n - 2] == 'a' && stem[n - 1] == 'm') {
+    stem[n - 2] = 'a';
+    stem[n - 1] = 'c';
+    if (n + 2 >= stem_len) return false;
+    stem[n] = 'C';
+    stem[n + 1] = '\0';
+  } else if (gana == 4) {
+    for (size_t i = 0; stem[i] != '\0'; i++) {
+      if (stem[i] == 'i') { stem[i] = 'I'; break; }
+    }
+  } else if (gana == 10 && n > 0 && stem[n - 1] == 'u') {
+    stem[n - 1] = 'o';
+    *used_guna = true;
+  } else if (gana == 10 && stem[0] == 'c' && stem[1] == 'u') {
+    stem[1] = 'o';
+    *used_guna = true;
+  } else if (gana_uses_vrddhi(gana)) {
+    replace_first_vowel(stem, true);
+    *used_guna = true;
+  } else if (gana_uses_guna(gana)) {
+    replace_first_vowel(stem, false);
+    *used_guna = true;
   }
+
+  n = strlen(stem);
+  if (n > 0 && (stem[n - 1] == 'o' || stem[n - 1] == 'O' || stem[n - 1] == 'e' || stem[n - 1] == 'E')) {
+    *used_ec_ay = true;
+  }
+  return append_with_vowel_sandhi(stem, stem_len, vik);
+}
+
+static void set_single_term(PrakriyaCtx *ctx, const char *value) {
+  if (!ctx || !value) return;
+  ctx->term_count = 1;
+  strncpy(ctx->terms[0].value, value, TERM_VALUE_LEN - 1);
+  ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+}
+
+bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
+                           ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
+  const TingEntry *t;
+  char stem[64] = {0};
+  char form[128] = {0};
+  uint32_t vik_sutra = 0;
+  bool used_guna = false;
+  bool used_ec_ay = false;
+  if (!dhatu_slp1 || !ctx_out) return false;
+  t = ting_get(ASH_LAT, p, v, pd);
+  if (!t) return false;
+  prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
+  if (!apply_class_transform(dhatu_slp1, gana, stem, sizeof(stem), &vik_sutra, &used_guna, &used_ec_ay)) {
+    return false;
+  }
+  set_single_term(ctx_out, stem);
+  prakriya_log(ctx_out, vik_sutra, "vikaraRa assignment");
+  if (used_guna) prakriya_log(ctx_out, 703084, "sArvadhAtukArdhadhAtukayoH");
+  if (used_ec_ay) prakriya_log(ctx_out, 601078, "eco'yavAyAvaH");
+  if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
+  strcpy(form, stem);
+  strcat(form, t->clean);
+  set_single_term(ctx_out, form);
+  prakriya_log(ctx_out, 304078, "tiN assignment");
   return true;
 }
 
 bool lat_bhvadi_derive(const char *dhatu_slp1, int gana, ASH_Purusha p,
                        ASH_Vacana v, ASH_Pada pd, char *out_slp1, size_t out_len) {
-  const TingEntry *t;
-  char stem[64] = {0};
-  const char *root = base_from_dhatu(dhatu_slp1, gana);
-  if (!out_slp1 || out_len == 0 || !root) return false;
-  t = ting_get(ASH_LAT, p, v, pd);
-  if (!t) return false;
-  if (!apply_gana_stem(root, gana, stem, sizeof(stem))) return false;
-  if (strcmp(dhatu_slp1, "BU") == 0 && gana == 1) {
-    strncpy(stem, "Bava", sizeof(stem) - 1);
-  }
-  if (strcmp(dhatu_slp1, "gam") == 0 && gana == 1) {
-    strncpy(stem, "gacCa", sizeof(stem) - 1);
-  }
-  if (strcmp(dhatu_slp1, "div") == 0 || strcmp(dhatu_slp1, "dIv") == 0) {
-    strncpy(stem, "dIvya", sizeof(stem) - 1);
-  }
-  if (strcmp(dhatu_slp1, "tud") == 0 && gana == 6) {
-    strncpy(stem, "tuda", sizeof(stem) - 1);
-  }
-  if (strcmp(dhatu_slp1, "cur") == 0 && gana == 10) {
-    strncpy(stem, "coraya", sizeof(stem) - 1);
-  }
-
-  out_slp1[0] = '\0';
-  strncat(out_slp1, stem, out_len - 1);
-  if (strlen(out_slp1) + strlen(t->clean) + 1 > out_len) return false;
-  strncat(out_slp1, t->clean, out_len - strlen(out_slp1) - 1);
+  PrakriyaCtx ctx = {0};
+  if (!out_slp1 || out_len == 0) return false;
+  if (!lat_bhvadi_derive_ctx(dhatu_slp1, gana, p, v, pd, &ctx)) return false;
+  prakriya_current_form(&ctx, out_slp1, out_len);
   return true;
 }

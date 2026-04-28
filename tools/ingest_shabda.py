@@ -27,37 +27,17 @@ Usage:
 """
 
 import argparse, csv, json, os, sys, unicodedata
+from devanagari_slp1 import deva_to_slp1
 
 RAW_BASE   = "https://raw.githubusercontent.com/ashtadhyayi-com/data/master"
 SHABDA_URL = f"{RAW_BASE}/shabda/data2.txt"
 FALLBACK   = os.path.join(os.path.dirname(__file__), "../vendor/shabda_fallback.json")
 OUTPUT_TSV = os.path.join(os.path.dirname(__file__), "../data/shabda_forms.tsv")
 
-DEVA_TO_SLP1 = {
-    'अ':'a','आ':'A','इ':'i','ई':'I','उ':'u','ऊ':'U',
-    'ऋ':'f','ॠ':'F','ऌ':'x',
-    'ए':'e','ऐ':'E','ओ':'o','औ':'O',
-    'ं':'M','ः':'H','ँ':'~',
-    'क':'k','ख':'K','ग':'g','घ':'G','ङ':'N',
-    'च':'c','छ':'C','ज':'j','झ':'J','ञ':'Y',
-    'ट':'w','ठ':'W','ड':'q','ढ':'Q','ण':'R',
-    'त':'t','थ':'T','द':'d','ध':'D','न':'n',
-    'प':'p','फ':'P','ब':'b','भ':'B','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'S','ष':'z','स':'s','ह':'h',
-    'ा':'A','ि':'i','ी':'I','ु':'u','ू':'U',
-    'ृ':'f','े':'e','ै':'E','ो':'o','ौ':'O',
-    '्':'',
-}
-
 VIBHAKTI_NAMES = ['prathama','dvitiya','tritiya','caturthi',
                    'pancami','shasthi','saptami','sambodhana']
 VACANA_NAMES   = ['ekavacana','dvivacana','bahuvacana']
 LINGA_MAP      = {'P':'PUMS','S':'STRI','N':'NAPUMSAKA','A':'ALL'}
-
-def deva_to_slp1(text):
-    text = unicodedata.normalize('NFC', text)
-    return ''.join(DEVA_TO_SLP1.get(c, c if ord(c)<128 else '') for c in text)
 
 def fetch_data():
     if os.path.exists(FALLBACK):

@@ -1,6 +1,21 @@
-# Aṣṭādhyāyī — Complete C Library (`libAshtadhyayi`)
+# libAshtadhyayi — A C library for Pāṇinian Sanskrit grammar
 
-A 100% authentic, modular C implementation of Pāṇini's Aṣṭādhyāyī — the world's first formal generative grammar (~500 BCE), covering all 3,983 sūtras of the BORI edition.
+A modular C17 library implementing foundations of Pāṇini's Aṣṭādhyāyī (~500 BCE). Full rule coverage is in progress; current releases focus on a traceable engine, data ingestion, phonology, sandhi, and early morphology.
+
+## Current implementation status
+
+The foundation is implemented and tested:
+
+- **Phonology and encoding**: varṇa classification, pratyāhāra lookup, SLP1/IAST/Devanāgarī/HK conversion, vowel/consonant/visarga sandhi.
+- **Sūtra database**: all 3,983 BORI-edition sūtras load with address and type metadata.
+- **Metadata**: saṃjñā, anubandha, adhikāra, anuvṛtti, and paribhāṣā structures are present.
+- **Derivation pipeline**: laṭ tiṅanta and subanta paths are partial and under active validation against bundled oracles.
+
+Open implementation and review work is tracked in `.cursor/stories/` and `.cursor/bugs/`.
+
+## Vision
+
+The long-term goal is complete Aṣṭādhyāyī coverage with verifiable derivations, source-backed data, and prakriyā traces that cite the sūtra IDs responsible for each step.
 
 ## Source Authority & Reference Oracles
 
@@ -28,9 +43,9 @@ A 100% authentic, modular C implementation of Pāṇini's Aṣṭādhyāyī — 
 
 | File | Forms | Target Phase | Validation Target |
 |------|-------|--------------|-------------------|
-| **`shabda/data2.txt`** | **216,168** (9,007 × 24) | Phase 4 subanta | ≥99% match |
-| **`dhatu/dhatuforms_*.txt`** | **254,736** (2,229 × 10 × 2 × 9) | Phase 3 tiṅanta | ≥99% match |
-| **`shabda/shabdaprakriya.txt`** | **13,456 steps** (4,863 derivations) | Trace validation | ≥70% sūtra match per step |
+| **`shabda/data2.txt`** | **216,168** (9,007 × 24) | Phase 4 subanta | informational strict match report |
+| **`dhatu/dhatuforms_*.txt`** | **254,736** (2,229 × 10 × 2 × 9) | Phase 3 tiṅanta | informational strict match report |
+| **`shabda/shabdaprakriya.txt`** | **13,456 steps** (4,863 derivations) | Trace validation | sampled informational report |
 
 ### Classical commentary (reference only, not loaded at runtime)
 
@@ -108,6 +123,20 @@ ash_db_free(db);
 | 5 | Pipeline, Samāsa, Kṛt, Taddhita | 5 | `make validate-phase5` |
 | 6 | Validation vs Reference Oracles & API Polish | 6 | `make validate-phase6` |
 
+## Phase status
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| 0 | [x] Active | Data ingestion regenerates TSVs from bundled fallbacks. |
+| 1 | [x] Active | Phonology, encoding, and sandhi tests run in `validate-phase1`. |
+| 2 | [x] Active | Sūtra and metadata structures load and test. |
+| 3 | [ ] Partial | laṭ tinanta path exists; broader lakāra and root coverage in progress. |
+| 4 | [ ] Partial | Several subanta stem classes exist; oracle rates are informational. |
+| 5 | [ ] Partial | Pipeline, samāsa, kṛt, taddhita, and uṇādi modules are scaffolded. |
+| 6 | [ ] Partial | Validation harness reports strict raw rates; release criteria still evolving. |
+
+See `.cursor/stories/` for story scope and `.cursor/bugs/` for known bug-fix work.
+
 ## Encoding Convention
 
 All internal processing uses **SLP1** (ASCII). Conversion to IAST / Devanāgarī happens only at output boundaries via `encoding/encoding.h`.
@@ -117,13 +146,11 @@ All internal processing uses **SLP1** (ASCII). Conversion to IAST / Devanāgarī
 Instead of comparing against external oracles (vyakarana, scl), we validate against
 the **pre-computed reference oracles** from the same source repository:
 
-- **Phase 3 tiṅanta** → `data/dhatuforms.tsv` (254,736 forms). Target ≥99% match.
-- **Phase 4 subanta** → `data/shabda_forms.tsv` (216,168 forms). Target ≥99% match.
-- **Prakriyā traces** → `data/shabdaprakriya.tsv` (4,863 traces). Target ≥70% sūtra
-  attribution match per step; ≥95% final-form match.
+- **Phase 3 tiṅanta** → `data/dhatuforms.tsv` (254,736 forms), sampled with strict Devanāgarī equality.
+- **Phase 4 subanta** → `data/shabda_forms.tsv` (216,168 forms), sampled with strict Devanāgarī equality.
+- **Prakriyā traces** → `data/shabdaprakriya.tsv` (4,863 traces), sampled informationally until CLI trace export is complete.
 
-These oracles derive from the same Pāṇinian rules our library implements, so
-discrepancies indicate bugs in our implementation (not legitimate grammatical ambiguity).
+Current oracle scripts are informational while morphology coverage matures; they report raw rates and mismatches without hiding known gaps.
 
 ## License
 
