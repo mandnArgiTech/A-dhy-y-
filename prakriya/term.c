@@ -1,4 +1,4 @@
-/* term.c — stub; Story 3.1 */
+/* term.c — term helpers for derivation context; Story 3.1 */
 #include "term.h"
 #include "anubandha.h"
 #include "varna.h"

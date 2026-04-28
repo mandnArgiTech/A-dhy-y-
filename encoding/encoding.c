@@ -108,7 +108,7 @@ static bool is_vowel_slp1(char c) {
 
 static bool is_consonant_slp1(char c) {
   const EncEntry *e = find_by_slp1(c);
-  return e != NULL && !is_vowel_slp1(c) && c != 'M' && c != 'H';
+  return e != NULL && !is_vowel_slp1(c) && c != 'M' && c != 'H' && c != 'h';
 }
 
 /* ── SLP1 → IAST ─────────────────────────────────────────────────────────── */
@@ -341,10 +341,92 @@ char *enc_hk_to_slp1(const char *hk) {
   return out;
 }
 
-/* Devanāgarī → SLP1 is complex; stubbed for now */
+/* Find an encoding entry by exact Devanagari standalone glyph. */
+static const EncEntry *find_by_deva_std(const char *p, size_t *consumed) {
+  for (int i = 0; ENC[i].slp1; i++) {
+    size_t n = strlen(ENC[i].deva_std);
+    if (n > 0 && strncmp(p, ENC[i].deva_std, n) == 0) {
+      if (consumed) *consumed = n;
+      return &ENC[i];
+    }
+  }
+  return NULL;
+}
+
+/* Find vowel entry by Devanagari matra glyph. */
+static const EncEntry *find_by_deva_matra(const char *p, size_t *consumed) {
+  for (int i = 0; ENC[i].slp1; i++) {
+    if (!ENC[i].deva_matra) continue;
+    size_t n = strlen(ENC[i].deva_matra);
+    if (n > 0 && strncmp(p, ENC[i].deva_matra, n) == 0) {
+      if (consumed) *consumed = n;
+      return &ENC[i];
+    }
+  }
+  return NULL;
+}
+
 char *enc_devanagari_to_slp1(const char *deva) {
+  const char *p = deva;
+  size_t out_cap;
+  size_t out_pos = 0;
+  char *out;
   if (!deva) return NULL;
-  return strdup(deva);  /* TODO: full implementation */
+  out_cap = strlen(deva) + 8;
+  out = malloc(out_cap);
+  if (!out) return NULL;
+
+  while (*p && out_pos + 4 < out_cap) {
+    size_t consumed = 0;
+    const EncEntry *e = find_by_deva_std(p, &consumed);
+
+    /* Handle virama explicitly when seen without a recognized consonant before it. */
+    if (strncmp(p, VIRAMA_UTF8, VIRAMA_LEN) == 0) {
+      p += VIRAMA_LEN;
+      continue;
+    }
+
+    if (!e) {
+      /* Pass through ASCII punctuation/spaces as-is; skip unknown UTF-8 bytes. */
+      if (((unsigned char)*p) < 0x80) {
+        out[out_pos++] = *p++;
+      } else {
+        p++;
+      }
+      continue;
+    }
+
+    p += consumed;
+
+    if (is_consonant_slp1(e->slp1)) {
+      /* Consonant: default inherent 'a' unless followed by virama or matra. */
+      size_t matra_len = 0;
+      const EncEntry *matra = NULL;
+      out[out_pos++] = e->slp1;
+
+      if (strncmp(p, VIRAMA_UTF8, VIRAMA_LEN) == 0) {
+        p += VIRAMA_LEN;
+        continue;
+      }
+
+      matra = find_by_deva_matra(p, &matra_len);
+      if (matra) {
+        if (matra->slp1 != 'a') {
+          out[out_pos++] = matra->slp1;
+        }
+        p += matra_len;
+      } else {
+        out[out_pos++] = 'a';
+      }
+      continue;
+    }
+
+    /* Standalone vowels / anusvara / visarga */
+    out[out_pos++] = e->slp1;
+  }
+
+  out[out_pos] = '\0';
+  return out;
 }
 
 /* ── Generic dispatcher ──────────────────────────────────────────────────── */

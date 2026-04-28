@@ -122,6 +122,22 @@ void test_ayavadi_ai_plus_a(void) {
   TEST_ASSERT_EQUAL_STRING("Aya", r.result_slp1);
 }
 
+void test_yan_l_final_branch(void) {
+  /* ḷ + a → la (yan mapping default branch) */
+  SandhiResult r = sandhi_vowel_apply('x', 'a');
+  TEST_ASSERT_EQUAL_STRING("la", r.result_slp1);
+}
+
+void test_ayavadi_au_plus_a_and_default_branch(void) {
+  /* au + a → Ava */
+  SandhiResult r = sandhi_vowel_apply('O', 'a');
+  TEST_ASSERT_EQUAL_STRING("Ava", r.result_slp1);
+  /* default fallthrough for unknown first char */
+  r = sandhi_vowel_apply('?', 'a');
+  TEST_ASSERT_EQUAL_STRING("?a", r.result_slp1);
+  TEST_ASSERT_FALSE(r.changed);
+}
+
 /* ── Full-word join ──────────────────────────────────────────────────── */
 
 void test_join_rama_asti(void) {
@@ -193,6 +209,8 @@ int main(void) {
   RUN_TEST(test_ayavadi_e_plus_a);
   RUN_TEST(test_ayavadi_o_plus_a);
   RUN_TEST(test_ayavadi_ai_plus_a);
+  RUN_TEST(test_yan_l_final_branch);
+  RUN_TEST(test_ayavadi_au_plus_a_and_default_branch);
   RUN_TEST(test_join_rama_asti);
   RUN_TEST(test_join_ca_iti);
   RUN_TEST(test_join_ca_eva);

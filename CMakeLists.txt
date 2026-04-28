@@ -6,7 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Compiler flags
 add_compile_options(-Wall -Wextra -Werror -pedantic)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+option(ASH_ENABLE_SANITIZERS "Enable address/UB sanitizers in debug-like builds" OFF)
+if(ASH_ENABLE_SANITIZERS)
   add_compile_options(-g -fsanitize=address,undefined)
   add_link_options(-fsanitize=address,undefined)
 endif()

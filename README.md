@@ -80,7 +80,7 @@ cmake --build build
 ctest --test-dir build
 ```
 
-Current state: 12/12 stub tests passing. All 21 public API functions implemented.
+Current state: unit and validation targets are active, and the public API is wired for concrete runtime behavior.
 
 ## Quick Demo
 

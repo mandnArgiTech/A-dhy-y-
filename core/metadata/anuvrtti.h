@@ -1,4 +1,4 @@
-/* anuvrtti.h — stub; Story 2.5 */
+/* anuvrtti.h — anuvrtti resolver API; Story 2.5 */
 #ifndef ANUVRTTI_H
 #include <stddef.h>
 #define ANUVRTTI_H

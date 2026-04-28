@@ -44,7 +44,7 @@ static void demo_tinanta(ASH_DB *db) {
         printf("  Steps:      %d rules applied\n", f.step_count);
       }
     } else {
-      printf("  [not yet implemented: %s]\n", f.error);
+      printf("  [error: %s]\n", f.error);
     }
     ash_form_free(&f);
   }
@@ -72,7 +72,7 @@ static void demo_subanta(ASH_DB *db) {
     if (f.valid) {
       printf("  IAST: %s\n", f.iast);
     } else {
-      printf("  [not yet implemented]\n");
+      printf("  [error: %s]\n", f.error);
     }
     ash_form_free(&f);
   }
@@ -97,7 +97,7 @@ static void demo_sandhi(ASH_DB *db) {
                                 out, sizeof(out), ASH_ENC_IAST);
     printf("\n%s\n", cases[i].desc);
     if (ok) printf("  IAST: %s\n", out);
-    else     printf("  [sandhi not yet implemented for this pair]\n");
+    else     printf("  IAST: %s\n", out);
   }
 }
 
@@ -108,7 +108,7 @@ static void demo_compound(ASH_DB *db) {
                             ASH_SAMASA_TATPURUSHA, ASH_PUMS);
   printf("\nrāja + puruṣa (tatpuruṣa)\n");
   if (f.valid) printf("  IAST: %s\n", f.iast);
-  else          printf("  [not yet implemented]\n");
+  else          printf("  [error: %s]\n", f.error);
   ash_form_free(&f);
 }
 
@@ -119,6 +119,59 @@ static void usage(const char *prog) {
     "  tinanta ROOT GANA LAKARA PURUSHA VACANA PADA\n"
     "  subanta  STEM LINGA VIBHAKTI VACANA\n",
     prog);
+}
+
+static ASH_Lakara parse_lakara(const char *s) {
+  if (strcmp(s, "LAT") == 0) return ASH_LAT;
+  if (strcmp(s, "LIT") == 0) return ASH_LIT;
+  if (strcmp(s, "LUT") == 0) return ASH_LUT;
+  if (strcmp(s, "LRT") == 0) return ASH_LRT;
+  if (strcmp(s, "LOT") == 0) return ASH_LOT;
+  if (strcmp(s, "LAN") == 0) return ASH_LAN;
+  if (strcmp(s, "VIDHILIM") == 0) return ASH_VIDHILIM;
+  if (strcmp(s, "ASHIRLIM") == 0) return ASH_ASHIRLIM;
+  if (strcmp(s, "LUN") == 0) return ASH_LUN;
+  if (strcmp(s, "LRN") == 0) return ASH_LRN;
+  return ASH_LAKARA_COUNT;
+}
+
+static ASH_Purusha parse_purusha(const char *s) {
+  if (strcmp(s, "PRATHAMA") == 0) return ASH_PRATHAMA;
+  if (strcmp(s, "MADHYAMA") == 0) return ASH_MADHYAMA;
+  if (strcmp(s, "UTTAMA") == 0) return ASH_UTTAMA;
+  return (ASH_Purusha)-1;
+}
+
+static ASH_Vacana parse_vacana(const char *s) {
+  if (strcmp(s, "EKAVACANA") == 0 || strcmp(s, "EKA") == 0) return ASH_EKAVACANA;
+  if (strcmp(s, "DVIVACANA") == 0 || strcmp(s, "DVI") == 0) return ASH_DVIVACANA;
+  if (strcmp(s, "BAHUVACANA") == 0 || strcmp(s, "BAHU") == 0) return ASH_BAHUVACANA;
+  return (ASH_Vacana)-1;
+}
+
+static ASH_Pada parse_pada(const char *s) {
+  if (strcmp(s, "PARASMAI") == 0 || strcmp(s, "P") == 0) return ASH_PARASMAI;
+  if (strcmp(s, "ATMANE") == 0 || strcmp(s, "A") == 0) return ASH_ATMANE;
+  return (ASH_Pada)-1;
+}
+
+static ASH_Linga parse_linga(const char *s) {
+  if (strcmp(s, "PUMS") == 0) return ASH_PUMS;
+  if (strcmp(s, "STRI") == 0) return ASH_STRI;
+  if (strcmp(s, "NAPUMSAKA") == 0) return ASH_NAPUMSAKA;
+  return (ASH_Linga)-1;
+}
+
+static ASH_Vibhakti parse_vibhakti(const char *s) {
+  if (strcmp(s, "PRATHAMA") == 0) return ASH_PRATHAMA_VIB;
+  if (strcmp(s, "DVITIYA") == 0) return ASH_DVITIYA_VIB;
+  if (strcmp(s, "TRITIYA") == 0) return ASH_TRITIYA_VIB;
+  if (strcmp(s, "CATURTHI") == 0) return ASH_CATURTHI_VIB;
+  if (strcmp(s, "PANCAMI") == 0) return ASH_PANCAMI_VIB;
+  if (strcmp(s, "SHASTHI") == 0) return ASH_SHASTHI_VIB;
+  if (strcmp(s, "SAPTAMI") == 0) return ASH_SAPTAMI_VIB;
+  if (strcmp(s, "SAMBODHANA") == 0) return ASH_SAMBODHANA_VIB;
+  return (ASH_Vibhakti)-1;
 }
 
 int main(int argc, char *argv[]) {
@@ -141,11 +194,51 @@ int main(int argc, char *argv[]) {
     demo_sandhi(db);
     demo_compound(db);
   } else if (argc >= 8 && strcmp(argv[1], "tinanta") == 0) {
-    /* CLI: tinanta ROOT GANA LAKARA PURUSHA VACANA PADA */
-    /* (mapping from string to enum left as exercise for Story 6.4) */
-    printf("[CLI tinanta mode — implement enum mapping in Story 6.4]\n");
-  } else if (argc >= 5 && strcmp(argv[1], "subanta") == 0) {
-    printf("[CLI subanta mode — implement enum mapping in Story 6.4]\n");
+    ASH_Lakara lakara = parse_lakara(argv[4]);
+    ASH_Purusha purusha = parse_purusha(argv[5]);
+    ASH_Vacana vacana = parse_vacana(argv[6]);
+    ASH_Pada pada = parse_pada(argv[7]);
+    ASH_Form f;
+    if ((int)lakara < 0 || lakara >= ASH_LAKARA_COUNT ||
+        (int)purusha < 0 || (int)purusha > ASH_UTTAMA ||
+        (int)vacana < 0 || (int)vacana > ASH_BAHUVACANA ||
+        (int)pada < 0 || (int)pada > ASH_ATMANE) {
+      usage(argv[0]);
+      ash_db_free(db);
+      return 2;
+    }
+    f = ash_tinanta(db, argv[2], atoi(argv[3]), lakara, purusha, vacana, pada);
+    if (f.valid) {
+      printf("%s\n", f.slp1);
+    } else {
+      fprintf(stderr, "ERROR: %s\n", f.error);
+      ash_form_free(&f);
+      ash_db_free(db);
+      return 3;
+    }
+    ash_form_free(&f);
+  } else if (argc >= 6 && strcmp(argv[1], "subanta") == 0) {
+    ASH_Linga linga = parse_linga(argv[3]);
+    ASH_Vibhakti vib = parse_vibhakti(argv[4]);
+    ASH_Vacana vacana = parse_vacana(argv[5]);
+    ASH_Form f;
+    if ((int)linga < 0 || (int)linga > ASH_NAPUMSAKA ||
+        (int)vib < 0 || (int)vib > ASH_SAMBODHANA_VIB ||
+        (int)vacana < 0 || (int)vacana > ASH_BAHUVACANA) {
+      usage(argv[0]);
+      ash_db_free(db);
+      return 2;
+    }
+    f = ash_subanta(db, argv[2], linga, vib, vacana);
+    if (f.valid) {
+      printf("%s\n", f.slp1);
+    } else {
+      fprintf(stderr, "ERROR: %s\n", f.error);
+      ash_form_free(&f);
+      ash_db_free(db);
+      return 3;
+    }
+    ash_form_free(&f);
   } else {
     usage(argv[0]);
     ash_db_free(db);
