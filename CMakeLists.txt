@@ -6,7 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Compiler flags
 add_compile_options(-Wall -Wextra -Werror -pedantic)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+option(ASH_ENABLE_SANITIZERS "Enable address/UB sanitizers in debug-like builds" OFF)
+if(ASH_ENABLE_SANITIZERS)
   add_compile_options(-g -fsanitize=address,undefined)
   add_link_options(-fsanitize=address,undefined)
 endif()
@@ -118,18 +119,21 @@ add_custom_target(validate-phase0
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_shabdaprakriya.py --validate
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   COMMENT "Phase 0: Validating data ingestion (4 source files + 3 oracle files)"
+  VERBATIM
 )
 
 add_custom_target(validate-phase1
   COMMAND ${CMAKE_CTEST_COMMAND} -R "test_varna|test_pratyahara|test_encoding|test_sandhi"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 1: Validating phonology engine"
+  VERBATIM
 )
 
 add_custom_target(validate-phase2
   COMMAND ${CMAKE_CTEST_COMMAND} -R "test_sutra|test_samjna|test_anubandha|test_adhikara|test_anuvrtti|test_paribhasha"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 2: Validating sutra engine"
+  VERBATIM
 )
 
 add_custom_target(validate-phase3
@@ -137,6 +141,7 @@ add_custom_target(validate-phase3
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_vyakarana_oracle.py --validate
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 3: Validating tinanta derivation"
+  VERBATIM
 )
 
 add_custom_target(validate-phase4
@@ -144,12 +149,14 @@ add_custom_target(validate-phase4
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_scl_oracle.py --validate
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 4: Validating subanta declension"
+  VERBATIM
 )
 
 add_custom_target(validate-phase5
-  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline\\|test_samasa\\|test_krit\\|test_taddhita\\|test_unadi" --output-on-failure
+  COMMAND ${CMAKE_CTEST_COMMAND} -R "test_pipeline|test_samasa|test_krit|test_taddhita|test_unadi" --output-on-failure
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 5: Validating pipeline and derivatives"
+  VERBATIM
 )
 
 add_custom_target(validate-phase6
@@ -157,6 +164,7 @@ add_custom_target(validate-phase6
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/coverage_report.py
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 6: Full validation and coverage report"
+  VERBATIM
 )
 
 # ── Install ────────────────────────────────────────────────────────────────

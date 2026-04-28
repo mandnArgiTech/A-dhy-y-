@@ -1,3 +1,3 @@
-/* ting.c — stub; see story for this module */
+/* ting.c — retained as translation unit placeholder.
+ * tiN APIs are implemented in lakara.c. */
 #include "lakara.h"
-/* TODO: implement per story */

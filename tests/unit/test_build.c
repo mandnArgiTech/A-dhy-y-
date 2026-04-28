@@ -9,10 +9,21 @@
 #include "pratyahara.h"
 #include "sutra.h"
 #include "sandhi_vowel.h"
+#include "test_paths.h"
 #include <string.h>
 
 void setUp(void)    {}
 void tearDown(void) {}
+
+static const char *sutra_data_path(void) {
+  static char path[256];
+  return test_resolve_data_file("sutras.tsv", path, sizeof(path));
+}
+
+static const char *data_dir_path(void) {
+  static char dir[256];
+  return test_resolve_data_dir(dir, sizeof(dir));
+}
 
 /* ── Story 0.1: build compiles, version correct ─────────────────────────── */
 void test_version(void) {
@@ -78,9 +89,9 @@ void test_samjna_bitmask(void) {
 /* ── Story 2.1: Sūtra loader — requires data/sutras.tsv ─────────────────── */
 void test_sutra_db_load(void) {
   SutraDB db;
-  int rc = sutra_db_load(&db, "data/sutras.tsv");
+  int rc = sutra_db_load(&db, sutra_data_path());
   if (rc != 0) {
-    TEST_IGNORE_MESSAGE("data/sutras.tsv missing — run `python3 tools/ingest_source.py`");
+    TEST_FAIL_MESSAGE("sutras.tsv missing");
   }
   TEST_ASSERT_GREATER_OR_EQUAL(3959, db.count);
   sutra_db_free(&db);
@@ -88,8 +99,8 @@ void test_sutra_db_load(void) {
 
 void test_sutra_111_is_vriddhi_samjna(void) {
   SutraDB db;
-  if (sutra_db_load(&db, "data/sutras.tsv") != 0) {
-    TEST_IGNORE_MESSAGE("data/sutras.tsv missing");
+  if (sutra_db_load(&db, sutra_data_path()) != 0) {
+    TEST_FAIL_MESSAGE("sutras.tsv missing");
   }
   const Sutra *s = sutra_get_by_addr(&db, 1, 1, 1);
   TEST_ASSERT_NOT_NULL(s);
@@ -102,8 +113,8 @@ void test_sutra_111_is_vriddhi_samjna(void) {
 
 void test_sutra_6_1_77_iko_yanaci(void) {
   SutraDB db;
-  if (sutra_db_load(&db, "data/sutras.tsv") != 0) {
-    TEST_IGNORE_MESSAGE("data/sutras.tsv missing");
+  if (sutra_db_load(&db, sutra_data_path()) != 0) {
+    TEST_FAIL_MESSAGE("sutras.tsv missing");
   }
   const Sutra *s = sutra_get_by_addr(&db, 6, 1, 77);
   TEST_ASSERT_NOT_NULL(s);
@@ -116,8 +127,8 @@ void test_sutra_6_1_77_iko_yanaci(void) {
 
 void test_sutra_lookup_by_id(void) {
   SutraDB db;
-  if (sutra_db_load(&db, "data/sutras.tsv") != 0) {
-    TEST_IGNORE_MESSAGE("data/sutras.tsv missing");
+  if (sutra_db_load(&db, sutra_data_path()) != 0) {
+    TEST_FAIL_MESSAGE("sutras.tsv missing");
   }
   const Sutra *s = sutra_get_by_id(&db, 1);
   TEST_ASSERT_NOT_NULL(s);
@@ -129,13 +140,13 @@ void test_sutra_lookup_by_id(void) {
 
 /* ── Phase 5: Public API stubs work ─────────────────────────────────────── */
 void test_ash_db_load(void) {
-  ASH_DB *db = ash_db_load("data/");
+  ASH_DB *db = ash_db_load(data_dir_path());
   TEST_ASSERT_NOT_NULL(db);
   ash_db_free(db);
 }
 
 void test_ash_tinanta_stub(void) {
-  ASH_DB *db = ash_db_load("data/");
+  ASH_DB *db = ash_db_load(data_dir_path());
   ASH_Form f = ash_tinanta(db, "BU", 1, ASH_LAT,
                              ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_TRUE(f.valid);
@@ -144,7 +155,7 @@ void test_ash_tinanta_stub(void) {
 }
 
 void test_ash_subanta_stub(void) {
-  ASH_DB *db = ash_db_load("data/");
+  ASH_DB *db = ash_db_load(data_dir_path());
   ASH_Form f = ash_subanta(db, "rAma", ASH_PUMS,
                              ASH_PRATHAMA_VIB, ASH_EKAVACANA);
   TEST_ASSERT_TRUE(f.valid);
