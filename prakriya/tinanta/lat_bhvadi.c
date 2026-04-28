@@ -105,9 +105,27 @@ static void set_single_term(PrakriyaCtx *ctx, const char *value) {
   ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
 }
 
+static void log_single_term_change(PrakriyaCtx *ctx, uint32_t sutra_id,
+                                   const char *before, const char *after,
+                                   const char *desc) {
+  char old_value[TERM_VALUE_LEN] = {0};
+  if (!ctx || !before || !after) return;
+  if (ctx->term_count == 0) {
+    ctx->term_count = 1;
+  }
+  strncpy(old_value, ctx->terms[0].value, sizeof(old_value) - 1);
+  set_single_term(ctx, before);
+  strncpy(ctx->terms[0].value, after, TERM_VALUE_LEN - 1);
+  ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log(ctx, sutra_id, desc);
+  strncpy(ctx->terms[0].value, old_value, TERM_VALUE_LEN - 1);
+  ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+}
+
 bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
                            ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
   const TingEntry *t;
+  char clean_root[64] = {0};
   char stem[64] = {0};
   char form[128] = {0};
   uint32_t vik_sutra = 0;
@@ -117,18 +135,19 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   t = ting_get(ASH_LAT, p, v, pd);
   if (!t) return false;
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
+  copy_clean_root(dhatu_slp1, clean_root, sizeof(clean_root));
   if (!apply_class_transform(dhatu_slp1, gana, stem, sizeof(stem), &vik_sutra, &used_guna, &used_ec_ay)) {
     return false;
   }
+  log_single_term_change(ctx_out, vik_sutra, clean_root, stem, "vikaraRa assignment");
+  if (used_guna) log_single_term_change(ctx_out, 703084, clean_root, stem, "sArvadhAtukArdhadhAtukayoH");
+  if (used_ec_ay) log_single_term_change(ctx_out, 601078, clean_root, stem, "eco'yavAyAvaH");
   set_single_term(ctx_out, stem);
-  prakriya_log(ctx_out, vik_sutra, "vikaraRa assignment");
-  if (used_guna) prakriya_log(ctx_out, 703084, "sArvadhAtukArdhadhAtukayoH");
-  if (used_ec_ay) prakriya_log(ctx_out, 601078, "eco'yavAyAvaH");
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
   strcat(form, t->clean);
+  log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
   set_single_term(ctx_out, form);
-  prakriya_log(ctx_out, 304078, "tiN assignment");
   return true;
 }
 

@@ -41,8 +41,10 @@ bool a_stem_masc_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   if (sup_assign(ctx_out, vib, vac, ASH_PUMS) != 0) return false;
   if (ctx_out->term_count < 2) return false;
   {
+    char before[TERM_VALUE_LEN] = {0};
     char form[TERM_VALUE_LEN] = {0};
     const char *suffix = ctx_out->terms[1].value;
+    prakriya_current_form(ctx_out, before, sizeof(before));
     strncat(form, ctx_out->terms[0].value, sizeof(form) - 1);
     if (form[0] != '\0' && form[strlen(form) - 1] == 'a') {
       if (strcmp(suffix, "H") == 0 || strcmp(suffix, "m") == 0 ||
@@ -57,16 +59,16 @@ bool a_stem_masc_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
     strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
     ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
     ctx_out->term_count = 1;
-  }
-  if (vib == ASH_PRATHAMA_VIB &&
-      (vac == ASH_EKAVACANA || vac == ASH_BAHUVACANA)) {
-    prakriya_log(ctx_out, 803015, "KaravasAnayor visarjanIyaH");
-  } else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
-    prakriya_log(ctx_out, 701012, "wA-Nasi-NasAm inAdyAH");
-  } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
-    prakriya_log(ctx_out, 703102, "supi ca");
-  } else {
-    prakriya_log(ctx_out, 401002, "svOjasamOw");
+    if (vib == ASH_PRATHAMA_VIB &&
+        (vac == ASH_EKAVACANA || vac == ASH_BAHUVACANA)) {
+      prakriya_log_transition(ctx_out, 803015, "KaravasAnayor visarjanIyaH", before, form);
+    } else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
+      prakriya_log_transition(ctx_out, 701012, "wA-Nasi-NasAm inAdyAH", before, form);
+    } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
+      prakriya_log_transition(ctx_out, 703102, "supi ca", before, form);
+    } else {
+      prakriya_log_transition(ctx_out, 401002, "svOjasamOw", before, form);
+    }
   }
   return true;
 }

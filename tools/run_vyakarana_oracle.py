@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import random
 import subprocess
 import sys
 import unicodedata
@@ -20,6 +21,7 @@ DATA_DHATUFORMS = os.path.join(ROOT, "../data/dhatuforms.tsv")
 DATA_DHATUPATHA = os.path.join(ROOT, "../data/dhatupatha.tsv")
 DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
 DEFAULT_SAMPLE_SIZE = 450
+RNG_SEED = 42
 
 PADA_MAP = {"P": "PARASMAI", "A": "ATMANE"}
 PURUSHA_MAP = {"PRATHAMA": "PRATHAMA", "MADHYAMA": "MADHYAMA", "UTTAMA": "UTTAMA"}
@@ -79,24 +81,30 @@ def load_lat_rows(filter_root: Optional[str]) -> List[dict]:
 
 def sample_rows(rows: List[dict], sample_size: int) -> List[dict]:
     grouped: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    rng = random.Random(RNG_SEED)
     for row in rows:
         grouped[(row["gana"], row["root"])].append(row)
+
     selected_roots: List[Tuple[str, str]] = []
+    target_roots = max(1, sample_size // 9)
     quotas = [("1", 12), ("2", 8), ("4", 8), ("6", 8), ("10", 8)]
     for gana, quota in quotas:
         roots = sorted(k for k in grouped if k[0] == gana)
-        selected_roots.extend(roots[:quota])
-    for key in sorted(grouped):
-        if key not in selected_roots:
-            selected_roots.append(key)
-        if len(selected_roots) * 9 >= sample_size:
+        rng.shuffle(roots)
+        for key in roots[:quota]:
+            if key not in selected_roots:
+                selected_roots.append(key)
+    remaining = sorted(k for k in grouped if k not in selected_roots)
+    rng.shuffle(remaining)
+    for key in remaining:
+        if len(selected_roots) >= target_roots:
             break
+        selected_roots.append(key)
+
     sampled: List[dict] = []
-    for key in selected_roots:
+    for key in selected_roots[:target_roots]:
         sampled.extend(sorted(grouped[key], key=lambda r: (r["purusha"], r["vacana"])))
-        if len(sampled) >= sample_size:
-            break
-    return sampled[:sample_size]
+    return sampled
 
 
 def pct(pair: List[int]) -> float:
@@ -118,6 +126,7 @@ def run_comparison(filter_root: Optional[str], sample_size: int, require_rate: O
     total = matched = errors = 0
     by_gana: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
     by_vacana: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_purusha: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
     mismatches: List[dict] = []
 
     for row in rows:
@@ -136,6 +145,8 @@ def run_comparison(filter_root: Optional[str], sample_size: int, require_rate: O
         by_gana[row["gana"]][1] += is_match
         by_vacana[row["vacana"]][0] += 1
         by_vacana[row["vacana"]][1] += is_match
+        by_purusha[row["purusha"]][0] += 1
+        by_purusha[row["purusha"]][1] += is_match
         result = {
             "root": row["root"], "gana": row["gana"], "lakara": "LAT",
             "purusha": row["purusha"], "vacana": row["vacana"], "pada": row["pada"],
@@ -157,6 +168,7 @@ def run_comparison(filter_root: Optional[str], sample_size: int, require_rate: O
     print(f"# of {roots} roots x LAT parasmai forms; compared: {total}; matched: {matched}; errors: {errors}; rate: {rate:.2f}%")
     print_breakdown("Per-gana rate:", by_gana)
     print_breakdown("Per-vacana rate:", by_vacana)
+    print_breakdown("Per-purusha rate:", by_purusha)
     print("Top mismatches:")
     for row in mismatches[:20]:
         print(f"  {row['root']} g{row['gana']} {row['purusha']}-{row['vacana']}: ours={row['our_deva'] or row['our_slp1']} oracle={row['oracle_deva']}")

@@ -117,8 +117,22 @@ static void usage(const char *prog) {
     "Usage: %s [command] [args...]\n"
     "  (no args)           — run demo\n"
     "  tinanta ROOT GANA LAKARA PURUSHA VACANA PADA\n"
-    "  subanta  STEM LINGA VIBHAKTI VACANA\n",
+    "  subanta  STEM LINGA VIBHAKTI VACANA\n"
+    "  trace-tinanta ROOT GANA LAKARA PURUSHA VACANA PADA\n"
+    "  trace-subanta  STEM LINGA VIBHAKTI VACANA\n",
     prog);
+}
+
+static void print_trace_tsv(const ASH_Form *f) {
+  if (!f) return;
+  printf("FORM\t%s\t%s\n", f->slp1, f->devanagari);
+  for (int i = 0; i < f->step_count; i++) {
+    printf("STEP\t%u\t%s\t%s\t%s\n",
+           f->steps[i].sutra_id,
+           f->steps[i].before_slp1,
+           f->steps[i].after_slp1,
+           f->steps[i].note);
+  }
 }
 
 static ASH_Lakara parse_lakara(const char *s) {
@@ -193,7 +207,8 @@ int main(int argc, char *argv[]) {
     demo_subanta(db);
     demo_sandhi(db);
     demo_compound(db);
-  } else if (argc >= 8 && strcmp(argv[1], "tinanta") == 0) {
+  } else if (argc >= 8 && (strcmp(argv[1], "tinanta") == 0 ||
+                           strcmp(argv[1], "trace-tinanta") == 0)) {
     ASH_Lakara lakara = parse_lakara(argv[4]);
     ASH_Purusha purusha = parse_purusha(argv[5]);
     ASH_Vacana vacana = parse_vacana(argv[6]);
@@ -209,7 +224,8 @@ int main(int argc, char *argv[]) {
     }
     f = ash_tinanta(db, argv[2], atoi(argv[3]), lakara, purusha, vacana, pada);
     if (f.valid) {
-      printf("%s\n", f.slp1);
+      if (strcmp(argv[1], "trace-tinanta") == 0) print_trace_tsv(&f);
+      else printf("%s\n", f.slp1);
     } else {
       fprintf(stderr, "ERROR: %s\n", f.error);
       ash_form_free(&f);
@@ -217,7 +233,8 @@ int main(int argc, char *argv[]) {
       return 3;
     }
     ash_form_free(&f);
-  } else if (argc >= 6 && strcmp(argv[1], "subanta") == 0) {
+  } else if (argc >= 6 && (strcmp(argv[1], "subanta") == 0 ||
+                           strcmp(argv[1], "trace-subanta") == 0)) {
     ASH_Linga linga = parse_linga(argv[3]);
     ASH_Vibhakti vib = parse_vibhakti(argv[4]);
     ASH_Vacana vacana = parse_vacana(argv[5]);
@@ -231,7 +248,8 @@ int main(int argc, char *argv[]) {
     }
     f = ash_subanta(db, argv[2], linga, vib, vacana);
     if (f.valid) {
-      printf("%s\n", f.slp1);
+      if (strcmp(argv[1], "trace-subanta") == 0) print_trace_tsv(&f);
+      else printf("%s\n", f.slp1);
     } else {
       fprintf(stderr, "ERROR: %s\n", f.error);
       ash_form_free(&f);

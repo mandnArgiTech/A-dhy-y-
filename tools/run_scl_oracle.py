@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import random
 import subprocess
 import sys
 import unicodedata
@@ -19,6 +20,7 @@ OUTPUT_TSV = os.path.join(ROOT, "../tests/regression/subanta_oracle_results.tsv"
 SHABDA_TSV = os.path.join(ROOT, "../data/shabda_forms.tsv")
 DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
 DEFAULT_SAMPLE_SIZE = 1200
+RNG_SEED = 42
 
 
 def nfc(text: str) -> str:
@@ -69,6 +71,7 @@ def call_our_library(stem: str, linga: str, vibhakti: str, vacana: str) -> Tuple
 
 def load_sample(filter_stem: Optional[str], sample_size: int) -> List[dict]:
     by_stem: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    rng = random.Random(RNG_SEED)
     with open(SHABDA_TSV, encoding="utf-8") as f:
         for row in csv.DictReader(f, delimiter="\t"):
             stem = row["stem_slp1"].strip()
@@ -78,22 +81,29 @@ def load_sample(filter_stem: Optional[str], sample_size: int) -> List[dict]:
             by_stem[(stem, linga)].append(row)
     buckets: Dict[Tuple[str, str], List[Tuple[str, str]]] = defaultdict(list)
     for key in sorted(by_stem):
-        buckets[(key[1], stem_class(key[0]))].append(key)
-    selected: List[dict] = []
+        if len(by_stem[key]) >= 24:
+            buckets[(key[1], stem_class(key[0]))].append(key)
+    for keys in buckets.values():
+        rng.shuffle(keys)
+
+    target_stems = max(1, sample_size // 24)
+    selected_keys: List[Tuple[str, str]] = []
     bucket_keys = sorted(buckets)
-    while len(selected) < sample_size and bucket_keys:
+    while len(selected_keys) < target_stems and bucket_keys:
         progressed = False
         for bucket in bucket_keys:
-            if not buckets[bucket]:
-                continue
-            key = buckets[bucket].pop(0)
-            selected.extend(by_stem[key])
-            progressed = True
-            if len(selected) >= sample_size:
-                break
+            if buckets[bucket]:
+                selected_keys.append(buckets[bucket].pop(0))
+                progressed = True
+                if len(selected_keys) >= target_stems:
+                    break
         if not progressed:
             break
-    return selected[:sample_size]
+
+    selected: List[dict] = []
+    for key in selected_keys:
+        selected.extend(sorted(by_stem[key], key=lambda r: (r["vibhakti"], r["vacana"])))
+    return selected
 
 
 def pct(pair: List[int]) -> float:

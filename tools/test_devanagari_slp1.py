@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from devanagari_slp1 import deva_to_slp1
+from devanagari_slp1 import deva_to_slp1, slp1_to_devanagari
 
 
 class DevanagariSlp1Tests(unittest.TestCase):
@@ -36,6 +36,22 @@ class DevanagariSlp1Tests(unittest.TestCase):
         }
         for deva, slp1 in cases.items():
             with self.subTest(deva=deva):
+                self.assertEqual(slp1, deva_to_slp1(deva))
+
+    def test_slp1_to_devanagari_round_trip(self):
+        cases = {
+            "Bavati": "भवति",
+            "rAmaH": "रामः",
+            "rAmeRa": "रामेण",
+            "rAmAn": "रामान्",
+            "kfzRa": "कृष्ण",
+            "tattva": "तत्त्व",
+            "svAmin": "स्वामिन्",
+            "taMca": "तंच",
+        }
+        for slp1, deva in cases.items():
+            with self.subTest(slp1=slp1):
+                self.assertEqual(deva, slp1_to_devanagari(slp1))
                 self.assertEqual(slp1, deva_to_slp1(deva))
 
 
