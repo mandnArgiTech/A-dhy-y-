@@ -25,51 +25,15 @@ PRATYAHARA_URL = f"{RAW_BASE}/pratyahara/data.txt"
 FALLBACK       = os.path.join(os.path.dirname(__file__), "../vendor/pratyahara_fallback.json")
 OUTPUT_TSV     = os.path.join(os.path.dirname(__file__), "../data/pratyahara.tsv")
 
-DEVA_TO_SLP1 = {
-    'अ':'a','आ':'A','इ':'i','ई':'I','उ':'u','ऊ':'U',
-    'ऋ':'f','ॠ':'F','ऌ':'x','ॡ':'X',
-    'ए':'e','ऐ':'E','ओ':'o','औ':'O',
-    'ं':'M','ः':'H','ँ':'~',
-    'क':'k','ख':'K','ग':'g','घ':'G','ङ':'N',
-    'च':'c','छ':'C','ज':'j','झ':'J','ञ':'Y',
-    'ट':'w','ठ':'W','ड':'q','ढ':'Q','ण':'R',
-    'त':'t','थ':'T','द':'d','ध':'D','न':'n',
-    'प':'p','फ':'P','ब':'b','भ':'B','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'S','ष':'z','स':'s','ह':'h',
-    'ा':'A','ि':'i','ी':'I','ु':'u','ू':'U',
-    'ृ':'f','े':'e','ै':'E','ो':'o','ौ':'O',
-    '्':'',
-    # Standalone consonants without vowel (halanta forms)
-    'क्':'k','ख्':'K','ग्':'g','घ्':'G','ङ्':'N',
-    'च्':'c','छ्':'C','ज्':'j','झ्':'J','ञ्':'Y',
-    'ट्':'w','ठ्':'W','ड्':'q','ढ्':'Q','ण्':'R',
-    'त्':'t','थ्':'T','द्':'d','ध्':'D','न्':'n',
-    'प्':'p','फ्':'P','ब्':'b','भ्':'B','म्':'m',
-    'य्':'y','र्':'r','ल्':'l','व्':'v',
-    'श्':'S','ष्':'z','स्':'s','ह्':'h',
-}
+from devanagari_slp1 import deva_to_slp1
 
-def deva_to_slp1(text: str) -> str:
-    text = unicodedata.normalize('NFC', text)
-    result = []
-    i = 0
-    while i < len(text):
-        # Try 2-char first (halanta forms)
-        two = text[i:i+2]
-        if two in DEVA_TO_SLP1:
-            result.append(DEVA_TO_SLP1[two])
-            i += 2
-        elif text[i] in DEVA_TO_SLP1:
-            result.append(DEVA_TO_SLP1[text[i]])
-            i += 1
-        elif ord(text[i]) < 128:
-            result.append(text[i])
-            i += 1
-        else:
-            i += 1
-    return ''.join(result)
+CONSONANT_LABELS = set("kKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzsh")
 
+def pratyahara_label_to_slp1(name_deva: str) -> str:
+    label = deva_to_slp1(name_deva)
+    if len(label) == 3 and label[0] in CONSONANT_LABELS and label[1] == 'a':
+        return label[0] + label[2]
+    return label
 
 def fetch_data() -> dict:
     if os.path.exists(FALLBACK):
@@ -94,7 +58,7 @@ def generate(data: dict):
     rows = []
     for i, entry in enumerate(entries, 1):
         name_deva = unicodedata.normalize('NFC', str(entry.get('name', '')))
-        name_slp1 = deva_to_slp1(name_deva)
+        name_slp1 = pratyahara_label_to_slp1(name_deva)
         # expansion: comma-separated Devanagari phonemes
         expansion_deva = str(entry.get('list', ''))
         members_deva   = [m.strip() for m in expansion_deva.split(',') if m.strip()]

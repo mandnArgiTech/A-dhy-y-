@@ -32,6 +32,9 @@ void prakriya_init_tinanta(PrakriyaCtx *ctx, const char *dhatu_slp1, int gana,
 void prakriya_init_subanta(PrakriyaCtx *ctx, const char *stem_slp1, ASH_Linga li,
                             ASH_Vibhakti vib, ASH_Vacana v);
 void prakriya_log(PrakriyaCtx *ctx, uint32_t sutra_id, const char *desc);
+void prakriya_log_transition(PrakriyaCtx *ctx, uint32_t sutra_id,
+                             const char *before_slp1, const char *after_slp1,
+                             const char *desc);
 void prakriya_current_form(const PrakriyaCtx *ctx, char *out, size_t len);
 void prakriya_print_trace(const PrakriyaCtx *ctx, FILE *stream);
 ASH_Form prakriya_build_result(const PrakriyaCtx *ctx);

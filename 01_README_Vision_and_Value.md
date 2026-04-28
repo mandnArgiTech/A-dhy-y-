@@ -1,6 +1,6 @@
 # 01 — Vision and Value (Master Index)
 
-This repository implements a **deterministic Paninian grammar engine** as a modular systems library in C (C17), with a C-compatible public API (`include/ashtadhyayi.h`) and C++ interoperability via `extern "C"`.
+This repository is building a **deterministic Paninian grammar engine** as a modular systems library in C (C17), with a C-compatible public API (`include/ashtadhyayi.h`) and C++ interoperability via `extern "C"`. The foundation is active; complete Aṣṭādhyāyī coverage remains the roadmap, not the current status.
 
 If you master this architecture, you can build:
 
@@ -12,20 +12,22 @@ If you master this architecture, you can build:
 
 ---
 
-## Concrete capabilities extracted from this codebase
+## Current status and concrete capabilities
 
-Current engine capabilities (as implemented, not hypothetical):
+Implemented capabilities as of this snapshot:
 
 - Data loading from TSV (`sutras.tsv`, `dhatupatha.tsv`) into runtime structures.
 - Sūtra lookup by global ID or traditional address.
-- Tiṅanta derivation entrypoint (`ash_tinanta`) with **LAT path implemented**.
-- Subanta derivation entrypoint (`ash_subanta`) across several stem classes.
+- Tiṅanta derivation entrypoint (`ash_tinanta`) with a **partial LAT path**.
+- Subanta derivation entrypoint (`ash_subanta`) across several partial stem classes.
 - Kṛt derivation (`ash_krit`) with curated and fallback generation logic.
 - Samāsa derivation (`ash_samasa`) across six samāsa categories.
 - Sandhi join/split public APIs (`ash_sandhi_apply`, `ash_sandhi_split`).
 - Pratyāhāra expansion and membership checks.
 - Internal SLP1 processing with output conversion to IAST/Devanāgarī/HK.
 - Unit-test + phase-validation framework (`validate-phase0`…`validate-phase6`).
+
+Known gaps and bug-fix stories live in `.cursor/bugs/`; implementation stories live in `.cursor/stories/`.
 
 ---
 

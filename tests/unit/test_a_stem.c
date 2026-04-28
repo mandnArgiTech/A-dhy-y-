@@ -7,16 +7,16 @@ void tearDown(void) {}
 
 void test_rama_nom_sg(void) {
   PrakriyaCtx ctx = {0};
-  bool ok = a_stem_masc_derive("rAm", ASH_PRATHAMA_VIB, ASH_EKAVACANA, &ctx);
+  bool ok = a_stem_masc_derive("rAma", ASH_PRATHAMA_VIB, ASH_EKAVACANA, &ctx);
   char form[64] = {0};
   TEST_ASSERT_TRUE(ok);
   prakriya_current_form(&ctx, form, sizeof(form));
-  TEST_ASSERT_EQUAL_STRING("rAmH", form);
+  TEST_ASSERT_EQUAL_STRING("rAmaH", form);
 }
 
 void test_rama_acc_pl(void) {
   PrakriyaCtx ctx = {0};
-  bool ok = a_stem_masc_derive("rAm", ASH_DVITIYA_VIB, ASH_BAHUVACANA, &ctx);
+  bool ok = a_stem_masc_derive("rAma", ASH_DVITIYA_VIB, ASH_BAHUVACANA, &ctx);
   char form[64] = {0};
   TEST_ASSERT_TRUE(ok);
   prakriya_current_form(&ctx, form, sizeof(form));
@@ -25,7 +25,7 @@ void test_rama_acc_pl(void) {
 
 void test_rama_inst_sg(void) {
   PrakriyaCtx ctx = {0};
-  bool ok = a_stem_masc_derive("rAm", ASH_TRITIYA_VIB, ASH_EKAVACANA, &ctx);
+  bool ok = a_stem_masc_derive("rAma", ASH_TRITIYA_VIB, ASH_EKAVACANA, &ctx);
   char form[64] = {0};
   TEST_ASSERT_TRUE(ok);
   prakriya_current_form(&ctx, form, sizeof(form));

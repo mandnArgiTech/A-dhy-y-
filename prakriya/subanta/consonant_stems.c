@@ -27,13 +27,18 @@ bool n_stem_derive(const char *stem_slp1, ASH_Linga lin,
   if (!ctx_out || !n_stem_can_handle(stem_slp1)) return false;
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
   ctx_out->term_count = 1;
-  if (vib == ASH_PRATHAMA_VIB && vac == ASH_EKAVACANA) strncpy(out_slp1, "rAjA", out_len - 1);
-  else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) strncpy(out_slp1, "rAjYH", out_len - 1);
-  else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) strncpy(out_slp1, "rAjYA", out_len - 1);
-  else strncpy(out_slp1, "rAjn", out_len - 1);
+  if (vib == ASH_PRATHAMA_VIB && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%.*sA", 3, stem_slp1);
+  } else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
+    snprintf(out_slp1, out_len, "%.*sYH", 3, stem_slp1);
+  } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%.*sYA", 3, stem_slp1);
+  } else {
+    strncpy(out_slp1, stem_slp1, out_len - 1);
+  }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log(ctx_out, 802007, "nalopaH prAtipadikAntasya");
+  prakriya_log_transition(ctx_out, 802007, "nalopaH prAtipadikAntasya", stem_slp1, ctx_out->terms[0].value);
   return true;
 }
 
@@ -47,12 +52,16 @@ bool as_stem_derive(const char *stem_slp1, ASH_Linga lin,
   if (!ctx_out || !as_stem_can_handle(stem_slp1)) return false;
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_NAPUMSAKA, vib, vac);
   ctx_out->term_count = 1;
-  if ((vib == ASH_PRATHAMA_VIB || vib == ASH_DVITIYA_VIB) && vac == ASH_EKAVACANA) strncpy(out_slp1, "mnH", out_len - 1);
-  else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) strncpy(out_slp1, "mnsA", out_len - 1);
-  else strncpy(out_slp1, "mns", out_len - 1);
+  if ((vib == ASH_PRATHAMA_VIB || vib == ASH_DVITIYA_VIB) && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%.*sH", 2, stem_slp1);
+  } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%sA", stem_slp1);
+  } else {
+    strncpy(out_slp1, stem_slp1, out_len - 1);
+  }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log(ctx_out, 803016, "aH parasminn asati virAmaH");
+  prakriya_log_transition(ctx_out, 803016, "aH parasminn asati virAmaH", stem_slp1, ctx_out->terms[0].value);
   return true;
 }
 
@@ -64,12 +73,16 @@ bool r_stem_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   if (!ctx_out || !r_stem_can_handle(stem_slp1)) return false;
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
   ctx_out->term_count = 1;
-  if (vib == ASH_PRATHAMA_VIB && vac == ASH_EKAVACANA) strncpy(out_slp1, "pitA", out_len - 1);
-  else if (vib == ASH_SHASTHI_VIB && vac == ASH_EKAVACANA) strncpy(out_slp1, "pituH", out_len - 1);
-  else strncpy(out_slp1, "pitf", out_len - 1);
+  if (vib == ASH_PRATHAMA_VIB && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%.*sA", 3, stem_slp1);
+  } else if (vib == ASH_SHASTHI_VIB && vac == ASH_EKAVACANA) {
+    snprintf(out_slp1, out_len, "%.*suH", 3, stem_slp1);
+  } else {
+    strncpy(out_slp1, stem_slp1, out_len - 1);
+  }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log(ctx_out, 701072, "f-final stem special handling");
+  prakriya_log_transition(ctx_out, 701072, "f-final stem special handling", stem_slp1, ctx_out->terms[0].value);
   return true;
 }
 

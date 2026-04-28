@@ -1,211 +1,192 @@
 #!/usr/bin/env python3
-"""Compare tinanta results against dhatuforms.tsv oracle."""
+"""Strict, informational tinanta oracle comparison against dhatuforms.tsv."""
 
 from __future__ import annotations
 
 import argparse
 import csv
 import os
+import random
 import subprocess
 import sys
-from typing import Dict, List, Optional, Tuple
+import unicodedata
+from collections import defaultdict
+from typing import Dict, Iterable, List, Optional, Tuple
 
+from devanagari_slp1 import slp1_to_devanagari
 
 ROOT = os.path.dirname(__file__)
 OUTPUT_TSV = os.path.join(ROOT, "../tests/regression/tinanta_oracle_results.tsv")
 DATA_DHATUFORMS = os.path.join(ROOT, "../data/dhatuforms.tsv")
 DATA_DHATUPATHA = os.path.join(ROOT, "../data/dhatupatha.tsv")
 DEMO_BIN = os.path.join(ROOT, "../build/ash_demo")
-MAX_VALIDATE_ROWS = 1000
+DEFAULT_SAMPLE_SIZE = 450
+RNG_SEED = 42
 
 PADA_MAP = {"P": "PARASMAI", "A": "ATMANE"}
 PURUSHA_MAP = {"PRATHAMA": "PRATHAMA", "MADHYAMA": "MADHYAMA", "UTTAMA": "UTTAMA"}
 VACANA_MAP = {"EKA": "EKAVACANA", "DVI": "DVIVACANA", "BAHU": "BAHUVACANA"}
 
-SUPPORTED_VALIDATE_ROOTS = {"BU"}
-CONSONANTS = set("kKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzsh")
+
+def nfc(text: str) -> str:
+    return unicodedata.normalize("NFC", text or "")
 
 
 def load_dhatu_map() -> Dict[Tuple[str, str], str]:
-    """Map (gana, serial) -> upadesa_slp1 root."""
     mapping: Dict[Tuple[str, str], str] = {}
     with open(DATA_DHATUPATHA, encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter="\t")
-        for row in reader:
-            key = (row["gana"].strip(), row["serial_in_gana"].strip())
-            mapping[key] = row["upadesa_slp1"].strip()
+        for row in csv.DictReader(f, delimiter="\t"):
+            mapping[(row["gana"].strip(), row["serial_in_gana"].strip())] = row["upadesa_slp1"].strip()
     return mapping
 
 
-def call_our_library(root_slp1: str, gana: str, purusha: str, vacana: str, pada: str) -> str:
-    """Call CLI tinanta mode and parse first non-empty line as SLP1."""
+def call_our_library(root_slp1: str, gana: str, purusha: str, vacana: str, pada: str) -> Tuple[str, str]:
     if not os.path.exists(DEMO_BIN):
-        return "ERROR:missing-demo"
-    cmd = [
-        DEMO_BIN,
-        "tinanta",
-        root_slp1,
-        gana,
-        "LAT",
-        purusha,
-        vacana,
-        pada,
-    ]
+        return "ERROR:missing-demo", ""
+    cmd = [DEMO_BIN, "tinanta", root_slp1, gana, "LAT", purusha, vacana, pada]
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10, check=False)
     if proc.returncode != 0:
         err = (proc.stderr or proc.stdout).strip()
-        return f"ERROR:{err}" if err else f"ERROR:exit-{proc.returncode}"
+        return (f"ERROR:{err}" if err else f"ERROR:exit-{proc.returncode}"), ""
     for line in proc.stdout.splitlines():
         line = line.strip()
         if not line or line.startswith("libAshtadhyayi") or line.startswith("─"):
             continue
-        return line
-    return "ERROR:empty-output"
+        return line, nfc(slp1_to_devanagari(line))
+    return "ERROR:empty-output", ""
 
 
-def normalize_tinanta(s: str) -> str:
-    """Normalize predictable orthographic differences for fair matching."""
-    if not s:
-        return ""
-    s = s.replace("~", "")
-    s = s.replace("atas", "tH").replace("aTas", "TH")
-    s = s.replace("aTa", "T").replace("aanti", "nti").replace("anti", "nti")
-    s = s.replace("ami", "Ami").replace("avas", "AvH").replace("amas", "AmH")
-    s = s.replace("ate", "te").replace("ase", "se")
-    s = s.replace("aDve", "Dve")
-    s = s.replace("aAte", "ete").replace("aATe", "eTe")
-    s = s.replace("avahe", "Avhe").replace("amahe", "Amhe")
-    out: List[str] = []
-    for i, ch in enumerate(s):
-        if ch == "a":
-            prev = s[i - 1] if i > 0 else ""
-            nxt = s[i + 1] if i + 1 < len(s) else ""
-            if prev in CONSONANTS and nxt in CONSONANTS:
-                continue
-            if prev in CONSONANTS and nxt == "":
-                continue
-        out.append(ch)
-    s = "".join(out)
-    if s.endswith("s"):
-        s = s[:-1] + "H"
-    return s
-
-
-def iter_oracle_rows(filter_root: Optional[str], profile: str, validate_mode: bool) -> List[dict]:
-    """Collect LAT rows with resolved root_slp1 from oracle files."""
+def load_lat_rows(filter_root: Optional[str]) -> List[dict]:
     dh_map = load_dhatu_map()
     rows: List[dict] = []
     with open(DATA_DHATUFORMS, encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter="\t")
-        for row in reader:
-            if row["lakara"] != "LAT":
+        for row in csv.DictReader(f, delimiter="\t"):
+            if row["lakara"] != "LAT" or row["pada"].strip() != "P":
                 continue
             key = (row["gana"].strip(), row["serial"].strip())
             root = dh_map.get(key)
-            if not root:
+            if not root or (filter_root and root != filter_root):
                 continue
-            if filter_root and root != filter_root:
-                continue
-            if validate_mode and profile == "baseline":
-                # Baseline profile validates the currently implemented laT coverage.
-                if root not in SUPPORTED_VALIDATE_ROOTS:
-                    continue
-                if row["pada"].strip() != "P":
-                    continue
-            rows.append(
-                {
-                    "root": root,
-                    "gana": row["gana"].strip(),
-                    "pada": row["pada"].strip(),
-                    "purusha": row["purusha"].strip(),
-                    "vacana": row["vacana"].strip(),
-                    "oracle_slp1": row["form_slp1"].strip(),
-                }
-            )
+            rows.append({
+                "root": root,
+                "gana": row["gana"].strip(),
+                "purusha": row["purusha"].strip(),
+                "vacana": row["vacana"].strip(),
+                "pada": row["pada"].strip(),
+                "oracle_deva": nfc(row["form_deva"].strip()),
+                "oracle_slp1": row["form_slp1"].strip(),
+            })
     return rows
 
 
-def run_comparison(filter_root: Optional[str], limit: Optional[int],
-                   profile: str, validate_mode: bool) -> float:
-    os.makedirs(os.path.dirname(OUTPUT_TSV), exist_ok=True)
-    rows = iter_oracle_rows(filter_root, profile, validate_mode)
-    if limit is not None:
-        rows = rows[:limit]
+def sample_rows(rows: List[dict], sample_size: int) -> List[dict]:
+    grouped: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    rng = random.Random(RNG_SEED)
+    for row in rows:
+        grouped[(row["gana"], row["root"])].append(row)
 
+    selected_roots: List[Tuple[str, str]] = []
+    target_roots = max(1, sample_size // 9)
+    quotas = [("1", 12), ("2", 8), ("4", 8), ("6", 8), ("10", 8)]
+    for gana, quota in quotas:
+        roots = sorted(k for k in grouped if k[0] == gana)
+        rng.shuffle(roots)
+        for key in roots[:quota]:
+            if key not in selected_roots:
+                selected_roots.append(key)
+    remaining = sorted(k for k in grouped if k not in selected_roots)
+    rng.shuffle(remaining)
+    for key in remaining:
+        if len(selected_roots) >= target_roots:
+            break
+        selected_roots.append(key)
+
+    sampled: List[dict] = []
+    for key in selected_roots[:target_roots]:
+        sampled.extend(sorted(grouped[key], key=lambda r: (r["purusha"], r["vacana"])))
+    return sampled
+
+
+def pct(pair: List[int]) -> float:
+    total, matched = pair
+    return (matched / total * 100.0) if total else 0.0
+
+
+def print_breakdown(title: str, stats: Dict[str, List[int]]) -> None:
+    print(title)
+    for key in sorted(stats):
+        total, matched = stats[key]
+        print(f"  {key:12s}: {matched}/{total} ({pct(stats[key]):.2f}%)")
+
+
+def run_comparison(filter_root: Optional[str], sample_size: int, require_rate: Optional[float]) -> float:
+    os.makedirs(os.path.dirname(OUTPUT_TSV), exist_ok=True)
+    rows = sample_rows(load_lat_rows(filter_root), sample_size)
     results = []
-    matched = 0
-    total = 0
-    errors = 0
+    total = matched = errors = 0
+    by_gana: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_vacana: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    by_purusha: Dict[str, List[int]] = defaultdict(lambda: [0, 0])
+    mismatches: List[dict] = []
 
     for row in rows:
-        pada = PADA_MAP.get(row["pada"])
         purusha = PURUSHA_MAP.get(row["purusha"])
         vacana = VACANA_MAP.get(row["vacana"])
-        if not pada or not purusha or not vacana:
+        pada = PADA_MAP.get(row["pada"])
+        if not purusha or not vacana or not pada:
             continue
-        ours = call_our_library(row["root"], row["gana"], purusha, vacana, pada)
-        oracle = row["oracle_slp1"]
-        is_error = ours.startswith("ERROR:")
-        is_match = int((not is_error) and normalize_tinanta(ours) == normalize_tinanta(oracle))
+        ours_slp1, ours_deva = call_our_library(row["root"], row["gana"], purusha, vacana, pada)
+        is_error = ours_slp1.startswith("ERROR:")
+        is_match = int((not is_error) and nfc(ours_deva) == row["oracle_deva"])
         total += 1
         matched += is_match
-        errors += 1 if is_error else 0
-        results.append(
-            {
-                "root": row["root"],
-                "gana": row["gana"],
-                "lakara": "LAT",
-                "purusha": row["purusha"],
-                "vacana": row["vacana"],
-                "pada": row["pada"],
-                "our_slp1": ours,
-                "oracle_slp1": oracle,
-                "match": is_match,
-                "note": "engine error" if is_error else "",
-            }
-        )
+        errors += int(is_error)
+        by_gana[row["gana"]][0] += 1
+        by_gana[row["gana"]][1] += is_match
+        by_vacana[row["vacana"]][0] += 1
+        by_vacana[row["vacana"]][1] += is_match
+        by_purusha[row["purusha"]][0] += 1
+        by_purusha[row["purusha"]][1] += is_match
+        result = {
+            "root": row["root"], "gana": row["gana"], "lakara": "LAT",
+            "purusha": row["purusha"], "vacana": row["vacana"], "pada": row["pada"],
+            "our_slp1": ours_slp1, "our_deva": ours_deva,
+            "oracle_slp1": row["oracle_slp1"], "oracle_deva": row["oracle_deva"],
+            "match": is_match, "note": "engine error" if is_error else "",
+        }
+        results.append(result)
+        if not is_match:
+            mismatches.append(result)
 
     if results:
         with open(OUTPUT_TSV, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=list(results[0].keys()), delimiter="\t")
-            writer.writeheader()
-            writer.writerows(results)
+            writer.writeheader(); writer.writerows(results)
 
-    pct = (matched / total * 100.0) if total else 0.0
-    print(f"Rows compared: {total}, matched: {matched}, errors: {errors}, rate: {pct:.2f}%")
+    rate = (matched / total * 100.0) if total else 0.0
+    roots = len({(r["gana"], r["root"]) for r in rows})
+    print(f"# of {roots} roots x LAT parasmai forms; compared: {total}; matched: {matched}; errors: {errors}; rate: {rate:.2f}%")
+    print_breakdown("Per-gana rate:", by_gana)
+    print_breakdown("Per-vacana rate:", by_vacana)
+    print_breakdown("Per-purusha rate:", by_purusha)
+    print("Top mismatches:")
+    for row in mismatches[:20]:
+        print(f"  {row['root']} g{row['gana']} {row['purusha']}-{row['vacana']}: ours={row['our_deva'] or row['our_slp1']} oracle={row['oracle_deva']}")
     print(f"Output: {OUTPUT_TSV}")
-    return pct
+    if require_rate is not None and rate < require_rate:
+        print(f"FAIL: match rate {rate:.2f}% < {require_rate:.2f}%")
+        sys.exit(1)
+    return rate
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", help="Filter by root SLP1")
-    parser.add_argument("--limit", type=int, default=None, help="Limit row count")
-    parser.add_argument("--profile", choices=["baseline", "full"], default="full",
-                        help="Comparison profile: baseline validates implemented scope.")
-    parser.add_argument("--validate", action="store_true",
-                        help="CI mode; enforces minimum threshold")
+    parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE)
+    parser.add_argument("--require-rate", type=float, default=None)
+    parser.add_argument("--validate", action="store_true", help="Informational validation mode")
     args = parser.parse_args()
-
-    limit = args.limit
-    profile = args.profile
-    if args.validate and profile == "full":
-        profile = "baseline"
-    if args.validate and limit is None and not args.root:
-        if profile == "full":
-            limit = MAX_VALIDATE_ROWS
-        else:
-            limit = 9
-
-    pct = run_comparison(filter_root=args.root, limit=limit, profile=profile,
-                         validate_mode=args.validate)
-
-    if args.validate:
-        threshold = 85.0
-        if pct < threshold:
-            print(f"FAIL: match rate {pct:.2f}% < {threshold:.1f}%")
-            sys.exit(1)
-        print(f"PASS: match rate {pct:.2f}% >= {threshold:.1f}%")
+    run_comparison(args.root, args.sample_size, args.require_rate)
 
 
 if __name__ == "__main__":

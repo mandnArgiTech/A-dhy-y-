@@ -20,13 +20,20 @@ void prakriya_init_subanta(PrakriyaCtx *ctx, const char *stem, ASH_Linga li,
   term_init(&ctx->terms[0], stem, SJ_PRATIPADIKA);
   ctx->term_count = 1;
 }
-void prakriya_log(PrakriyaCtx *ctx, uint32_t sutra_id, const char *desc) {
+void prakriya_log_transition(PrakriyaCtx *ctx, uint32_t sutra_id, const char *before,
+                             const char *after, const char *desc) {
   if (!ctx || ctx->step_count >= MAX_PRAKRIYA_STEPS) return;
   PrakriyaStep *s = &ctx->steps[ctx->step_count++];
   s->sutra_id = sutra_id;
-  prakriya_current_form(ctx, s->form_before, sizeof(s->form_before));
+  if (before) strncpy(s->form_before, before, sizeof(s->form_before)-1);
+  if (after) strncpy(s->form_after, after, sizeof(s->form_after)-1);
   if (desc) strncpy(s->description, desc, sizeof(s->description)-1);
-  prakriya_current_form(ctx, s->form_after, sizeof(s->form_after));
+}
+void prakriya_log(PrakriyaCtx *ctx, uint32_t sutra_id, const char *desc) {
+  char current[128] = {0};
+  if (!ctx) return;
+  prakriya_current_form(ctx, current, sizeof(current));
+  prakriya_log_transition(ctx, sutra_id, current, current, desc);
 }
 void prakriya_current_form(const PrakriyaCtx *ctx, char *out, size_t len) {
   if (!ctx || !out || len < 1) return;

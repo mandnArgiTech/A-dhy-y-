@@ -100,6 +100,8 @@ target_include_directories(unity PUBLIC tests/unity)
 
 # ── Unit tests (auto-discover) ─────────────────────────────────────────────
 enable_testing()
+add_test(NAME test_devanagari_slp1
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/test_devanagari_slp1.py)
 file(GLOB UNIT_TEST_SRCS tests/unit/test_*.c)
 foreach(test_src IN LISTS UNIT_TEST_SRCS)
   get_filename_component(test_name ${test_src} NAME_WE)
@@ -110,6 +112,7 @@ endforeach()
 
 # ── Phase validation targets ───────────────────────────────────────────────
 add_custom_target(validate-phase0
+  COMMAND python3 -m unittest ${CMAKE_SOURCE_DIR}/tools/test_devanagari_slp1.py
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_source.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_dhatupatha.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_ganapatha.py --validate
@@ -117,8 +120,9 @@ add_custom_target(validate-phase0
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_shabda.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_dhatuforms.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_shabdaprakriya.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/ingest_unadipatha.py --validate
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  COMMENT "Phase 0: Validating data ingestion (4 source files + 3 oracle files)"
+  COMMENT "Phase 0: Validating data ingestion and Python codec"
   VERBATIM
 )
 
@@ -161,6 +165,9 @@ add_custom_target(validate-phase5
 
 add_custom_target(validate-phase6
   COMMAND ${CMAKE_CTEST_COMMAND}
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_vyakarana_oracle.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_scl_oracle.py --validate
+  COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/run_prakriya_oracle.py --validate
   COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/coverage_report.py
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Phase 6: Full validation and coverage report"
