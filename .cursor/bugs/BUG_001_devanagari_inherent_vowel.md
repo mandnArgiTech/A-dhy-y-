@@ -1,4 +1,6 @@
-# BUG-001 — Devanāgarī → SLP1 converter drops inherent vowel `a`
+> **Status: CLOSED in commit 2a642ca + 1ce380d.** This file is kept for reference; do not re-implement.
+
+# [CLOSED] BUG-001 — Devanāgarī → SLP1 converter drops inherent vowel `a`
 
 **Severity:** CRITICAL — corrupts both reference oracles  
 **Phase blocked:** 6 (validation), all of Phase 3/4 oracle comparisons  

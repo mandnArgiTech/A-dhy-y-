@@ -1,4 +1,6 @@
-# BUG-003 — Tiṅanta / Subanta derivation paths return hardcoded literals
+> **Status: PARTIALLY ADDRESSED in Round 1.** See BUG-008/009/010/011/012 for follow-up work that supersedes this story.
+
+# [PARTIAL] BUG-003 — Tiṅanta / Subanta derivation paths return hardcoded literals
 
 **Severity:** CRITICAL — claims "100% authentic Pāṇinian implementation" but doesn't apply rules  
 **Phase blocked:** 3 (tiṅanta), 4 (subanta), 5 (pipeline), 6 (validation)  

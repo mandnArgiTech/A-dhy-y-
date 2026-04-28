@@ -1,4 +1,6 @@
-# BUG-002 — Oracle "normalize" function rigs the match rate
+> **Status: CLOSED in commit 2a642ca + 1ce380d.** This file is kept for reference; do not re-implement.
+
+# [CLOSED] BUG-002 — Oracle "normalize" function rigs the match rate
 
 **Severity:** CRITICAL — invalidates published 88.89% / 100% pass rates  
 **Phase blocked:** 6 (validation), Phase 6.1 / 6.2 / 6.3 acceptance  

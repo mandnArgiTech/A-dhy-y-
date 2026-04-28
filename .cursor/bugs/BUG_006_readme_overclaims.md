@@ -1,4 +1,6 @@
-# BUG-006 — README claims "100% authentic, complete" but implementation covers a small subset
+> **Status: CLOSED in commit 2a642ca + 1ce380d.** This file is kept for reference; do not re-implement.
+
+# [CLOSED] BUG-006 — README claims "100% authentic, complete" but implementation covers a small subset
 
 **Severity:** LOW (truth in advertising), MEDIUM (sets wrong user expectations)  
 **Phase blocked:** none (cosmetic), but blocks honest releases  

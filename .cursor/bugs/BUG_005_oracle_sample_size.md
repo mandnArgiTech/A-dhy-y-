@@ -1,4 +1,6 @@
-# BUG-005 — Oracle validation samples are too small to be meaningful
+> **Status: CLOSED in commit 2a642ca + 1ce380d.** This file is kept for reference; do not re-implement.
+
+# [CLOSED] BUG-005 — Oracle validation samples are too small to be meaningful
 
 **Severity:** MEDIUM — gives false confidence in coverage  
 **Phase blocked:** 6.1, 6.2 acceptance criteria honesty  

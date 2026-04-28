@@ -1,4 +1,6 @@
-# BUG-004 — pipeline_tinanta synthesises a fixed 4-step trace for every derivation
+> **Status: PARTIALLY ADDRESSED in Round 1.** See BUG-008/009/010/011/012 for follow-up work that supersedes this story.
+
+# [PARTIAL] BUG-004 — pipeline_tinanta synthesises a fixed 4-step trace for every derivation
 
 **Severity:** HIGH — invalidates Phase 6.2b (prakriyā trace validation)  
 **Phase blocked:** 6.2b (sūtra attribution match against shabdaprakriya.tsv)  
