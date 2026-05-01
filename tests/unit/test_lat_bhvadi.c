@@ -100,6 +100,68 @@ void test_lat_nft_gana4_no_idirgha(void) {
   TEST_ASSERT_EQUAL_STRING("nftyati", out);
 }
 
+/* BUG-011: 7.3.101 ato dīrgho yaṅi lengthens stem-final `a` before
+   uttama-puruṣa endings (mi, vas, mas in parasmai). */
+void test_lat_bhu_uttama_eka_dirgha(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("BU", 1, ASH_UTTAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("BavAmi", out);
+}
+
+/* BUG-011 + BUG-012 together: BavAvaH (uttama-dvi) needs both ā-lengthening
+   and final-s → visarga. */
+void test_lat_bhu_uttama_dvi_dirgha_visarga(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("BU", 1, ASH_UTTAMA, ASH_DVIVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("BavAvaH", out);
+}
+
+/* BUG-012: 8.2.66 + 8.3.15 final s → H. Tas-ending forms become taH. */
+void test_lat_bhu_prathama_dvi_visarga(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("BU", 1, ASH_PRATHAMA, ASH_DVIVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("BavataH", out);
+}
+
+/* BUG-012: ātmanepada forms ending in `e` should be unaffected by visarga rule. */
+void test_lat_bhu_atmane_no_regression(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("BU", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_ATMANE, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("Bavate", out);
+}
+
+/* All 9 LAT-parasmai forms of bhū together — the canonical paradigm. */
+void test_lat_bhu_all_nine_parasmai(void) {
+  struct {
+    ASH_Purusha p; ASH_Vacana v; const char *expected;
+  } cases[] = {
+    {ASH_PRATHAMA, ASH_EKAVACANA,  "Bavati"},
+    {ASH_PRATHAMA, ASH_DVIVACANA,  "BavataH"},
+    {ASH_PRATHAMA, ASH_BAHUVACANA, "Bavanti"},
+    {ASH_MADHYAMA, ASH_EKAVACANA,  "Bavasi"},
+    {ASH_MADHYAMA, ASH_DVIVACANA,  "BavaTaH"},
+    {ASH_MADHYAMA, ASH_BAHUVACANA, "BavaTa"},
+    {ASH_UTTAMA,   ASH_EKAVACANA,  "BavAmi"},
+    {ASH_UTTAMA,   ASH_DVIVACANA,  "BavAvaH"},
+    {ASH_UTTAMA,   ASH_BAHUVACANA, "BavAmaH"},
+  };
+  for (size_t i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
+    char out[64] = {0};
+    bool ok = lat_bhvadi_derive("BU", 1, cases[i].p, cases[i].v,
+                                ASH_PARASMAI, out, sizeof(out));
+    TEST_ASSERT_TRUE(ok);
+    TEST_ASSERT_EQUAL_STRING(cases[i].expected, out);
+  }
+}
+
 /* BUG-010: dhātupāṭha upadeśa with anubandhas must be stripped before
    derivation. The standard upadeśa for ṇī (root 1.0647) is "RIva~". */
 void test_lat_strips_dhatupatha_upadesa(void) {
@@ -156,6 +218,11 @@ int main(void) {
   RUN_TEST(test_lat_pat_default);
   RUN_TEST(test_lat_sev_default);
   RUN_TEST(test_lat_nft_gana4_no_idirgha);
+  RUN_TEST(test_lat_bhu_uttama_eka_dirgha);
+  RUN_TEST(test_lat_bhu_uttama_dvi_dirgha_visarga);
+  RUN_TEST(test_lat_bhu_prathama_dvi_visarga);
+  RUN_TEST(test_lat_bhu_atmane_no_regression);
+  RUN_TEST(test_lat_bhu_all_nine_parasmai);
   RUN_TEST(test_lat_strips_dhatupatha_upadesa);
   RUN_TEST(test_lat_strips_anunasika_marker);
   RUN_TEST(test_lat_trace_has_real_transitions);

@@ -235,10 +235,50 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   if (used_ec_ay) {
     log_single_term_change(ctx_out, 601078, after_class, stem, "eco'yavAyAvaH");
   }
+  /* 7.3.101 ato dīrgho yaṅi — uttama-puruṣa endings begin with `m` or `v`
+     in parasmaipada (mi, vas, mas) and `m`/`v` in ātmane (vahe, mahe).
+     The stem-final `a` is lengthened to `A` before such endings, in
+     sārvadhātuka context. Apply this BEFORE concatenation so the trace
+     records a clean stem→stem transition. */
+  {
+    char joined_stem[64] = {0};
+    strncpy(joined_stem, stem, sizeof(joined_stem) - 1);
+    size_t sn = strlen(joined_stem);
+    bool yan_initial = (t->clean[0] == 'm' || t->clean[0] == 'v');
+    if (yan_initial && sn > 0 && joined_stem[sn - 1] == 'a') {
+      joined_stem[sn - 1] = 'A';
+      log_single_term_change(ctx_out, 703101, stem, joined_stem,
+                             "ato dIrgho yaNi");
+      strncpy(stem, joined_stem, sizeof(stem) - 1);
+      stem[sizeof(stem) - 1] = '\0';
+    }
+  }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
+  /* 6.1.97 ato guṇe — when stem-final `a` meets an `a`-initial ending, the
+     two `a`s collapse to a single `a` (parā-rūpa). Drop the stem's final
+     `a` before concatenation. */
+  {
+    size_t fl = strlen(form);
+    if (fl > 0 && form[fl - 1] == 'a' && t->clean[0] == 'a') {
+      form[fl - 1] = '\0';
+    }
+  }
   strcat(form, t->clean);
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
+
+  /* 8.2.66 sasajuṣo ruḥ + 8.3.15 kharavasānayor visarjanīyaḥ — final `s`
+     of a finite verb form becomes `H` (visarga) at end of utterance. The
+     two sūtras are collapsed into one logged step here. */
+  {
+    size_t fl = strlen(form);
+    if (fl > 0 && form[fl - 1] == 's') {
+      char before[128] = {0};
+      strncpy(before, form, sizeof(before) - 1);
+      form[fl - 1] = 'H';
+      log_single_term_change(ctx_out, 802066, before, form, "sasajuzo ruH");
+    }
+  }
   return true;
 }
 
