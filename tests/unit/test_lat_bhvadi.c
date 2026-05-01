@@ -138,6 +138,65 @@ void test_lat_bhu_atmane_no_regression(void) {
   TEST_ASSERT_EQUAL_STRING("Bavate", out);
 }
 
+/* Story 3.7: 7.3.78 root substitutions in gaṇa-1. */
+void test_lat_pa_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("pA", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("pibati", out);
+}
+
+void test_lat_stha_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("zWA", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("tizWati", out);
+}
+
+void test_lat_drsh_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("dfS", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("paSyati", out);
+}
+
+void test_lat_sad_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("zad", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("sIdati", out);
+}
+
+void test_lat_ghra_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("GrA", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("jiGrati", out);
+}
+
+/* Story 3.7: 7.2.116 ata upadhāyāḥ for gaṇa-10 with `a`-upadha. */
+void test_lat_taq_gana10_alengthen(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("taq", 10, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("tAqayati", out);
+}
+
+/* Story 3.7: gaṇa-10 root with consonant upadha must NOT lengthen. */
+void test_lat_cur_gana10_no_alengthen(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("cur", 10, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("corayati", out);
+}
+
 /* All 9 LAT-parasmai forms of bhū together — the canonical paradigm. */
 void test_lat_bhu_all_nine_parasmai(void) {
   struct {
@@ -218,6 +277,13 @@ int main(void) {
   RUN_TEST(test_lat_pat_default);
   RUN_TEST(test_lat_sev_default);
   RUN_TEST(test_lat_nft_gana4_no_idirgha);
+  RUN_TEST(test_lat_pa_substitution);
+  RUN_TEST(test_lat_stha_substitution);
+  RUN_TEST(test_lat_drsh_substitution);
+  RUN_TEST(test_lat_sad_substitution);
+  RUN_TEST(test_lat_ghra_substitution);
+  RUN_TEST(test_lat_taq_gana10_alengthen);
+  RUN_TEST(test_lat_cur_gana10_no_alengthen);
   RUN_TEST(test_lat_bhu_uttama_eka_dirgha);
   RUN_TEST(test_lat_bhu_uttama_dvi_dirgha_visarga);
   RUN_TEST(test_lat_bhu_prathama_dvi_visarga);

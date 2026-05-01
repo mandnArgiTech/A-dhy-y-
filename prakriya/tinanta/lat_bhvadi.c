@@ -74,6 +74,18 @@ static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vi
       stem[used - 1] = '\0';
       return strncat(stem, final == 'e' ? "aya" : "Aya", stem_len - strlen(stem) - 1) != NULL;
     }
+    /* 6.1.97 ato guṇe — when stem ends in `a` and vikaraṇa is `a`, the two
+       `a`s collapse to a single `a` at the boundary. */
+    if (final == 'a') {
+      return true;  /* nothing to append; stem already ends in the collapsed `a` */
+    }
+  }
+  /* For multi-char vikaraṇas like "aya" beginning with `a`, the same
+     collapse applies if the stem ends with `a`. */
+  if (vik[0] == 'a' && stem[used - 1] == 'a') {
+    if (used + strlen(vik) > stem_len) return false;
+    strncat(stem, vik + 1, stem_len - used - 1);
+    return true;
   }
   if (used + strlen(vik) + 1 > stem_len) return false;
   strncat(stem, vik, stem_len - used - 1);
@@ -93,6 +105,39 @@ static const char *const KRAM_VRDDHI[] = {"kram", NULL};
 /* Selected gaṇa-4 roots whose stem-internal `i` is lengthened to `I` before
    the śyan vikaraṇa. This is a small dhātupāṭha-aligned subset. */
 static const char *const GANA4_IDIRGHA[] = {"div", "siv", "sriv", "zWiv", NULL};
+
+/* 7.3.78 pā-ghrā-… — explicit root substitutions before Sap. The list is
+   closed and small; long-term this should come from a TSV alongside the
+   dhātupāṭha but a static table is sufficient for current oracle coverage. */
+typedef struct { const char *root; const char *substitute; } SubRule;
+static const SubRule ROOT_SUBSTITUTIONS[] = {
+  {"pA",   "piba"},
+  {"GrA",  "jiGra"},
+  {"DmA",  "Dama"},
+  {"zWA",  "tizWa"},
+  {"mnA",  "mana"},
+  {"dA",   "yacCa"},
+  {"dfS",  "paSya"},
+  {"fc",   "fcCa"},
+  {"zad",  "sId"},
+  {NULL, NULL}
+};
+
+static const char *root_substitute_lookup(const char *clean_root) {
+  if (!clean_root) return NULL;
+  for (size_t i = 0; ROOT_SUBSTITUTIONS[i].root; i++) {
+    if (strcmp(clean_root, ROOT_SUBSTITUTIONS[i].root) == 0) {
+      return ROOT_SUBSTITUTIONS[i].substitute;
+    }
+  }
+  return NULL;
+}
+
+/* 7.2.116 ata upadhāyāḥ — penultimate `a` of the root lengthens to `A`
+   before ṇit/ñit suffixes (here applied to gaṇa-10's ṇic-aya). Encoded
+   as a small list of roots that exhibit this lengthening so we don't
+   over-apply to roots like `kaTa` whose upadha is a consonant. */
+static const char *const GANA10_UPADHA_ALENGTHEN[] = {"taq", "vad", "Gaw", NULL};
 
 static bool root_in_list(const char *stem, const char *const list[]) {
   if (!stem) return false;
@@ -130,10 +175,16 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     default: *vik_sutra = 301068; break;
   }
 
-  /* 7.3.77: only the four named roots get final consonant → cC. */
-  if (gana == 1 && root_in_list(stem, IV_GAM_YAM)) {
+  /* 7.3.78 root substitution (pā → piba, sthā → tiṣṭha, dṛś → paśya, …)
+     fires *before* every other gaṇa-1 transformation. */
+  const char *sub = (gana == 1) ? root_substitute_lookup(stem) : NULL;
+  if (sub) {
+    strncpy(stem, sub, stem_len - 1);
+    stem[stem_len - 1] = '\0';
+    *class_sutra = 703078;
+  } else if (gana == 1 && root_in_list(stem, IV_GAM_YAM)) {
+    /* 7.3.77: only the four named roots get final consonant → cC. */
     if (n + 2 >= stem_len) return false;
-    /* Replace the last char (m or N for iyaN) with c, then append C. */
     stem[n - 1] = 'c';
     stem[n] = 'C';
     stem[n + 1] = '\0';
@@ -162,8 +213,17 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   } else if (gana == 10) {
     /* Gaṇa-10 (curādi) takes ṇic (aya); 7.3.84 guṇa applies because ṇic is
        ṇit, not ṅit. */
-    replace_first_vowel(stem, false);
-    *used_guna = true;
+    if (root_in_list(stem, GANA10_UPADHA_ALENGTHEN)) {
+      /* 7.2.116 ata upadhāyāḥ: penultimate `a` lengthens to `A`. */
+      size_t sn = strlen(stem);
+      if (sn >= 2 && stem[sn - 2] == 'a') {
+        stem[sn - 2] = 'A';
+        *class_sutra = 702116;
+      }
+    } else {
+      replace_first_vowel(stem, false);
+      *used_guna = true;
+    }
   }
 
   /* Snapshot the post-class, pre-vikaraṇa stem so callers can log it. */
@@ -223,9 +283,11 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   if (strcmp(clean_root, after_class) != 0) {
     uint32_t id = class_sutra ? class_sutra : (used_guna ? 703084 : vik_sutra);
     const char *desc;
-    if (class_sutra == 703077) desc = "izugamiyamAM CaH";
+    if (class_sutra == 703078) desc = "pAGrAdhmAsTAmnAdAR-pibajiGradhamatizWamanayacCa";
+    else if (class_sutra == 703077) desc = "izugamiyamAM CaH";
     else if (class_sutra == 703076) desc = "kramaH parasmEpadezu";
     else if (class_sutra == 703075) desc = "ziSraNAM Si";
+    else if (class_sutra == 702116) desc = "ata upaDAyAH";
     else if (used_guna) desc = "sArvadhAtukArdhadhAtukayoH";
     else desc = "class transform";
     log_single_term_change(ctx_out, id, clean_root, after_class, desc);
