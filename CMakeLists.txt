@@ -58,6 +58,7 @@ set(PRAKRIYA_SRC
     prakriya/subanta/vibhakti.c
     prakriya/subanta/a_stem.c
     prakriya/subanta/aaiu_stems.c
+    prakriya/subanta/iu_stem_full.c
     prakriya/subanta/consonant_stems.c
     prakriya/subanta/karaka.c
     prakriya/krit/krit_primary.c
