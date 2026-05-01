@@ -134,9 +134,13 @@ void test_unadi_growth_and_error_loader_branches(void) {
 
   f = fopen(many_path, "w");
   TEST_ASSERT_NOT_NULL(f);
-  fprintf(f, "unadi_id\troot_slp1\tsuffix_slp1\tform_slp1\tmeaning_en\tsutra_ref\n");
+  fprintf(f,
+          "unadi_id\tsutra_deva\tsutra_slp1\tpratyay_deva\tpratyay_slp1\t"
+          "sk_commentary\tsutra_ref\n");
   for (int i = 0; i < 40; i++) {
-    snprintf(line, sizeof(line), "%d\tr%d\ts\tf%d\tm\tu.%d\n", i + 1, i, i, i + 1);
+    snprintf(line, sizeof(line),
+             "%d\tsutra-%d-deva\tsutra%d\tpratyay-%d-deva\tp%d\tsk\tref%d\n",
+             i + 1, i, i, i, i, i + 1);
     fputs(line, f);
   }
   fclose(f);

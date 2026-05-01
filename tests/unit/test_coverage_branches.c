@@ -547,12 +547,12 @@ void test_context_print_and_misc_modules(void) {
   ganapatha_db_free(&gdb);
 
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&udb, data_file("unadipatha.tsv")));
-  TEST_ASSERT_NULL(unadi_lookup(&udb, "nope", NULL));
-  TEST_ASSERT_FALSE(unadi_is_attested(&udb, "unknown"));
-  f = unadi_form(&udb, "nope", "x");
+  TEST_ASSERT_NULL(unadi_lookup_by_pratyay(&udb, "no-such-pratyay"));
+  TEST_ASSERT_NULL(unadi_lookup_by_id(&udb, 9999999));
+  f = unadi_cite_pratyay(&udb, "no-such-pratyay");
   TEST_ASSERT_FALSE(f.valid);
   ash_form_free(&f);
-  f = unadi_form(&udb, "jan", "u");
+  f = unadi_cite_pratyay(&udb, "uR");
   TEST_ASSERT_TRUE(f.valid);
   ash_form_free(&f);
   unadi_db_free(&udb);
