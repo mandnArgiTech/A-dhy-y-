@@ -310,10 +310,34 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   memset(normalized, 0, sizeof(normalized));
   strncpy(normalized, stem_slp1, sizeof(normalized) - 1);
 
+  /* Story 4.6 / 4.7: prefer the full 24-slot helpers when their
+     stem-class predicates apply. Fall back to legacy stubs for
+     a-stem masculine, ā-stem feminine, and any unhandled case. */
+  size_t nlen = strlen(normalized);
+  char last = nlen > 0 ? normalized[nlen - 1] : '\0';
+  bool ends_in_an = nlen >= 2 && normalized[nlen - 2] == 'a' &&
+                    normalized[nlen - 1] == 'n';
+  bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
+                    normalized[nlen - 1] == 's';
+
   if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);
   } else if (li == ASH_STRI && aa_stem_fem_can_handle(normalized)) {
     ok = aa_stem_fem_derive(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && (last == 'i' || last == 'I')) {
+    ok = i_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && (last == 'i' || last == 'I')) {
+    ok = i_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && (last == 'u' || last == 'U')) {
+    ok = u_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && (last == 'u' || last == 'U')) {
+    ok = u_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && ends_in_an) {
+    ok = an_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && ends_in_as) {
+    ok = as_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'f') {
+    ok = r_stem_masc_full(normalized, vib, v, &ctx);
   } else if (i_stem_can_handle(normalized)) {
     ok = i_stem_derive(normalized, li, vib, v, &ctx);
   } else if (u_stem_can_handle(normalized)) {

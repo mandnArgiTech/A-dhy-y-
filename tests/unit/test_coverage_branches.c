@@ -238,9 +238,12 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   TEST_ASSERT_EQUAL_STRING("mns", f.slp1);
   ash_form_free(&f);
 
+  /* Story 4.7: r_stem_masc_full now wired into the dispatcher.
+     pitf + caturthī-dvi = pitfByAm (real form), not the legacy stub's
+     pass-through "pitf". */
   f = ash_subanta(db, "pitf", ASH_PUMS, ASH_CATURTHI_VIB, ASH_DVIVACANA);
   TEST_ASSERT_TRUE(f.valid);
-  TEST_ASSERT_EQUAL_STRING("pitf", f.slp1);
+  TEST_ASSERT_EQUAL_STRING("pitfByAm", f.slp1);
   ash_form_free(&f);
 
   TEST_ASSERT_EQUAL_INT(0, sutra_db_load(&sdb, data_file("sutras.tsv")));
