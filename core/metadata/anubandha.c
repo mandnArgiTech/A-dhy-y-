@@ -58,10 +58,16 @@ void anubandha_strip(const char *upadesa_slp1, Samjna context,
   bool is_it[128] = {false};
 
   /* ── 1.3.2: nasalized vowels (~ marker) are it ──────────────────────── */
+  /* The strict reading of upadeśe'janunāsika it is that the anunāsika vowel
+     itself is the it-letter; the ~ marker is just the diacritic. We delete
+     the ~ in every position and additionally delete the immediately
+     preceding vowel (since the vowel-with-anunāsika is the actual it). */
   for (int i = 0; i < n; i++) {
     if (work[i] == '~') {
       is_it[i] = true;
-      /* The nasalization marker itself is deleted; the preceding vowel stays */
+      if (i > 0 && varna_is_vowel(work[i - 1])) {
+        is_it[i - 1] = true;
+      }
     }
   }
 

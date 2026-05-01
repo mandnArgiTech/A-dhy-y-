@@ -49,6 +49,29 @@ void test_lat_rejects_null_output(void) {
                                       ASH_PARASMAI, NULL, 0));
 }
 
+/* BUG-010: dhātupāṭha upadeśa with anubandhas must be stripped before
+   derivation. The standard upadeśa for ṇī (root 1.0647) is "RIva~". */
+void test_lat_strips_dhatupatha_upadesa(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("RIva~", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  /* 6.1.65 ṇo naḥ: initial ṇ (R) is realised as n. */
+  TEST_ASSERT_EQUAL_CHAR_MESSAGE('n', out[0],
+                                 "expected output to start with 'n' not 'R'");
+}
+
+void test_lat_strips_anunasika_marker(void) {
+  /* gam upadesa = "gamx~" (gana-1, root 1.1137). After stripping x~ the
+     clean root is "gam"; the regular gana-1 derivation should follow. */
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("gamx~", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_CHAR_MESSAGE('g', out[0],
+                                 "expected output to start with 'g'");
+}
+
 /* BUG-009: prakriya trace must record real before→after transitions, not
    identical strings on every step. For BU + LAT-prathama-eka, at minimum the
    guṇa step (BU → Bo) and the tiṅ-assignment step (Bava → Bavati) should
@@ -77,6 +100,8 @@ int main(void) {
   RUN_TEST(test_lat_gana6_tud);
   RUN_TEST(test_lat_gana10_cur);
   RUN_TEST(test_lat_rejects_null_output);
+  RUN_TEST(test_lat_strips_dhatupatha_upadesa);
+  RUN_TEST(test_lat_strips_anunasika_marker);
   RUN_TEST(test_lat_trace_has_real_transitions);
   return UNITY_END();
 }

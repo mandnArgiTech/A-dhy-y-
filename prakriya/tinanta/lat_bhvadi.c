@@ -3,17 +3,50 @@
 #include "lakara.h"
 #include "vikaranas.h"
 #include "varna.h"
+#include "anubandha.h"
+#include "samjna.h"
 #include <string.h>
 
-static void copy_clean_root(const char *src, char *dst, size_t dst_len) {
-  size_t pos = 0;
+/* Reduce a dhātupāṭha upadeśa form to the clean root used in derivation.
+   Inputs come in two flavours:
+   - Bare clean roots (e.g. "BU", "gam") supplied directly by callers/tests:
+     pass through unchanged apart from accent-marker / R→n adjustment.
+   - Upadeśa with anubandha markers (e.g. "RIva~", "gamx~", "YiPal"):
+     run anubandha_strip to apply 1.3.2 anunāsika-vowel-it,
+     1.3.3 final-consonant-it (with vibhakti exception), and 1.3.5 Yi/wu/qu
+     initials.
+   Then in either case, apply 6.1.65 ṇo naḥ (dhātu-initial ṇ → n) and drop
+   the optional `^` accent marker. */
+static bool has_anubandha_marker(const char *s) {
+  if (!s) return false;
+  if (strchr(s, '~') || strchr(s, '^')) return true;
+  /* Leading Yi/wu/qu pairs (1.3.5) are upadeśa markers. */
+  if (s[0] && s[1]) {
+    if ((s[0] == 'Y' && s[1] == 'i') ||
+        (s[0] == 'w' && s[1] == 'u') ||
+        (s[0] == 'q' && s[1] == 'u')) return true;
+  }
+  return false;
+}
+
+static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
   if (!src || !dst || dst_len == 0) return;
   dst[0] = '\0';
-  for (size_t i = 0; src[i] != '\0' && pos + 1 < dst_len; i++) {
-    if (src[i] == '~' || src[i] == '^') continue;
-    dst[pos++] = src[i];
+  const char *source = src;
+  AnubandhaResult ar;
+  if (has_anubandha_marker(src)) {
+    anubandha_strip(src, SJ_DHATU, &ar);
+    source = ar.clean_slp1;
+  }
+  size_t pos = 0;
+  for (size_t i = 0; source[i] != '\0' && pos + 1 < dst_len; i++) {
+    if (source[i] == '^' || source[i] == '~') continue;
+    dst[pos++] = source[i];
   }
   dst[pos] = '\0';
+  if (dst[0] == 'R') {
+    dst[0] = 'n';
+  }
 }
 
 static void replace_first_vowel(char *root, bool vrddhi) {
@@ -136,7 +169,8 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   t = ting_get(ASH_LAT, p, v, pd);
   if (!t) return false;
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
-  copy_clean_root(dhatu_slp1, clean_root, sizeof(clean_root));
+  clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
+  if (clean_root[0] == '\0') return false;
   if (!apply_class_transform(clean_root, gana, stem, sizeof(stem),
                              after_class, sizeof(after_class),
                              &vik_sutra, &used_guna, &used_ec_ay)) {
