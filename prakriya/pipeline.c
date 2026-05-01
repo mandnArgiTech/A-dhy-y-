@@ -322,6 +322,18 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
 
   if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'I') {
+    /* Story 4.8: long-ī feminine (nadI). */
+    ok = ii_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'U') {
+    /* Story 4.8: long-ū feminine (vaDU). */
+    ok = uu_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'i') {
+    /* Story 4.8: short-i feminine (mati). */
+    ok = i_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'u') {
+    /* Story 4.8: short-u feminine (Denu). */
+    ok = u_stem_fem_full(normalized, vib, v, &ctx);
   } else if (li == ASH_STRI && aa_stem_fem_can_handle(normalized)) {
     ok = aa_stem_fem_derive(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && (last == 'i' || last == 'I')) {

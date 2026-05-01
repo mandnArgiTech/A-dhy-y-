@@ -113,6 +113,50 @@ void test_i_neut_vari_full_paradigm(void) {
   check_form(i_stem_neut_full, "vAri", ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "vArIRAm");
 }
 
+/* Story 4.8: feminine paradigms. */
+void test_nadi_full_paradigm(void) {
+  check_form(ii_stem_fem_full, "nadI", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "nadI");
+  check_form(ii_stem_fem_full, "nadI", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "nadyO");
+  check_form(ii_stem_fem_full, "nadI", ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "nadyaH");
+  check_form(ii_stem_fem_full, "nadI", ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "nadIm");
+  check_form(ii_stem_fem_full, "nadI", ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "nadIH");
+  check_form(ii_stem_fem_full, "nadI", ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "nadyA");
+  check_form(ii_stem_fem_full, "nadI", ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "nadyE");
+  check_form(ii_stem_fem_full, "nadI", ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "nadyAH");
+  check_form(ii_stem_fem_full, "nadI", ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "nadInAm");
+  check_form(ii_stem_fem_full, "nadI", ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "nadyAm");
+  check_form(ii_stem_fem_full, "nadI", ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "nadIzu");
+  check_form(ii_stem_fem_full, "nadI", ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "nadi");
+}
+
+void test_vadhu_full_paradigm(void) {
+  check_form(uu_stem_fem_full, "vaDU", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "vaDUH");
+  check_form(uu_stem_fem_full, "vaDU", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "vaDvO");
+  check_form(uu_stem_fem_full, "vaDU", ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "vaDvaH");
+  check_form(uu_stem_fem_full, "vaDU", ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "vaDvA");
+  check_form(uu_stem_fem_full, "vaDU", ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "vaDvE");
+  check_form(uu_stem_fem_full, "vaDU", ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "vaDUnAm");
+  check_form(uu_stem_fem_full, "vaDU", ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "vaDUzu");
+  check_form(uu_stem_fem_full, "vaDU", ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "vaDu");
+}
+
+void test_mati_fem_paradigm(void) {
+  check_form(i_stem_fem_full, "mati", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "matiH");
+  check_form(i_stem_fem_full, "mati", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "matI");
+  check_form(i_stem_fem_full, "mati", ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "matayaH");
+  check_form(i_stem_fem_full, "mati", ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "matIH");
+  check_form(i_stem_fem_full, "mati", ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "matyA");
+  check_form(i_stem_fem_full, "mati", ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "matizu");
+}
+
+void test_dhenu_fem_paradigm(void) {
+  check_form(u_stem_fem_full, "Denu", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "DenuH");
+  check_form(u_stem_fem_full, "Denu", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "DenU");
+  check_form(u_stem_fem_full, "Denu", ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "DenavaH");
+  check_form(u_stem_fem_full, "Denu", ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "DenvA");
+  check_form(u_stem_fem_full, "Denu", ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "DenUH");
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_aa_stem_feminine);
@@ -125,5 +169,9 @@ int main(void) {
   RUN_TEST(test_u_masc_guru_full_paradigm);
   RUN_TEST(test_u_neut_madhu_full_paradigm);
   RUN_TEST(test_i_neut_vari_full_paradigm);
+  RUN_TEST(test_nadi_full_paradigm);
+  RUN_TEST(test_vadhu_full_paradigm);
+  RUN_TEST(test_mati_fem_paradigm);
+  RUN_TEST(test_dhenu_fem_paradigm);
   return UNITY_END();
 }

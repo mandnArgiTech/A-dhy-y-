@@ -35,4 +35,14 @@ bool u_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool u_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.8: feminine vowel-stem paradigms. */
+bool ii_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool uu_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool i_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                     ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool u_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                     ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif
