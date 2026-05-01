@@ -80,10 +80,34 @@ static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vi
   return true;
 }
 
+/* 7.3.77 iṣu-gami-yam-āṃ chaḥ — replaces the final consonant of these four
+   specific roots with `cC` before a vowel-initial sārvadhātuka suffix. The
+   list is closed: it must NOT be derived from a "ends in am" pattern. */
+static const char *const IV_GAM_YAM[] = {"iz", "gam", "yam", "iyaN", NULL};
+
+/* 7.3.76 kramaḥ parasmaipadeṣu — root `kram` lengthens its `a` to `A` when
+   conjugated in parasmaipada. Treat this as a small explicit list rather
+   than a structural ends-in-am pattern. */
+static const char *const KRAM_VRDDHI[] = {"kram", NULL};
+
+/* Selected gaṇa-4 roots whose stem-internal `i` is lengthened to `I` before
+   the śyan vikaraṇa. This is a small dhātupāṭha-aligned subset. */
+static const char *const GANA4_IDIRGHA[] = {"div", "siv", "sriv", "zWiv", NULL};
+
+static bool root_in_list(const char *stem, const char *const list[]) {
+  if (!stem) return false;
+  for (size_t i = 0; list[i]; i++) {
+    if (strcmp(stem, list[i]) == 0) return true;
+  }
+  return false;
+}
+
 static bool apply_class_transform(const char *clean_root_in, int gana,
+                                  ASH_Pada pd,
                                   char *stem, size_t stem_len,
                                   char *after_class, size_t after_class_len,
                                   uint32_t *vik_sutra,
+                                  uint32_t *class_sutra,
                                   bool *used_guna, bool *used_ec_ay) {
   char vik[16] = {0};
   size_t n;
@@ -97,6 +121,7 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
 
   *used_guna = false;
   *used_ec_ay = false;
+  *class_sutra = 0;
   switch (gana) {
     case 4: *vik_sutra = 301069; break;
     case 6: *vik_sutra = 301077; break;
@@ -105,31 +130,43 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     default: *vik_sutra = 301068; break;
   }
 
-  if (gana == 1 && n >= 2 && stem[n - 2] == 'a' && stem[n - 1] == 'm') {
-    stem[n - 2] = 'a';
-    stem[n - 1] = 'c';
+  /* 7.3.77: only the four named roots get final consonant → cC. */
+  if (gana == 1 && root_in_list(stem, IV_GAM_YAM)) {
     if (n + 2 >= stem_len) return false;
+    /* Replace the last char (m or N for iyaN) with c, then append C. */
+    stem[n - 1] = 'c';
     stem[n] = 'C';
     stem[n + 1] = '\0';
-  } else if (gana == 4) {
+    *class_sutra = 703077;
+  } else if (gana == 1 && pd == ASH_PARASMAI && root_in_list(stem, KRAM_VRDDHI)) {
+    /* 7.3.76: kram → krAm in parasmaipada. */
+    for (size_t i = 0; stem[i] != '\0'; i++) {
+      if (stem[i] == 'a') { stem[i] = 'A'; break; }
+    }
+    *class_sutra = 703076;
+  } else if (gana == 1) {
+    /* Default gaṇa-1 path: 7.3.84 sārvadhātukārdhadhātukayoḥ applies guṇa
+       to the stem's final ik-vowel before Sap. */
+    replace_first_vowel(stem, false);
+    *used_guna = true;
+  } else if (gana == 4 && root_in_list(stem, GANA4_IDIRGHA)) {
+    /* Selected divādi roots (div, siv, sriv, ṣṭhiv) lengthen internal i→I. */
     for (size_t i = 0; stem[i] != '\0'; i++) {
       if (stem[i] == 'i') { stem[i] = 'I'; break; }
     }
-  } else if (gana == 10 && n > 0 && stem[n - 1] == 'u') {
-    stem[n - 1] = 'o';
-    *used_guna = true;
-  } else if (gana == 10 && stem[0] == 'c' && stem[1] == 'u') {
-    stem[1] = 'o';
-    *used_guna = true;
-  } else if (gana_uses_vrddhi(gana)) {
-    replace_first_vowel(stem, true);
-    *used_guna = true;
-  } else if (gana_uses_guna(gana)) {
+    *class_sutra = 703075;
+  } else if (gana == 4) {
+    /* Default gaṇa-4 path: śyan is ṅit so 1.1.5 blocks guṇa. */
+  } else if (gana == 6) {
+    /* Gaṇa-6 (tudādi) takes śa (a), also ṅit — no guṇa. */
+  } else if (gana == 10) {
+    /* Gaṇa-10 (curādi) takes ṇic (aya); 7.3.84 guṇa applies because ṇic is
+       ṇit, not ṅit. */
     replace_first_vowel(stem, false);
     *used_guna = true;
   }
 
-  /* Snapshot the post-class, pre-vikarana stem so callers can log it. */
+  /* Snapshot the post-class, pre-vikaraṇa stem so callers can log it. */
   strncpy(after_class, stem, after_class_len - 1);
   after_class[after_class_len - 1] = '\0';
 
@@ -163,6 +200,7 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   char stem[64] = {0};
   char form[128] = {0};
   uint32_t vik_sutra = 0;
+  uint32_t class_sutra = 0;
   bool used_guna = false;
   bool used_ec_ay = false;
   if (!dhatu_slp1 || !ctx_out) return false;
@@ -171,19 +209,26 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
   clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
   if (clean_root[0] == '\0') return false;
-  if (!apply_class_transform(clean_root, gana, stem, sizeof(stem),
+  if (!apply_class_transform(clean_root, gana, pd, stem, sizeof(stem),
                              after_class, sizeof(after_class),
-                             &vik_sutra, &used_guna, &used_ec_ay)) {
+                             &vik_sutra, &class_sutra,
+                             &used_guna, &used_ec_ay)) {
     return false;
   }
   /* Order of logged steps:
-     1. guṇa/vṛddhi (clean_root → after_class) when class actually mutated the stem
+     1. guṇa or class-specific rule (clean_root → after_class) if it fired
      2. vikaraṇa assignment + concatenation (after_class → stem)
      3. ec→ay sandhi at root+vikaraṇa boundary, if it fired
      4. tiṅ assignment (stem → form) */
-  if (used_guna && strcmp(clean_root, after_class) != 0) {
-    log_single_term_change(ctx_out, 703084, clean_root, after_class,
-                           "sArvadhAtukArdhadhAtukayoH");
+  if (strcmp(clean_root, after_class) != 0) {
+    uint32_t id = class_sutra ? class_sutra : (used_guna ? 703084 : vik_sutra);
+    const char *desc;
+    if (class_sutra == 703077) desc = "izugamiyamAM CaH";
+    else if (class_sutra == 703076) desc = "kramaH parasmEpadezu";
+    else if (class_sutra == 703075) desc = "ziSraNAM Si";
+    else if (used_guna) desc = "sArvadhAtukArdhadhAtukayoH";
+    else desc = "class transform";
+    log_single_term_change(ctx_out, id, clean_root, after_class, desc);
   }
   log_single_term_change(ctx_out, vik_sutra, after_class, stem,
                          "vikaraRa assignment");

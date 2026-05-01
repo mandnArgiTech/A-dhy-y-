@@ -49,6 +49,57 @@ void test_lat_rejects_null_output(void) {
                                       ASH_PARASMAI, NULL, 0));
 }
 
+/* BUG-008: 7.3.77 must apply ONLY to {iz, gam, yam, iyaN}. Other gaṇa-1
+   roots ending in `am` (nam, ram, kṣam, ...) take the default a-path. */
+void test_lat_nam_no_chai_substitution(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("nam", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  /* Must NOT produce 'nacCati' (the over-applied 7.3.77 result). */
+  TEST_ASSERT_NULL_MESSAGE(strstr(out, "cC"),
+                           "nam must not undergo 7.3.77 substitution");
+}
+
+/* BUG-008: 7.3.76 kramaḥ parasmaipadeṣu lengthens kram → krAm in P. */
+void test_lat_kram_parasmai_vrddhi(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("kram", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("krAmati", out);
+}
+
+/* BUG-008: a-stem gaṇa-1 root that does not end in `am` produces the
+   default form. */
+void test_lat_pat_default(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("pat", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("patati", out);
+}
+
+/* BUG-008: e-stem gaṇa-1 root produces the default form. */
+void test_lat_sev_default(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("sev", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  /* sev → guṇa fires on e (already guṇa) → still sev → +a → seva → +ti */
+  TEST_ASSERT_EQUAL_STRING("sevati", out);
+}
+
+/* BUG-008: gaṇa-4 root that is not in the GANA4_IDIRGHA list (e.g. nft)
+   should not get any spurious i-lengthening. */
+void test_lat_nft_gana4_no_idirgha(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("nft", 4, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("nftyati", out);
+}
+
 /* BUG-010: dhātupāṭha upadeśa with anubandhas must be stripped before
    derivation. The standard upadeśa for ṇī (root 1.0647) is "RIva~". */
 void test_lat_strips_dhatupatha_upadesa(void) {
@@ -100,6 +151,11 @@ int main(void) {
   RUN_TEST(test_lat_gana6_tud);
   RUN_TEST(test_lat_gana10_cur);
   RUN_TEST(test_lat_rejects_null_output);
+  RUN_TEST(test_lat_nam_no_chai_substitution);
+  RUN_TEST(test_lat_kram_parasmai_vrddhi);
+  RUN_TEST(test_lat_pat_default);
+  RUN_TEST(test_lat_sev_default);
+  RUN_TEST(test_lat_nft_gana4_no_idirgha);
   RUN_TEST(test_lat_strips_dhatupatha_upadesa);
   RUN_TEST(test_lat_strips_anunasika_marker);
   RUN_TEST(test_lat_trace_has_real_transitions);
