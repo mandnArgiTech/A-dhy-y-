@@ -61,13 +61,13 @@ bool a_stem_masc_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
     ctx_out->term_count = 1;
     if (vib == ASH_PRATHAMA_VIB &&
         (vac == ASH_EKAVACANA || vac == ASH_BAHUVACANA)) {
-      prakriya_log_transition(ctx_out, 803015, "KaravasAnayor visarjanIyaH", before, form);
+      prakriya_log_transition(ctx_out, 803015, before, form, "KaravasAnayor visarjanIyaH");
     } else if (vib == ASH_DVITIYA_VIB && vac == ASH_BAHUVACANA) {
-      prakriya_log_transition(ctx_out, 701012, "wA-Nasi-NasAm inAdyAH", before, form);
+      prakriya_log_transition(ctx_out, 701012, before, form, "wA-Nasi-NasAm inAdyAH");
     } else if (vib == ASH_TRITIYA_VIB && vac == ASH_EKAVACANA) {
-      prakriya_log_transition(ctx_out, 703102, "supi ca", before, form);
+      prakriya_log_transition(ctx_out, 703102, before, form, "supi ca");
     } else {
-      prakriya_log_transition(ctx_out, 401002, "svOjasamOw", before, form);
+      prakriya_log_transition(ctx_out, 401002, before, form, "svOjasamOw");
     }
   }
   return true;

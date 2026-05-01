@@ -47,13 +47,18 @@ static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vi
   return true;
 }
 
-static bool apply_class_transform(const char *dhatu_slp1, int gana, char *stem, size_t stem_len,
-                                  uint32_t *vik_sutra, bool *used_guna, bool *used_ec_ay) {
+static bool apply_class_transform(const char *clean_root_in, int gana,
+                                  char *stem, size_t stem_len,
+                                  char *after_class, size_t after_class_len,
+                                  uint32_t *vik_sutra,
+                                  bool *used_guna, bool *used_ec_ay) {
   char vik[16] = {0};
   size_t n;
-  if (!dhatu_slp1 || !stem || stem_len == 0) return false;
+  if (!clean_root_in || !stem || stem_len == 0 || !after_class || after_class_len == 0)
+    return false;
   if (!vikarana_for_gana(gana, vik, sizeof(vik))) return false;
-  copy_clean_root(dhatu_slp1, stem, stem_len);
+  strncpy(stem, clean_root_in, stem_len - 1);
+  stem[stem_len - 1] = '\0';
   n = strlen(stem);
   if (n == 0) return false;
 
@@ -91,6 +96,10 @@ static bool apply_class_transform(const char *dhatu_slp1, int gana, char *stem, 
     *used_guna = true;
   }
 
+  /* Snapshot the post-class, pre-vikarana stem so callers can log it. */
+  strncpy(after_class, stem, after_class_len - 1);
+  after_class[after_class_len - 1] = '\0';
+
   n = strlen(stem);
   if (n > 0 && (stem[n - 1] == 'o' || stem[n - 1] == 'O' || stem[n - 1] == 'e' || stem[n - 1] == 'E')) {
     *used_ec_ay = true;
@@ -108,24 +117,16 @@ static void set_single_term(PrakriyaCtx *ctx, const char *value) {
 static void log_single_term_change(PrakriyaCtx *ctx, uint32_t sutra_id,
                                    const char *before, const char *after,
                                    const char *desc) {
-  char old_value[TERM_VALUE_LEN] = {0};
   if (!ctx || !before || !after) return;
-  if (ctx->term_count == 0) {
-    ctx->term_count = 1;
-  }
-  strncpy(old_value, ctx->terms[0].value, sizeof(old_value) - 1);
-  set_single_term(ctx, before);
-  strncpy(ctx->terms[0].value, after, TERM_VALUE_LEN - 1);
-  ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
-  prakriya_log(ctx, sutra_id, desc);
-  strncpy(ctx->terms[0].value, old_value, TERM_VALUE_LEN - 1);
-  ctx->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx, sutra_id, before, after, desc);
+  set_single_term(ctx, after);
 }
 
 bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
                            ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
   const TingEntry *t;
   char clean_root[64] = {0};
+  char after_class[64] = {0};
   char stem[64] = {0};
   char form[128] = {0};
   uint32_t vik_sutra = 0;
@@ -136,18 +137,29 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   if (!t) return false;
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
   copy_clean_root(dhatu_slp1, clean_root, sizeof(clean_root));
-  if (!apply_class_transform(dhatu_slp1, gana, stem, sizeof(stem), &vik_sutra, &used_guna, &used_ec_ay)) {
+  if (!apply_class_transform(clean_root, gana, stem, sizeof(stem),
+                             after_class, sizeof(after_class),
+                             &vik_sutra, &used_guna, &used_ec_ay)) {
     return false;
   }
-  log_single_term_change(ctx_out, vik_sutra, clean_root, stem, "vikaraRa assignment");
-  if (used_guna) log_single_term_change(ctx_out, 703084, clean_root, stem, "sArvadhAtukArdhadhAtukayoH");
-  if (used_ec_ay) log_single_term_change(ctx_out, 601078, clean_root, stem, "eco'yavAyAvaH");
-  set_single_term(ctx_out, stem);
+  /* Order of logged steps:
+     1. guṇa/vṛddhi (clean_root → after_class) when class actually mutated the stem
+     2. vikaraṇa assignment + concatenation (after_class → stem)
+     3. ec→ay sandhi at root+vikaraṇa boundary, if it fired
+     4. tiṅ assignment (stem → form) */
+  if (used_guna && strcmp(clean_root, after_class) != 0) {
+    log_single_term_change(ctx_out, 703084, clean_root, after_class,
+                           "sArvadhAtukArdhadhAtukayoH");
+  }
+  log_single_term_change(ctx_out, vik_sutra, after_class, stem,
+                         "vikaraRa assignment");
+  if (used_ec_ay) {
+    log_single_term_change(ctx_out, 601078, after_class, stem, "eco'yavAyAvaH");
+  }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
   strcat(form, t->clean);
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
-  set_single_term(ctx_out, form);
   return true;
 }
 
