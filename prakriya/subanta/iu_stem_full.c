@@ -153,7 +153,7 @@ static void apply_natva(const char *stem, char *form) {
   bool seen = false;
   for (size_t i = 0; form[i]; i++) {
     char c = form[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+    if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
       seen = true;
     } else if (natva_is_blocker(c)) {
       seen = false;

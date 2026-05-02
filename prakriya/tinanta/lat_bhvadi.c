@@ -512,7 +512,7 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
     bool seen = false;
     for (size_t i = 0; stem[i]; i++) {
       char c = stem[i];
-      if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+      if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
         seen = true;
       } else if (c == 't' || c == 'T' || c == 'd' || c == 'D' ||
                  c == 'c' || c == 'C' || c == 'j' || c == 'J' || c == 'Y' ||
