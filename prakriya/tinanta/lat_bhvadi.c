@@ -64,14 +64,19 @@ static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
   }
   dst[pos] = '\0';
   /* 6.1.64 dhātv-ādeḥ ṣaḥ saḥ — initial ṣ (z) of a dhātu is realised
-     as dental s in the derivation. */
+     as dental s in the derivation. When ṣ is part of a ṣṭ-cluster
+     (zw in SLP1), the following ṭ also de-retroflexes to t (zwUp →
+     stUp per 8.4.41 in reverse for dhātu-initial). */
   if (dst[0] == 'z') {
     dst[0] = 's';
+    if (dst[1] == 'w') dst[1] = 't';
+    if (dst[1] == 'W') dst[1] = 'T';
   }
-  /* 6.1.65 ṇo naḥ — initial ṇ (R) of a dhātu is realised as dental n. */
-  if (dst[0] == 'R') {
-    dst[0] = 'n';
-  }
+  /* 6.1.65 ṇo naḥ — initial ṇ (R) of a dhātu is realised as dental n.
+     Also apply when ṇ stands second after a converted ṣ (zRA → snA),
+     i.e. anywhere within the dhātu-initial cluster. */
+  if (dst[0] == 'R') dst[0] = 'n';
+  if (dst[0] == 's' && dst[1] == 'R') dst[1] = 'n';
 }
 
 static void replace_first_vowel(char *root, bool vrddhi) {
@@ -112,28 +117,34 @@ static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vi
   if (used == 0) return false;
   /* Empty vikaraṇa (athematic gaṇa-2/3/7): nothing to append. */
   if (vik[0] == '\0') return true;
-  if (strcmp(vik, "a") == 0) {
+  /* 6.1.78 ec → ay/av sandhi at the stem→vikaraṇa junction when the
+     vikaraṇa begins with a vowel. Stem-final e/o/E/O turns into
+     ay/av/Ay/Av before the vikaraṇa's initial vowel. This applies to
+     gaṇa-1's `a` (Sap), gaṇa-10's `aya` (ṇic), and similar a-initial
+     vikaraṇas. */
+  if (vik[0] == 'a') {
     char final = stem[used - 1];
     if (final == 'o' || final == 'O') {
-      stem[used - 1] = '\0';
-      return strncat(stem, final == 'o' ? "ava" : "Ava", stem_len - strlen(stem) - 1) != NULL;
+      stem[used - 1] = (final == 'o') ? 'a' : 'A';
+      stem[used] = 'v';
+      stem[used + 1] = '\0';
+      used = strlen(stem);
+    } else if (final == 'e' || final == 'E') {
+      stem[used - 1] = (final == 'e') ? 'a' : 'A';
+      stem[used] = 'y';
+      stem[used + 1] = '\0';
+      used = strlen(stem);
+    } else if (final == 'a') {
+      /* 6.1.97 a + a → a (parā-rūpa): drop one `a` from the vikaraṇa. */
+      if (used + strlen(vik) > stem_len) return false;
+      strncat(stem, vik + 1, stem_len - used - 1);
+      return true;
+    } else if (final == 'A') {
+      /* 6.1.101 A + a → A (savarṇa-dīrgha): drop the vikaraṇa's `a`. */
+      if (used + strlen(vik) > stem_len) return false;
+      strncat(stem, vik + 1, stem_len - used - 1);
+      return true;
     }
-    if (final == 'e' || final == 'E') {
-      stem[used - 1] = '\0';
-      return strncat(stem, final == 'e' ? "aya" : "Aya", stem_len - strlen(stem) - 1) != NULL;
-    }
-    /* 6.1.97 ato guṇe — when stem ends in `a` and vikaraṇa is `a`, the two
-       `a`s collapse to a single `a` at the boundary. */
-    if (final == 'a') {
-      return true;  /* nothing to append; stem already ends in the collapsed `a` */
-    }
-  }
-  /* For multi-char vikaraṇas like "aya" beginning with `a`, the same
-     collapse applies if the stem ends with `a`. */
-  if (vik[0] == 'a' && stem[used - 1] == 'a') {
-    if (used + strlen(vik) > stem_len) return false;
-    strncat(stem, vik + 1, stem_len - used - 1);
-    return true;
   }
   if (used + strlen(vik) + 1 > stem_len) return false;
   strncat(stem, vik, stem_len - used - 1);
@@ -166,9 +177,11 @@ static const SubRule ROOT_SUBSTITUTIONS[] = {
   {"pA",   "piba"},
   {"GrA",  "jiGra"},
   {"DmA",  "Dama"},
-  /* zWA and zad are normalised to sWA and sad by 6.1.64 dhātv-ādeḥ ṣaḥ
-     saḥ before the substitution table is consulted. */
-  {"sWA",  "tizWa"},
+  /* zWA and zad are normalised to sTA and sad by 6.1.64 (and the
+     accompanying ṣṭ→st cluster handling for dhātu-initial). The
+     substitution result preserves the W (ṭh) within tizWa per 8.4.41
+     ṣṭunā ṣṭuḥ which retroflexes again after the t/ṣ adjacency. */
+  {"sTA",  "tizWa"},
   {"mnA",  "mana"},
   {"dA",   "yacCa"},
   {"dfS",  "paSya"},
@@ -342,7 +355,17 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     }
     *class_sutra = 703075;
   } else if (gana == 4) {
-    /* Default gaṇa-4 path: śyan is ṅit so 1.1.5 blocks guṇa. */
+    /* Default gaṇa-4 path: śyan is ṅit so 1.1.5 blocks guṇa.
+       But 7.1.100 ṛto id dhātoḥ + 8.2.77 hali ca: dhātu-final ṝ
+       (with intervening consonant) becomes Ir before consonant
+       suffix. JFz → JIr (F → Ir, z dropped) → JIrya → JIryati. */
+    size_t sn = strlen(stem);
+    if (sn >= 2 && stem[sn - 2] == 'F') {
+      stem[sn - 2] = 'I';
+      stem[sn - 1] = 'r';
+      stem[sn] = '\0';
+      *class_sutra = 701100;
+    }
   } else if (gana == 6) {
     /* Gaṇa-6 (tudādi) takes śa (a), also ṅit — no guṇa. */
   } else if (gana == 10) {
