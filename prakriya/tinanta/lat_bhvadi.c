@@ -191,7 +191,10 @@ static const char *root_substitute_lookup(const char *clean_root) {
    before ṇit/ñit suffixes (here applied to gaṇa-10's ṇic-aya). Encoded
    as a small list of roots that exhibit this lengthening so we don't
    over-apply to roots like `kaTa` whose upadha is a consonant. */
-static const char *const GANA10_UPADHA_ALENGTHEN[] = {"taq", "vad", "Gaw", NULL};
+static const char *const GANA10_UPADHA_ALENGTHEN[] = {
+  "taq", "vad", "Gaw", "laq", "lab", "lap", "raq", "raB",
+  NULL
+};
 
 static bool root_in_list(const char *stem, const char *const list[]) {
   if (!stem) return false;
@@ -357,15 +360,30 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     } else {
       /* If the root ends in a vowel, 7.2.115 aco ñṇiti applies vṛddhi
          to that vowel (ñic is ṇit). For consonant-final roots the
-         upadha-laghu rule 7.3.86 applies guṇa to the penultimate. */
+         upadha-laghu rule 7.3.86 applies guṇa to the penultimate.
+         When the root is given in dhātupāṭha pre-attached form
+         (BAma, varRa, kaTa) — i.e. ends in `a` after a consonant —
+         the trailing `a` is the inherent vowel and no vrddhi/guṇa
+         applies; the `a` collapses with the `aya` vikaraṇa via
+         6.1.97 in append_with_vowel_sandhi. */
       size_t sn = strlen(stem);
       char final = sn > 0 ? stem[sn - 1] : 0;
-      bool final_vowel = (final == 'a' || final == 'i' || final == 'I' ||
-                          final == 'u' || final == 'U' || final == 'f' ||
-                          final == 'F' || final == 'x' || final == 'X' ||
-                          final == 'e' || final == 'o');
-      replace_first_vowel(stem, final_vowel);
-      *used_guna = true;
+      bool final_a = (final == 'a');
+      bool final_long_vowel = (final == 'A' || final == 'I' || final == 'U' ||
+                               final == 'F' || final == 'X' || final == 'e' ||
+                               final == 'o');
+      bool final_short_vowel = (final == 'i' || final == 'u' || final == 'f' ||
+                                final == 'x');
+      if (final_a) {
+        /* No transformation; let 6.1.97 handle the a+a junction. */
+      } else if (final_long_vowel || final_short_vowel) {
+        replace_first_vowel(stem, true);
+        *used_guna = true;
+      } else {
+        /* consonant-final: 7.3.86 guṇa of laghu upadha. */
+        replace_first_vowel(stem, false);
+        *used_guna = true;
+      }
     }
   }
 
@@ -512,6 +530,20 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
       strcat(form, t->clean);
     }
   }
+  /* Nasal place assimilation (cluster surface rule corresponding to
+     8.4.58 anusvārasya yayi parasavarṇaḥ extended for plain nasals):
+     `n` immediately before a labial stop (p/P/b/B/m) surfaces as m.
+     This handles SunBati from SunBa+ti where the n of the root assimilates
+     to the labial. */
+  for (size_t i = 0; form[i]; i++) {
+    if (form[i] != 'n') continue;
+    char next = form[i + 1];
+    if (next == 'p' || next == 'P' || next == 'b' || next == 'B' ||
+        next == 'm') {
+      form[i] = 'm';
+    }
+  }
+
   /* 8.3.59 ādeśapratyayoḥ — `s` of pratyaya becomes ṣ (z) when preceded
      by an iṇ letter (i, ī, u, ū, ṛ, ṝ, ḷ, e, o, ai, au, k). a/ā do not
      trigger this rule. We only flip suffix-region s, identified by
