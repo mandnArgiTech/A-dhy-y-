@@ -53,4 +53,8 @@ bool ii_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool z_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.15: kim feminine pronominal paradigm. */
+bool kim_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
+                   ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif

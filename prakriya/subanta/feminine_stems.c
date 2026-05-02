@@ -168,7 +168,7 @@ static bool natva_is_blocker(char c) {
     case 't': case 'T': case 'd': case 'D':
     case 'c': case 'C': case 'j': case 'J': case 'Y':
     case 'w': case 'W': case 'q': case 'Q':
-    case 'S': case 's':
+    case 'R': case 'S': case 's':
     case 'l':
       return true;
   }
@@ -420,4 +420,52 @@ bool ii_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
                           "long-ī masculine paradigm slot");
   return true;
+}
+
+/* ── kim STRI (interrogative pronoun feminine) ─────────────────────── */
+
+static const struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  const char  *form;     /* full surface form including k- prefix */
+} KIM_FEM[] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "kA"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "ke"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "kAH"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "kAm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "ke"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "kAH"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "kayA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "kAByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "kABiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "kasyE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "kAByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "kAByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "kasyAH"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "kAByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "kAByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "kasyAH"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "kayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "kAsAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "kasyAm"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "kayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "kAsu"},
+};
+
+bool kim_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
+                   ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  if (strcmp(stem_slp1, "kim") != 0) return false;
+  for (size_t i = 0; i < sizeof(KIM_FEM) / sizeof(KIM_FEM[0]); i++) {
+    if (KIM_FEM[i].vib == vib && KIM_FEM[i].vac == vac) {
+      prakriya_init_subanta(ctx_out, stem_slp1, ASH_STRI, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, KIM_FEM[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700300, stem_slp1, KIM_FEM[i].form,
+                              "kim feminine pronoun paradigm");
+      return true;
+    }
+  }
+  return false;
 }

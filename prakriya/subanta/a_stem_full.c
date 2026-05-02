@@ -79,7 +79,7 @@ static bool natva_is_blocker(char c) {
     case 't': case 'T': case 'd': case 'D':
     case 'c': case 'C': case 'j': case 'J': case 'Y':
     case 'w': case 'W': case 'q': case 'Q':
-    case 'S': case 's':
+    case 'R': case 'S': case 's':
     case 'l':
       return true;
   }

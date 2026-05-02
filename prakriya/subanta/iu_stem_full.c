@@ -141,7 +141,7 @@ static bool natva_is_blocker(char c) {
     case 't': case 'T': case 'd': case 'D':           /* dental */
     case 'c': case 'C': case 'j': case 'J': case 'Y': /* palatal */
     case 'w': case 'W': case 'q': case 'Q':           /* retroflex non-ṇ */
-    case 'S': case 's':                                /* ś / s (z=ṣ is a trigger) */
+    case 'R': case 'S': case 's':                                /* ś / s (z=ṣ is a trigger) */
     case 'l':                                          /* l */
       return true;
   }

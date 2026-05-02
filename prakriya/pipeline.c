@@ -320,7 +320,10 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_PUMS && last == 'A') {
+  if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
+    /* Story 4.15: kim feminine pronominal paradigm. */
+    ok = kim_stri_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'A') {
     /* Story 4.12: monosyllabic root-noun paradigm (dvArapA, maDupA,
        agniDmA, somapA, viSvapA — all "X-pA" / "X-DmA" compounds). */
     ok = pa_stem_masc_full(normalized, vib, v, &ctx);
