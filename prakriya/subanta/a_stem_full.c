@@ -103,7 +103,13 @@ static bool a_stem_full_derive(const char *stem_slp1, const ASlot *table,
                                ASH_Vacana vac, PrakriyaCtx *ctx_out) {
   if (!stem_slp1 || !ctx_out || !table) return false;
   size_t n = strlen(stem_slp1);
-  if (n == 0 || stem_slp1[n - 1] != 'a') return false;
+  /* Accept both short-a and long-A finals: NAPUMSAKA stems are sometimes
+     listed in the dhātupāṭha / lexicon with their long-A upadeśa form
+     (e.g. "SrIpA" for the neuter of "SrIpa"). The slot tables drop the
+     final vowel either way. */
+  if (n == 0 || (stem_slp1[n - 1] != 'a' && stem_slp1[n - 1] != 'A')) {
+    return false;
+  }
   const ASlot *slot = a_slot_lookup(table, vib, vac);
   if (!slot) return false;
   prakriya_init_subanta(ctx_out, stem_slp1, linga, vib, vac);

@@ -354,3 +354,211 @@ bool r_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
                           "f-stem paradigm slot");
   return true;
 }
+
+/* ── in-stem (guRin-style PUMS) ────────────────────────────────────── */
+
+typedef enum {
+  IN_LONG_I,     /* guRI — n dropped, i lengthened: prathama-eka only. */
+  IN_FULL,       /* guRin — full stem before vowel-initial endings. */
+  IN_DROP_N,     /* guRi  — n dropped before consonant-initial endings. */
+} InBaseKind;
+
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  InBaseKind   base;
+  const char  *suffix;
+  uint32_t     sutra_id;
+} InSlot;
+
+static const InSlot IN_MASC_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  IN_LONG_I, "",     802007},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  IN_FULL,   "O",    701018},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, IN_FULL,   "aH",   701018},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  IN_FULL,   "am",   401002},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  IN_FULL,   "O",    701018},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, IN_FULL,   "aH",   701018},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  IN_FULL,   "A",    701012},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  IN_DROP_N, "ByAm", 802007},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, IN_DROP_N, "BiH",  802007},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  IN_FULL,   "e",    701012},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  IN_DROP_N, "ByAm", 802007},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, IN_DROP_N, "ByaH", 802007},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  IN_FULL,   "aH",   701012},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  IN_DROP_N, "ByAm", 802007},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, IN_DROP_N, "ByaH", 802007},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  IN_FULL,   "aH",   701012},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  IN_FULL,   "oH",   701012},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, IN_FULL,   "Am",   604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  IN_FULL,   "i",    701012},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  IN_FULL,   "oH",   701012},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, IN_DROP_N, "zu",   803059},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  IN_FULL,   "",     401002},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  IN_FULL,   "O",    701018},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, IN_FULL,   "aH",   701018},
+};
+
+static const InSlot *in_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (IN_MASC_SLOTS[i].vib == vib && IN_MASC_SLOTS[i].vac == vac) {
+      return &IN_MASC_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+static bool in_build_bases(const char *stem, char *long_i, char *full,
+                           char *drop_n, size_t buf_len) {
+  size_t n = stem ? strlen(stem) : 0;
+  if (n < 2) return false;
+  if (stem[n - 2] != 'i' || stem[n - 1] != 'n') return false;
+  size_t x_len = n - 2;
+  if (x_len + 2 > buf_len) return false;
+  /* LONG_I: X + I */
+  memcpy(long_i, stem, x_len);
+  long_i[x_len] = 'I';
+  long_i[x_len + 1] = '\0';
+  /* FULL: full stem (X + in) */
+  memcpy(full, stem, n);
+  full[n] = '\0';
+  /* DROP_N: X + i (n dropped) */
+  memcpy(drop_n, stem, x_len);
+  drop_n[x_len] = 'i';
+  drop_n[x_len + 1] = '\0';
+  return true;
+}
+
+bool in_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
+                       PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  char long_i[64], full[64], drop_n[64];
+  if (!in_build_bases(stem_slp1, long_i, full, drop_n, sizeof(long_i))) {
+    return false;
+  }
+  const InSlot *slot = in_slot_lookup(vib, vac);
+  if (!slot) return false;
+  const char *base;
+  switch (slot->base) {
+    case IN_LONG_I: base = long_i; break;
+    case IN_FULL:   base = full;   break;
+    case IN_DROP_N: base = drop_n; break;
+    default: return false;
+  }
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+  ctx_out->term_count = 1;
+  char form[TERM_VALUE_LEN] = {0};
+  snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "in-stem paradigm slot");
+  return true;
+}
+
+/* ── vat/mat-stem (SfRvat-style PUMS, present participle) ─────────── */
+
+typedef enum {
+  VAT_STRONG,   /* SfRvant — sarvanāmasthāna with nt augment (7.1.70). */
+  VAT_VOICED,   /* SfRvad  — t→d before voiced consonant suffix (8.2.39). */
+  VAT_N_FINAL,  /* SfRvan  — t→n in prathama/sambodhana eka. */
+  VAT_WEAK,     /* SfRvat  — full stem elsewhere. */
+} VatBaseKind;
+
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  VatBaseKind  base;
+  const char  *suffix;
+  uint32_t     sutra_id;
+} VatSlot;
+
+static const VatSlot VAT_MASC_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  VAT_N_FINAL,"",    802066},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  VAT_STRONG, "O",   701070},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, VAT_STRONG, "aH",  701070},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  VAT_STRONG, "am",  701070},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  VAT_STRONG, "O",   701070},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, VAT_WEAK,   "aH",  401002},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  VAT_WEAK,   "A",   401002},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  VAT_VOICED, "ByAm",802039},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, VAT_VOICED, "BiH", 802039},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  VAT_WEAK,   "e",   401002},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  VAT_VOICED, "ByAm",802039},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, VAT_VOICED, "ByaH",802039},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  VAT_WEAK,   "aH",  401002},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  VAT_VOICED, "ByAm",802039},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, VAT_VOICED, "ByaH",802039},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  VAT_WEAK,   "aH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  VAT_WEAK,   "oH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, VAT_WEAK,   "Am",  604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  VAT_WEAK,   "i",   401002},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  VAT_WEAK,   "oH",  401002},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, VAT_WEAK,   "su",  401002},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  VAT_N_FINAL,"",    802066},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  VAT_STRONG, "O",   701070},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, VAT_STRONG, "aH",  701070},
+};
+
+static const VatSlot *vat_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (VAT_MASC_SLOTS[i].vib == vib && VAT_MASC_SLOTS[i].vac == vac) {
+      return &VAT_MASC_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+static bool vat_build_bases(const char *stem, char *strong, char *voiced,
+                            char *n_final, char *weak, size_t buf_len) {
+  size_t n = stem ? strlen(stem) : 0;
+  if (n < 2) return false;
+  /* Accept "at"-final stems (vat, mat, hat-style). */
+  if (stem[n - 1] != 't') return false;
+  size_t x_len = n - 1;
+  if (x_len + 4 > buf_len) return false;
+  /* WEAK = full: SfRvat */
+  memcpy(weak, stem, n);
+  weak[n] = '\0';
+  /* STRONG: X + nt (insert n before final t): SfRvant */
+  if (x_len + 2 > buf_len) return false;
+  memcpy(strong, stem, x_len);
+  strong[x_len] = 'n';
+  strong[x_len + 1] = 't';
+  strong[x_len + 2] = '\0';
+  /* VOICED: X + d (t → d before voiced): SfRvad */
+  memcpy(voiced, stem, x_len);
+  voiced[x_len] = 'd';
+  voiced[x_len + 1] = '\0';
+  /* N_FINAL: X + n (t → n at pada-end): SfRvan */
+  memcpy(n_final, stem, x_len);
+  n_final[x_len] = 'n';
+  n_final[x_len + 1] = '\0';
+  return true;
+}
+
+bool vat_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                        ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  char strong[64], voiced[64], n_final[64], weak[64];
+  if (!vat_build_bases(stem_slp1, strong, voiced, n_final, weak,
+                       sizeof(strong))) return false;
+  const VatSlot *slot = vat_slot_lookup(vib, vac);
+  if (!slot) return false;
+  const char *base;
+  switch (slot->base) {
+    case VAT_STRONG:  base = strong;  break;
+    case VAT_VOICED:  base = voiced;  break;
+    case VAT_N_FINAL: base = n_final; break;
+    case VAT_WEAK:    base = weak;    break;
+    default: return false;
+  }
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+  ctx_out->term_count = 1;
+  char form[TERM_VALUE_LEN] = {0};
+  snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "vat-stem paradigm slot");
+  return true;
+}

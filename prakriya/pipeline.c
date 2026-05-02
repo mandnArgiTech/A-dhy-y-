@@ -320,11 +320,15 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_PUMS && last == 'a') {
-    /* Story 4.10: full a-stem masculine paradigm. */
+  if (li == ASH_PUMS && (last == 'a' || last == 'A')) {
+    /* Story 4.10/4.11: full a-stem masculine paradigm. PUMS stems
+       sometimes appear with long-A upadeśa (dvArapA, viSvapA);
+       a_stem_masc_full accepts both finals. */
     ok = a_stem_masc_full(normalized, vib, v, &ctx);
-  } else if (li == ASH_NAPUMSAKA && last == 'a') {
-    /* Story 4.10: full a-stem neuter paradigm. */
+  } else if (li == ASH_NAPUMSAKA && (last == 'a' || last == 'A')) {
+    /* Story 4.10/4.11: full a-stem neuter paradigm. NAPUMSAKA stems
+       sometimes appear with long-A upadeśa (SrIpA); a_stem_neut_full
+       accepts both. */
     ok = a_stem_neut_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);
@@ -357,6 +361,14 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
     ok = as_stem_neut_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && last == 'f') {
     ok = r_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
+    /* Story 4.11: in-stem PUMS (guRin, tundin, ...). */
+    ok = in_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             normalized[nlen - 2] == 'a' && normalized[nlen - 1] == 't') {
+    /* Story 4.11: vat/mat/at-stem PUMS (SfRvat, BagavatI, ...). */
+    ok = vat_stem_masc_full(normalized, vib, v, &ctx);
   } else if (i_stem_can_handle(normalized)) {
     ok = i_stem_derive(normalized, li, vib, v, &ctx);
   } else if (u_stem_can_handle(normalized)) {
