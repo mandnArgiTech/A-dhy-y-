@@ -320,7 +320,13 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
+  if (li == ASH_PUMS && last == 'a') {
+    /* Story 4.10: full a-stem masculine paradigm. */
+    ok = a_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && last == 'a') {
+    /* Story 4.10: full a-stem neuter paradigm. */
+    ok = a_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);
   } else if (li == ASH_STRI && last == 'I') {
     /* Story 4.8: long-ī feminine (nadI). */

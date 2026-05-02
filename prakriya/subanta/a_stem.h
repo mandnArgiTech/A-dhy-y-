@@ -19,4 +19,10 @@ bool a_stem_neuter_can_handle(const char *stem_slp1);
 bool a_stem_neuter_derive(const char *stem_slp1, ASH_Vibhakti vib,
                           ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.10: full 24-slot a-stem paradigms. */
+bool a_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool a_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif
