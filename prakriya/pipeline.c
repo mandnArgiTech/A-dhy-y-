@@ -381,6 +381,17 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
              normalized[nlen - 2] == 'a' && normalized[nlen - 1] == 't') {
     /* Story 4.11: vat/mat/at-stem PUMS (SfRvat, BagavatI, ...). */
     ok = vat_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             (last == 'p' || last == 'P' || last == 'k' || last == 'K' ||
+              last == 't' || last == 'T' || last == 'c' || last == 'w')) {
+    /* Story 4.14: voiceless-stop-final consonant PUMS (gup, marut). */
+    ok = cons_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && nlen >= 2 &&
+             (last == 'j' || last == 'p' || last == 'k' || last == 't' ||
+              last == 'P' || last == 'K' || last == 'T' || last == 'c' ||
+              last == 'w')) {
+    /* Story 4.14: voiced-j or voiceless-stop NAPUMSAKA (bahUrj). */
+    ok = cons_stem_neut_full(normalized, vib, v, &ctx);
   } else if (i_stem_can_handle(normalized)) {
     ok = i_stem_derive(normalized, li, vib, v, &ctx);
   } else if (u_stem_can_handle(normalized)) {
