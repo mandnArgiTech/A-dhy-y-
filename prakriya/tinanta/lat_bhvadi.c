@@ -341,6 +341,15 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
       } else if (gana == 2 && long_vowel) {
         replace_first_vowel(stem, false);
         *used_guna = true;
+      } else if (gana == 2 && sn >= 2) {
+        /* Consonant-final stem: 7.3.86 pugantalaghūpadhasya — guṇa
+           the laghu upadha (short ik vowel just before final
+           consonant). */
+        char upadha = stem[sn - 2];
+        if (upadha == 'i' || upadha == 'u' || upadha == 'f' || upadha == 'x') {
+          replace_first_vowel(stem, false);
+          *used_guna = true;
+        }
       }
     }
   } else if (gana == 4 && root_in_list(stem, GANA4_IDIRGHA)) {
@@ -629,6 +638,33 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
     if (next == 'p' || next == 'P' || next == 'b' || next == 'B' ||
         next == 'm') {
       form[i] = 'm';
+    }
+  }
+
+  /* H-final root sandhi (8.2.32 dāder dhātor ghaḥ + 8.2.40 jhaṣas
+     tathor dho 'dhaḥ + 8.3.78 dadhastathos ca + companion rules):
+     - h + t/T → g + D (aspiration of root-h transfers forward to t/T)
+     - h + s   → k + z (h drops, leaving k; aspiration backwards to
+       initial d → D, since the forward path is blocked)
+     - h before m / v / vowel-initial: h is preserved.
+     We apply this on the joined form by a simple two-character lookup
+     covering the common diha~/duha~/lih-style roots. */
+  {
+    char *p = form;
+    while (*p) {
+      if (*p == 'h') {
+        char nxt = p[1];
+        if (nxt == 't' || nxt == 'T') {
+          p[0] = 'g';
+          p[1] = 'D';
+        } else if (nxt == 's') {
+          p[0] = 'k';
+          p[1] = 'z';
+          /* Aspiration transfer backwards to a dhātu-initial d. */
+          if (form[0] == 'd') form[0] = 'D';
+        }
+      }
+      p++;
     }
   }
 
