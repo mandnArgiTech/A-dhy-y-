@@ -11,54 +11,50 @@ static const char *unadi_data_path(void) {
   return test_resolve_data_file("unadipatha.tsv", path, sizeof(path));
 }
 
-void test_unadi_load_and_lookup(void) {
+void test_unadi_load_and_lookup_by_id(void) {
   UnadiDB db;
-  const UnadiEntry *e;
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, unadi_data_path()));
-  TEST_ASSERT_GREATER_THAN(2, db.count);
-  e = unadi_lookup(&db, "vA", "yu");
+  /* Real Uṇādi-pāṭha has 748 sūtras starting at id 1001. */
+  TEST_ASSERT_EQUAL_INT(748, db.count);
+  const UnadiEntry *e = unadi_lookup_by_id(&db, 1001);
   TEST_ASSERT_NOT_NULL(e);
-  TEST_ASSERT_EQUAL_STRING("vAyu", e->form_slp1);
+  TEST_ASSERT_EQUAL_STRING("uR", e->pratyay_slp1);
   unadi_db_free(&db);
 }
 
-void test_unadi_attested(void) {
+void test_unadi_lookup_by_pratyay(void) {
   UnadiDB db;
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, unadi_data_path()));
-  TEST_ASSERT_TRUE(unadi_is_attested(&db, "manas"));
-  TEST_ASSERT_FALSE(unadi_is_attested(&db, "xyz"));
+  const UnadiEntry *e = unadi_lookup_by_pratyay(&db, "uR");
+  TEST_ASSERT_NOT_NULL(e);
+  TEST_ASSERT_EQUAL_UINT32(1001, e->unadi_id);
+  TEST_ASSERT_NULL(unadi_lookup_by_pratyay(&db, "definitely-not-a-pratyay"));
   unadi_db_free(&db);
 }
 
-void test_unadi_form(void) {
+void test_unadi_cite_pratyay(void) {
   UnadiDB db;
   ASH_Form f;
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, unadi_data_path()));
-  f = unadi_form(&db, "jan", "u");
+  f = unadi_cite_pratyay(&db, "uR");
   TEST_ASSERT_TRUE(f.valid);
-  TEST_ASSERT_EQUAL_STRING("jAnu", f.slp1);
+  TEST_ASSERT_EQUAL_STRING("uR", f.slp1);
   TEST_ASSERT_GREATER_THAN(0, f.step_count);
+  TEST_ASSERT_EQUAL_UINT32(1001, f.steps[0].sutra_id);
   ash_form_free(&f);
-  unadi_db_free(&db);
-}
 
-void test_unadi_lookup_no_suffix_and_missing_form(void) {
-  UnadiDB db = {0};
-  ASH_Form f;
-  TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&db, unadi_data_path()));
-  TEST_ASSERT_NOT_NULL(unadi_lookup(&db, "jan", NULL));
-  f = unadi_form(&db, "missing", "x");
+  f = unadi_cite_pratyay(&db, "no-such-pratyay");
   TEST_ASSERT_FALSE(f.valid);
   TEST_ASSERT_TRUE(strstr(f.error, "not found") != NULL);
   ash_form_free(&f);
+
   unadi_db_free(&db);
 }
 
 int main(void) {
   UNITY_BEGIN();
-  RUN_TEST(test_unadi_load_and_lookup);
-  RUN_TEST(test_unadi_attested);
-  RUN_TEST(test_unadi_form);
-  RUN_TEST(test_unadi_lookup_no_suffix_and_missing_form);
+  RUN_TEST(test_unadi_load_and_lookup_by_id);
+  RUN_TEST(test_unadi_lookup_by_pratyay);
+  RUN_TEST(test_unadi_cite_pratyay);
   return UNITY_END();
 }

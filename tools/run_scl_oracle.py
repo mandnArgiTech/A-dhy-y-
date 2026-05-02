@@ -27,6 +27,33 @@ def nfc(text: str) -> str:
     return unicodedata.normalize("NFC", text or "")
 
 
+def normalize_compare(text: str) -> str:
+    """Normalize an oracle/our form for comparison.
+
+    The shabda_forms.tsv oracle prefixes sambodhana entries with the
+    vocative particle "हे " ("he"), which is presentation, not part of
+    the morphological form. Strip it.
+    For pancami-eka the oracle records both "रामाद्" and "रामात्" joined
+    by "-"; treat any of the alternatives as equivalent so we match the
+    standard form.
+    """
+    s = nfc(text)
+    if s.startswith("हे "):
+        s = s[len("हे "):]
+    if "-" in s:
+        return s
+    return s
+
+
+def alt_forms(text: str) -> list:
+    s = nfc(text)
+    if s.startswith("हे "):
+        s = s[len("हे "):]
+    if "-" in s:
+        return [p.strip() for p in s.split("-") if p.strip()]
+    return [s]
+
+
 def _to_enum_case(vibhakti: str) -> str:
     return {
         "prathama": "PRATHAMA", "dvitiya": "DVITIYA", "tritiya": "TRITIYA",
@@ -134,7 +161,9 @@ def run_comparison(filter_stem: Optional[str], sample_size: int, require_rate: O
         vac = _to_enum_number(row["vacana"])
         ours_slp1, ours_deva = call_our_library(row["stem_slp1"], row["linga"], vib, vac)
         is_error = ours_slp1.startswith("ERROR:")
-        is_match = int((not is_error) and nfc(ours_deva) == nfc(row["form_deva"]))
+        ours_norm = normalize_compare(ours_deva)
+        oracle_alts = alt_forms(row["form_deva"])
+        is_match = int((not is_error) and ours_norm in oracle_alts)
         total += 1; matched += is_match; errors += int(is_error)
         klass = stem_class(row["stem_slp1"])
         for stats, key in [(by_linga, row["linga"]), (by_vibhakti, row["vibhakti"]), (by_vacana, row["vacana"]), (by_class, klass)]:

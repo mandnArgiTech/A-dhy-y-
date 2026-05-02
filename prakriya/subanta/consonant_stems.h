@@ -38,4 +38,27 @@ bool r_stem_can_handle(const char *stem_slp1);
 bool r_stem_derive(const char *stem_slp1, ASH_Vibhakti vib,
                    ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.7: full 24-slot consonant-stem paradigms.
+   Each takes the *true* upadeśa stem (e.g. "rAjan", "manas", "pitf") and
+   produces oracle-matching SLP1 output. */
+bool an_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool as_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool r_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
+/* Story 4.11: in-stems (guRin) and vat/mat-stems (SfRvat). */
+bool in_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool vat_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                        ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
+/* Story 4.12: pā-stem masculine root nouns (dvArapA) and in-stem
+   neuter (vAggmin). */
+bool pa_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool in_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif

@@ -286,6 +286,8 @@ typedef enum {
   ASH_KRIT_YA,         /**< Gerundive (-ya) */
   ASH_KRIT_LYAP,       /**< Absolutive with prefix (-ya) */
   ASH_KRIT_KTVA,       /**< Absolutive without prefix (-tvā) */
+  ASH_KRIT_TUM,        /**< Infinitive (-tum) */
+  ASH_KRIT_LYUT,       /**< Action noun (-ana, also called lyuṭ) */
 } ASH_KritType;
 
 /** Derive a kṛt form. */

@@ -38,7 +38,7 @@ bool n_stem_derive(const char *stem_slp1, ASH_Linga lin,
   }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log_transition(ctx_out, 802007, "nalopaH prAtipadikAntasya", stem_slp1, ctx_out->terms[0].value);
+  prakriya_log_transition(ctx_out, 802007, stem_slp1, ctx_out->terms[0].value, "nalopaH prAtipadikAntasya");
   return true;
 }
 
@@ -61,7 +61,7 @@ bool as_stem_derive(const char *stem_slp1, ASH_Linga lin,
   }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log_transition(ctx_out, 803016, "aH parasminn asati virAmaH", stem_slp1, ctx_out->terms[0].value);
+  prakriya_log_transition(ctx_out, 803016, stem_slp1, ctx_out->terms[0].value, "aH parasminn asati virAmaH");
   return true;
 }
 
@@ -82,7 +82,7 @@ bool r_stem_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   }
   out_slp1[out_len - 1] = '\0';
   strncpy(ctx_out->terms[0].value, out_slp1, TERM_VALUE_LEN - 1);
-  prakriya_log_transition(ctx_out, 701072, "f-final stem special handling", stem_slp1, ctx_out->terms[0].value);
+  prakriya_log_transition(ctx_out, 701072, stem_slp1, ctx_out->terms[0].value, "f-final stem special handling");
   return true;
 }
 

@@ -48,7 +48,7 @@ bool aa_stem_fem_derive(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
     }
   }
   strncat(out, sfx, out_len - strlen(out) - 1);
-  prakriya_log_transition(ctx_out, 703105, "A-stem feminine adjustment", stem_slp1, out);
+  prakriya_log_transition(ctx_out, 703105, stem_slp1, out, "A-stem feminine adjustment");
   return true;
 }
 
@@ -84,7 +84,7 @@ bool i_stem_derive(const char *stem_slp1, ASH_Linga linga, ASH_Vibhakti vib,
     strncpy(out, stem_slp1, out_len - 1);
     out[out_len - 1] = '\0';
   }
-  prakriya_log_transition(ctx_out, 703108, "i-stem suffix adjustment", stem_slp1, out);
+  prakriya_log_transition(ctx_out, 703108, stem_slp1, out, "i-stem suffix adjustment");
   return true;
 }
 
@@ -115,6 +115,6 @@ bool u_stem_derive(const char *stem_slp1, ASH_Linga linga, ASH_Vibhakti vib,
     strncpy(out, stem_slp1, out_len - 1);
     out[out_len - 1] = '\0';
   }
-  prakriya_log_transition(ctx_out, 703110, "u-stem suffix adjustment", stem_slp1, out);
+  prakriya_log_transition(ctx_out, 703110, stem_slp1, out, "u-stem suffix adjustment");
   return true;
 }

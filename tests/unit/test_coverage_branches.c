@@ -238,9 +238,12 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   TEST_ASSERT_EQUAL_STRING("mns", f.slp1);
   ash_form_free(&f);
 
+  /* Story 4.7: r_stem_masc_full now wired into the dispatcher.
+     pitf + caturthī-dvi = pitfByAm (real form), not the legacy stub's
+     pass-through "pitf". */
   f = ash_subanta(db, "pitf", ASH_PUMS, ASH_CATURTHI_VIB, ASH_DVIVACANA);
   TEST_ASSERT_TRUE(f.valid);
-  TEST_ASSERT_EQUAL_STRING("pitf", f.slp1);
+  TEST_ASSERT_EQUAL_STRING("pitfByAm", f.slp1);
   ash_form_free(&f);
 
   TEST_ASSERT_EQUAL_INT(0, sutra_db_load(&sdb, data_file("sutras.tsv")));
@@ -547,12 +550,12 @@ void test_context_print_and_misc_modules(void) {
   ganapatha_db_free(&gdb);
 
   TEST_ASSERT_EQUAL_INT(0, unadi_db_load(&udb, data_file("unadipatha.tsv")));
-  TEST_ASSERT_NULL(unadi_lookup(&udb, "nope", NULL));
-  TEST_ASSERT_FALSE(unadi_is_attested(&udb, "unknown"));
-  f = unadi_form(&udb, "nope", "x");
+  TEST_ASSERT_NULL(unadi_lookup_by_pratyay(&udb, "no-such-pratyay"));
+  TEST_ASSERT_NULL(unadi_lookup_by_id(&udb, 9999999));
+  f = unadi_cite_pratyay(&udb, "no-such-pratyay");
   TEST_ASSERT_FALSE(f.valid);
   ash_form_free(&f);
-  f = unadi_form(&udb, "jan", "u");
+  f = unadi_cite_pratyay(&udb, "uR");
   TEST_ASSERT_TRUE(f.valid);
   ash_form_free(&f);
   unadi_db_free(&udb);

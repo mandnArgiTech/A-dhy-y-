@@ -7,8 +7,14 @@ bool vikarana_for_gana(int gana, char *out, size_t out_len) {
   if (!out || out_len == 0) return false;
   switch (gana) {
     case 1:  v = "a";   break; /* Sap */
+    case 2:  v = "";    break; /* athematic — adādi, no vikaraṇa */
+    case 3:  v = "";    break; /* athematic — juhotyādi (reduplicated stem) */
     case 4:  v = "ya";  break; /* yaN */
+    case 5:  v = "nu";  break; /* svādi */
     case 6:  v = "a";   break; /* Sap-like thematic a */
+    case 7:  v = "";    break; /* athematic with infix nasal — rudhādi */
+    case 8:  v = "u";   break; /* tanādi */
+    case 9:  v = "nA";  break; /* kryādi */
     case 10: v = "aya"; break; /* cay/ay */
     default: v = "a";   break;
   }

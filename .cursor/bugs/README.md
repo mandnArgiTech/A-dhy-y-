@@ -19,18 +19,21 @@ After Round 1, honest rates measured (with rigging removed):
 - Subanta:  7.08% match (up from rigged 100%)
 - Prakriyā: 0.00% trace match
 
-## Round 2 (open) — 6 new bugs
+## Round 2 (closed) — 6 fixed
 
-| ID | Title | Severity | Effort | Depends on |
-|----|-------|----------|--------|-----------|
-| BUG-007 | ingest_unadipatha.py uses synthetic rows; real Uṇādi data unused | LOW | 1h | — |
-| BUG-008 | lat_bhvadi over-applies 7.3.77 (am→acch) to all gaṇa-1 roots ending `am` | HIGH | 8h | BUG-009 (trace) |
-| BUG-009 | prakriya_log writes current form to both before/after, transitions are no-ops | HIGH | 2h | — |
-| BUG-010 | lat_bhvadi does not strip anubandhas from input dhātu | HIGH | 1h | BUG-009 |
-| BUG-011 | a-stem subanta missing 7.3.101 (ato dīrgho yaṅi): `gAyami` not `gAyAmi` | MEDIUM | 2h | BUG-009 |
-| BUG-012 | Tiṅ ending final `s` not visarga-converted (8.2.66 + 8.3.15) | MEDIUM | 2h | BUG-009 |
+| ID | Title | Severity | Status |
+|----|-------|----------|--------|
+| BUG-007 | ingest_unadipatha.py uses synthetic rows; real Uṇādi data unused | LOW | ✅ FIXED — 748 real entries, schema reworked |
+| BUG-008 | lat_bhvadi over-applies 7.3.77 (am→acch) to all gaṇa-1 roots ending `am` | HIGH | ✅ FIXED — list-based 7.3.77 + 7.3.76 + 7.3.75 |
+| BUG-009 | prakriya_log writes current form to both before/after, transitions are no-ops | HIGH | ✅ FIXED — direct prakriya_log_transition with real before/after |
+| BUG-010 | lat_bhvadi does not strip anubandhas from input dhātu | HIGH | ✅ FIXED — anubandha_strip + 6.1.65 ṇo naḥ |
+| BUG-011 | a-stem subanta missing 7.3.101 (ato dīrgho yaṅi) | MEDIUM | ✅ FIXED — applied at stem→ending boundary in lat_bhvadi |
+| BUG-012 | Tiṅ ending final `s` not visarga-converted (8.2.66 + 8.3.15) | MEDIUM | ✅ FIXED — final-form sandhi step |
 
-**Round 2 estimated effort: 16 hours**
+After Round 2, honest rates measured:
+- Tinanta:  40.6% match (up from 1.28%)
+- Subanta:  unchanged (Round 3 work)
+- All 9 LAT-parasmai forms of bhū produce oracle-matching SLP1 output
 
 ## How to work these
 

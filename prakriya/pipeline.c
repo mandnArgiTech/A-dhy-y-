@@ -310,10 +310,77 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   memset(normalized, 0, sizeof(normalized));
   strncpy(normalized, stem_slp1, sizeof(normalized) - 1);
 
-  if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
+  /* Story 4.6 / 4.7: prefer the full 24-slot helpers when their
+     stem-class predicates apply. Fall back to legacy stubs for
+     a-stem masculine, ā-stem feminine, and any unhandled case. */
+  size_t nlen = strlen(normalized);
+  char last = nlen > 0 ? normalized[nlen - 1] : '\0';
+  bool ends_in_an = nlen >= 2 && normalized[nlen - 2] == 'a' &&
+                    normalized[nlen - 1] == 'n';
+  bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
+                    normalized[nlen - 1] == 's';
+
+  if (li == ASH_PUMS && last == 'A') {
+    /* Story 4.12: monosyllabic root-noun paradigm (dvArapA, maDupA,
+       agniDmA, somapA, viSvapA — all "X-pA" / "X-DmA" compounds). */
+    ok = pa_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'a') {
+    /* Story 4.10: regular a-stem masculine paradigm (rAma). */
+    ok = a_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && (last == 'a' || last == 'A')) {
+    /* Story 4.10/4.11: full a-stem neuter paradigm. NAPUMSAKA stems
+       sometimes appear with long-A upadeśa (SrIpA); a_stem_neut_full
+       accepts both. */
+    ok = a_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && a_stem_masc_can_handle(normalized)) {
     ok = a_stem_masc_derive(normalized, vib, v, &ctx);
-  } else if (li == ASH_STRI && aa_stem_fem_can_handle(normalized)) {
-    ok = aa_stem_fem_derive(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'I') {
+    /* Story 4.8: long-ī feminine (nadI). */
+    ok = ii_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'U') {
+    /* Story 4.8: long-ū feminine (vaDU). */
+    ok = uu_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'i') {
+    /* Story 4.8: short-i feminine (mati). */
+    ok = i_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'u') {
+    /* Story 4.8: short-u feminine (Denu). */
+    ok = u_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'A') {
+    /* Story 4.9: long-ā feminine (ramA). */
+    ok = aa_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'z') {
+    /* Story 4.13: z-final feminine consonant stem (arciz). */
+    ok = z_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'I') {
+    /* Story 4.13: long-ī masculine (BallAtakI). */
+    ok = ii_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'i') {
+    ok = i_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && (last == 'i' || last == 'I')) {
+    ok = i_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && (last == 'u' || last == 'U')) {
+    ok = u_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && (last == 'u' || last == 'U')) {
+    ok = u_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && ends_in_an) {
+    ok = an_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && ends_in_as) {
+    ok = as_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'f') {
+    ok = r_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
+    /* Story 4.11: in-stem PUMS (guRin, tundin, ...). */
+    ok = in_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && nlen >= 2 &&
+             normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
+    /* Story 4.12: in-stem NAPUMSAKA (vAggmin neuter). */
+    ok = in_stem_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             normalized[nlen - 2] == 'a' && normalized[nlen - 1] == 't') {
+    /* Story 4.11: vat/mat/at-stem PUMS (SfRvat, BagavatI, ...). */
+    ok = vat_stem_masc_full(normalized, vib, v, &ctx);
   } else if (i_stem_can_handle(normalized)) {
     ok = i_stem_derive(normalized, li, vib, v, &ctx);
   } else if (u_stem_can_handle(normalized)) {
