@@ -47,4 +47,10 @@ bool u_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool aa_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.13: long-ī masculine (BallAtakI) and z-final feminine (arciz). */
+bool ii_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool z_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                     ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif

@@ -349,7 +349,13 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   } else if (li == ASH_STRI && last == 'A') {
     /* Story 4.9: long-ā feminine (ramA). */
     ok = aa_stem_fem_full(normalized, vib, v, &ctx);
-  } else if (li == ASH_PUMS && (last == 'i' || last == 'I')) {
+  } else if (li == ASH_STRI && last == 'z') {
+    /* Story 4.13: z-final feminine consonant stem (arciz). */
+    ok = z_stem_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'I') {
+    /* Story 4.13: long-ī masculine (BallAtakI). */
+    ok = ii_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'i') {
     ok = i_stem_masc_full(normalized, vib, v, &ctx);
   } else if (li == ASH_NAPUMSAKA && (last == 'i' || last == 'I')) {
     ok = i_stem_neut_full(normalized, vib, v, &ctx);
