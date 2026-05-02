@@ -104,6 +104,8 @@ static bool append_with_vowel_sandhi(char *stem, size_t stem_len, const char *vi
   if (!stem || !vik || stem_len == 0) return false;
   used = strlen(stem);
   if (used == 0) return false;
+  /* Empty vikaraṇa (athematic gaṇa-2/3/7): nothing to append. */
+  if (vik[0] == '\0') return true;
   if (strcmp(vik, "a") == 0) {
     char final = stem[used - 1];
     if (final == 'o' || final == 'O') {
@@ -274,6 +276,20 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
        augment makes the upadha guru (i-anubandha case). */
     replace_first_vowel(stem, false);
     *used_guna = true;
+  } else if (gana == 2 || gana == 3 || gana == 7) {
+    /* Athematic gaṇas: no vikaraṇa, the tiṅ ending attaches directly to
+       the root stem. Vowel-final roots take guṇa of the root vowel
+       per 7.3.84 sārvadhātukārdhadhātukayoḥ (since LAT endings are
+       sārvadhātuka and not kñit). For our coverage we only apply a
+       light guṇa for vowel-final. */
+    size_t sn = strlen(stem);
+    char final = sn > 0 ? stem[sn - 1] : 0;
+    bool final_short = (final == 'i' || final == 'u' || final == 'f' ||
+                        final == 'x');
+    if (gana == 2 && final_short) {
+      replace_first_vowel(stem, false);
+      *used_guna = true;
+    }
   } else if (gana == 4 && root_in_list(stem, GANA4_IDIRGHA)) {
     /* Selected divādi roots (div, siv, sriv, ṣṭhiv) lengthen internal i→I. */
     for (size_t i = 0; stem[i] != '\0'; i++) {
@@ -431,16 +447,29 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
-  /* 6.1.97 ato guṇe — when stem-final `a` meets an `a`-initial ending, the
-     two `a`s collapse to a single `a` (parā-rūpa). Drop the stem's final
-     `a` before concatenation. */
+  /* 6.1.97 / 6.1.101 vowel-junction sandhi at the stem→ending boundary:
+     - a + a → a (parā-rūpa, drop stem-final a)
+     - A + a → A (savarṇa-dīrgha, drop ending-initial a)
+     - i + i → ī, u + u → ū (analogous savarṇa-dīrgha forms)
+     The savarṇa-dīrgha cases matter for athematic gaṇa-2 vowel-final
+     roots like KyA + anti = KyAnti. */
   {
     size_t fl = strlen(form);
-    if (fl > 0 && form[fl - 1] == 'a' && t->clean[0] == 'a') {
+    char stem_final = fl > 0 ? form[fl - 1] : 0;
+    char ending_initial = t->clean[0];
+    if (stem_final == 'a' && ending_initial == 'a') {
       form[fl - 1] = '\0';
+      strcat(form, t->clean);
+    } else if (stem_final == 'A' && ending_initial == 'a') {
+      strcat(form, t->clean + 1);
+    } else if (stem_final == 'I' && ending_initial == 'i') {
+      strcat(form, t->clean + 1);
+    } else if (stem_final == 'U' && ending_initial == 'u') {
+      strcat(form, t->clean + 1);
+    } else {
+      strcat(form, t->clean);
     }
   }
-  strcat(form, t->clean);
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
 
   /* 8.2.66 sasajuṣo ruḥ + 8.3.15 kharavasānayor visarjanīyaḥ — final `s`
