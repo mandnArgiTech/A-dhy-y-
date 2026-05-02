@@ -26,7 +26,26 @@ static bool has_anubandha_marker(const char *s) {
         (s[0] == 'w' && s[1] == 'u') ||
         (s[0] == 'q' && s[1] == 'u')) return true;
   }
+  /* Trailing Y as final consonant indicates ñ-it (1.3.3). We don't
+     also include S because it commonly appears as the root-final of
+     real dhātus (e.g. dfS = dṛś); the substitution table for those
+     uses the SLP1 root-form including S. */
+  size_t n = strlen(s);
+  if (n >= 2) {
+    char last = s[n - 1];
+    if (last == 'Y') return true;
+  }
   return false;
+}
+
+/* Detect i-anubandha (the `i~` cluster at end) per 7.1.58 idito num
+   dhātoḥ — such dhātus take a nuM (n) augment before the final
+   consonant of the root in sārvadhātuka derivations. */
+static bool has_i_anubandha(const char *s) {
+  if (!s) return false;
+  size_t n = strlen(s);
+  if (n < 2) return false;
+  return s[n - 2] == 'i' && s[n - 1] == '~';
 }
 
 static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
@@ -52,8 +71,29 @@ static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
 static void replace_first_vowel(char *root, bool vrddhi) {
   if (!root) return;
   for (size_t i = 0; root[i] != '\0'; i++) {
-    if (root[i] == 'a' || root[i] == 'i' || root[i] == 'u' || root[i] == 'f' || root[i] == 'U') {
-      root[i] = vrddhi ? varna_vrddhi(root[i]) : varna_guna(root[i]);
+    char c = root[i];
+    /* Eligible `ik` vowels for guṇa/vṛddhi. We exclude 'A' (long ā)
+       because varna_guna(A)='a' would shorten the stem; the other
+       long vowels I/U/F return their correct guṇa results
+       (e/o/Ar+r) so they are safe to include. */
+    if (c == 'a' || c == 'i' || c == 'I' || c == 'u' || c == 'U' ||
+        c == 'f' || c == 'F' || c == 'x' || c == 'X') {
+      char rep = vrddhi ? varna_vrddhi(c) : varna_guna(c);
+      /* For ṛ → ar / ḹ → ār / ḷ → al / ḹ → āl, varna_guna/vrddhi
+         returns just the vowel part; the trailing r/l must be inserted
+         by the caller. */
+      if (c == 'f' || c == 'F' || c == 'x' || c == 'X') {
+        char tail = (c == 'x' || c == 'X') ? 'l' : 'r';
+        size_t n = strlen(root);
+        if (i + 1 < n) {
+          memmove(root + i + 2, root + i + 1, n - i - 1);
+        }
+        root[i] = rep;
+        root[i + 1] = tail;
+        root[n + 1] = '\0';
+      } else {
+        root[i] = rep;
+      }
       return;
     }
   }
@@ -149,6 +189,7 @@ static bool root_in_list(const char *stem, const char *const list[]) {
 
 static bool apply_class_transform(const char *clean_root_in, int gana,
                                   ASH_Pada pd,
+                                  bool i_anubandha,
                                   char *stem, size_t stem_len,
                                   char *after_class, size_t after_class_len,
                                   uint32_t *vik_sutra,
@@ -175,9 +216,23 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     default: *vik_sutra = 301068; break;
   }
 
+  /* 7.1.58 idito num dhātoḥ — i-anubandha dhātus take a nuM augment
+     inserted before the final consonant of the root in sārvadhātuka
+     contexts. The nuM insertion blocks the regular guṇa path because
+     the upadha syllable becomes guru. */
+  if (i_anubandha) {
+    size_t sn = strlen(stem);
+    if (sn >= 2 && sn + 1 < stem_len) {
+      memmove(stem + sn, stem + sn - 1, 2);
+      stem[sn - 1] = 'n';
+      sn = strlen(stem);
+      *class_sutra = 701058;
+    }
+  }
+
   /* 7.3.78 root substitution (pā → piba, sthā → tiṣṭha, dṛś → paśya, …)
      fires *before* every other gaṇa-1 transformation. */
-  const char *sub = (gana == 1) ? root_substitute_lookup(stem) : NULL;
+  const char *sub = (gana == 1 && !i_anubandha) ? root_substitute_lookup(stem) : NULL;
   if (sub) {
     strncpy(stem, sub, stem_len - 1);
     stem[stem_len - 1] = '\0';
@@ -195,9 +250,10 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
       if (stem[i] == 'a') { stem[i] = 'A'; break; }
     }
     *class_sutra = 703076;
-  } else if (gana == 1) {
+  } else if (gana == 1 && !i_anubandha) {
     /* Default gaṇa-1 path: 7.3.84 sārvadhātukārdhadhātukayoḥ applies guṇa
-       to the stem's final ik-vowel before Sap. */
+       to the stem's final ik-vowel before Sap. Guṇa is blocked when nuM
+       augment makes the upadha guru (i-anubandha case). */
     replace_first_vowel(stem, false);
     *used_guna = true;
   } else if (gana == 4 && root_in_list(stem, GANA4_IDIRGHA)) {
@@ -267,13 +323,42 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   t = ting_get(ASH_LAT, p, v, pd);
   if (!t) return false;
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
+  bool i_anubandha = has_i_anubandha(dhatu_slp1);
   clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
   if (clean_root[0] == '\0') return false;
-  if (!apply_class_transform(clean_root, gana, pd, stem, sizeof(stem),
+  if (!apply_class_transform(clean_root, gana, pd, i_anubandha,
+                             stem, sizeof(stem),
                              after_class, sizeof(after_class),
                              &vik_sutra, &class_sutra,
                              &used_guna, &used_ec_ay)) {
     return false;
+  }
+  /* 8.4.1 + 8.4.2 ṇatva post-process: in the present-tense stem, any
+     `n` (including the nuM augment) immediately following an r/f
+     trigger via allowed-only intervening characters becomes ṇ. The
+     dispatch tables in subanta apply this internally; for tinanta we
+     run a single pass over the joined stem here. */
+  {
+    bool seen = false;
+    for (size_t i = 0; stem[i]; i++) {
+      char c = stem[i];
+      if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+        seen = true;
+      } else if (c == 't' || c == 'T' || c == 'd' || c == 'D' ||
+                 c == 'c' || c == 'C' || c == 'j' || c == 'J' || c == 'Y' ||
+                 c == 'S' || c == 's' || c == 'l') {
+        seen = false;
+      } else if (seen && c == 'n') {
+        char next = stem[i + 1];
+        if (next == 'q' || next == 'Q' || next == 'w' || next == 'W' ||
+            (next >= 'A' && next <= 'z' && (next == 'a' || next == 'A' ||
+             next == 'i' || next == 'I' || next == 'u' || next == 'U' ||
+             next == 'e' || next == 'o' || next == 'E' || next == 'O'))) {
+          stem[i] = 'R';
+          seen = false;
+        }
+      }
+    }
   }
   /* Order of logged steps:
      1. guṇa or class-specific rule (clean_root → after_class) if it fired

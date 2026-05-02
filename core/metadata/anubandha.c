@@ -76,7 +76,22 @@ void anubandha_strip(const char *upadesa_slp1, Samjna context,
   int last = n - 1;
   while (last > 0 && work[last] == '~') last--;
 
-  if (last >= 0 && is_candidate_final_it(work[last])) {
+  /* For DHATU upadeśa: if 1.3.2 already stripped a vowel-anunāsika
+     cluster at the end (e.g. `i~` in `ruqi~` or `a~` in `gamx~`), the
+     consonant before that cluster is NOT subjected to 1.3.3 final-it.
+     The cluster acts as a closed marker; the consonant is part of the
+     actual root. */
+  bool ends_in_anunasika_cluster = false;
+  if (samjna_has(context, SJ_DHATU) && n >= 2) {
+    int j = n - 1;
+    while (j > 0 && work[j] == '~') j--;
+    if (j > 0 && is_it[j] && varna_is_vowel(work[j])) {
+      ends_in_anunasika_cluster = true;
+    }
+  }
+
+  if (!ends_in_anunasika_cluster && last >= 0 &&
+      is_candidate_final_it(work[last])) {
     /* Exception 1.3.4: in vibhakti/sup suffix contexts, certain finals are NOT it */
     bool exception = false;
     if (samjna_has(context, SJ_VIBHAKTI) || samjna_has(context, SJ_SUP)) {

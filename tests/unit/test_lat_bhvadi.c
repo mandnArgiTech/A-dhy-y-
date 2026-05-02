@@ -138,6 +138,24 @@ void test_lat_bhu_atmane_no_regression(void) {
   TEST_ASSERT_EQUAL_STRING("Bavate", out);
 }
 
+/* Story 3.8: i-anubandha dhātus (7.1.58 idito num dhātoḥ). */
+void test_lat_ruqi_num_augment(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("ruqi~", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("ruRqati", out);
+}
+
+/* Story 3.8: ñ-it dhātu hfY → harati (Y stripped, ṛ→ar guṇa). */
+void test_lat_hfY_jit(void) {
+  char out[64] = {0};
+  bool ok = lat_bhvadi_derive("hfY", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                              ASH_PARASMAI, out, sizeof(out));
+  TEST_ASSERT_TRUE(ok);
+  TEST_ASSERT_EQUAL_STRING("harati", out);
+}
+
 /* Story 3.7: 7.3.78 root substitutions in gaṇa-1. */
 void test_lat_pa_substitution(void) {
   char out[64] = {0};
@@ -277,6 +295,8 @@ int main(void) {
   RUN_TEST(test_lat_pat_default);
   RUN_TEST(test_lat_sev_default);
   RUN_TEST(test_lat_nft_gana4_no_idirgha);
+  RUN_TEST(test_lat_ruqi_num_augment);
+  RUN_TEST(test_lat_hfY_jit);
   RUN_TEST(test_lat_pa_substitution);
   RUN_TEST(test_lat_stha_substitution);
   RUN_TEST(test_lat_drsh_substitution);
