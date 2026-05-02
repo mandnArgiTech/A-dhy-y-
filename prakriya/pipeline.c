@@ -334,8 +334,9 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   } else if (li == ASH_STRI && last == 'u') {
     /* Story 4.8: short-u feminine (Denu). */
     ok = u_stem_fem_full(normalized, vib, v, &ctx);
-  } else if (li == ASH_STRI && aa_stem_fem_can_handle(normalized)) {
-    ok = aa_stem_fem_derive(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'A') {
+    /* Story 4.9: long-ā feminine (ramA). */
+    ok = aa_stem_fem_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && (last == 'i' || last == 'I')) {
     ok = i_stem_masc_full(normalized, vib, v, &ctx);
   } else if (li == ASH_NAPUMSAKA && (last == 'i' || last == 'I')) {

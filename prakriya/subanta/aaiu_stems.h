@@ -44,5 +44,7 @@ bool i_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
 bool u_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool aa_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
 #endif

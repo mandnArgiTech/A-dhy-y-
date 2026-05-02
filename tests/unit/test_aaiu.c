@@ -149,6 +149,29 @@ void test_mati_fem_paradigm(void) {
   check_form(i_stem_fem_full, "mati", ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "matizu");
 }
 
+/* Story 4.9: ā-stem feminine. */
+void test_rama_aa_stem_full_paradigm(void) {
+  check_form(aa_stem_fem_full, "ramA", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "ramA");
+  check_form(aa_stem_fem_full, "ramA", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "rame");
+  check_form(aa_stem_fem_full, "ramA", ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "ramAH");
+  check_form(aa_stem_fem_full, "ramA", ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "ramAm");
+  check_form(aa_stem_fem_full, "ramA", ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "ramayA");
+  check_form(aa_stem_fem_full, "ramA", ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "ramAByAm");
+  check_form(aa_stem_fem_full, "ramA", ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "ramAyE");
+  check_form(aa_stem_fem_full, "ramA", ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "ramAyAH");
+  check_form(aa_stem_fem_full, "ramA", ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "ramayoH");
+  check_form(aa_stem_fem_full, "ramA", ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "ramARAm");
+  check_form(aa_stem_fem_full, "ramA", ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "ramAyAm");
+  check_form(aa_stem_fem_full, "ramA", ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "ramAsu");
+  check_form(aa_stem_fem_full, "ramA", ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "rame");
+}
+
+void test_lata_aa_stem_no_natva(void) {
+  /* latA contains no r/f/z/F/R, so 8.4.1 ṇatva does NOT fire. */
+  check_form(aa_stem_fem_full, "latA", ASH_SHASTHI_VIB, ASH_BAHUVACANA, "latAnAm");
+  check_form(aa_stem_fem_full, "latA", ASH_TRITIYA_VIB, ASH_EKAVACANA,  "latayA");
+}
+
 void test_dhenu_fem_paradigm(void) {
   check_form(u_stem_fem_full, "Denu", ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "DenuH");
   check_form(u_stem_fem_full, "Denu", ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "DenU");
@@ -173,5 +196,7 @@ int main(void) {
   RUN_TEST(test_vadhu_full_paradigm);
   RUN_TEST(test_mati_fem_paradigm);
   RUN_TEST(test_dhenu_fem_paradigm);
+  RUN_TEST(test_rama_aa_stem_full_paradigm);
+  RUN_TEST(test_lata_aa_stem_no_natva);
   return UNITY_END();
 }

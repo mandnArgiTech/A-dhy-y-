@@ -129,6 +129,36 @@ static const FemSlot U_FEM[24] = {
   {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "avaH", 601078},
 };
 
+/* ramA paradigm (long-ā feminine, ṭāp class). Drop stem-final A, append
+   slot ending. Note: tṛtīyā-eka uses "ayA" (ramayA), and dvivacana
+   prathama/dvitīyā/sambodhana = "e" (ā → e via vowel-replacement). */
+static const FemSlot AA_FEM[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "A",    603024},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "e",    701018},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "AH",   401002},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "Am",   401002},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "e",    701018},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "AH",   401002},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "ayA",  703105},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "AByAm",401002},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "ABiH", 401002},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "AyE",  703111},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "AByAm",401002},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "AByaH",401002},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "AyAH", 703111},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "AByAm",401002},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "AByaH",401002},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "AyAH", 703111},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "ayoH", 703105},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "AnAm", 604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "AyAm", 703116},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "ayoH", 703105},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "Asu",  401002},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "e",    701018},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  "e",    701018},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "AH",   401002},
+};
+
 static bool stem_triggers_natva(const char *stem) {
   if (!stem) return false;
   for (size_t i = 0; stem[i]; i++) {
@@ -209,4 +239,12 @@ bool u_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   size_t n = strlen(stem_slp1);
   if (n == 0 || stem_slp1[n - 1] != 'u') return false;
   return fem_derive(stem_slp1, U_FEM, vib, vac, ctx_out);
+}
+
+bool aa_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
+                      PrakriyaCtx *ctx_out) {
+  if (!stem_slp1) return false;
+  size_t n = strlen(stem_slp1);
+  if (n == 0 || stem_slp1[n - 1] != 'A') return false;
+  return fem_derive(stem_slp1, AA_FEM, vib, vac, ctx_out);
 }
