@@ -72,20 +72,32 @@ static const ASlot A_NEUT[24] = {
   {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "Ani",   701073},
 };
 
-static bool stem_triggers_natva(const char *stem) {
-  if (!stem) return false;
-  for (size_t i = 0; stem[i]; i++) {
-    char c = stem[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') return true;
+/* 8.4.1 + 8.4.2 ṇatva: `n` → ṇ after r/f/z/F/R when only allowed
+   chars (vowels, k/p-class, y, v, h, anusvāra) intervene. */
+static bool natva_is_blocker(char c) {
+  switch (c) {
+    case 't': case 'T': case 'd': case 'D':
+    case 'c': case 'C': case 'j': case 'J': case 'Y':
+    case 'w': case 'W': case 'q': case 'Q':
+    case 'S': case 's':
+    case 'l':
+      return true;
   }
   return false;
 }
 
 static void apply_natva(const char *stem, char *form) {
-  if (!stem_triggers_natva(stem)) return;
+  (void)stem;
+  bool seen = false;
   for (size_t i = 0; form[i]; i++) {
-    if (form[i] == 'n' && form[i + 1] && varna_is_vowel(form[i + 1])) {
+    char c = form[i];
+    if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+      seen = true;
+    } else if (natva_is_blocker(c)) {
+      seen = false;
+    } else if (seen && c == 'n' && form[i + 1] && varna_is_vowel(form[i + 1])) {
       form[i] = 'R';
+      seen = false;
     }
   }
 }

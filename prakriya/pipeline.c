@@ -320,10 +320,12 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_PUMS && (last == 'a' || last == 'A')) {
-    /* Story 4.10/4.11: full a-stem masculine paradigm. PUMS stems
-       sometimes appear with long-A upadeśa (dvArapA, viSvapA);
-       a_stem_masc_full accepts both finals. */
+  if (li == ASH_PUMS && last == 'A') {
+    /* Story 4.12: monosyllabic root-noun paradigm (dvArapA, maDupA,
+       agniDmA, somapA, viSvapA — all "X-pA" / "X-DmA" compounds). */
+    ok = pa_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'a') {
+    /* Story 4.10: regular a-stem masculine paradigm (rAma). */
     ok = a_stem_masc_full(normalized, vib, v, &ctx);
   } else if (li == ASH_NAPUMSAKA && (last == 'a' || last == 'A')) {
     /* Story 4.10/4.11: full a-stem neuter paradigm. NAPUMSAKA stems
@@ -365,6 +367,10 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
              normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
     /* Story 4.11: in-stem PUMS (guRin, tundin, ...). */
     ok = in_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && nlen >= 2 &&
+             normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
+    /* Story 4.12: in-stem NAPUMSAKA (vAggmin neuter). */
+    ok = in_stem_neut_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && nlen >= 2 &&
              normalized[nlen - 2] == 'a' && normalized[nlen - 1] == 't') {
     /* Story 4.11: vat/mat/at-stem PUMS (SfRvat, BagavatI, ...). */

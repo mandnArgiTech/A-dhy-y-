@@ -562,3 +562,139 @@ bool vat_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
                           "vat-stem paradigm slot");
   return true;
 }
+
+/* ── pā-stem masculine (dvArapA-style monosyllabic root noun) ─────── */
+
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  const char  *suffix;     /* what to append after dropping stem-final A */
+  uint32_t     sutra_id;
+} PaSlot;
+
+static const PaSlot PA_MASC_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "AH",    802066},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "O",     701018},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "AH",    802066},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "Am",    401002},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "O",     701018},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "aH",    701012},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "A",     701012},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "AByAm", 401002},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "ABiH",  401002},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "e",     701013},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "AByAm", 401002},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "AByaH", 401002},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "aH",    701012},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "AByAm", 401002},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "AByaH", 401002},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "aH",    701012},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "oH",    701012},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "Am",    604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "i",     701013},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "oH",    701012},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "Asu",   401002},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "AH",    802066},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  "O",     701018},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "AH",    802066},
+};
+
+static const PaSlot *pa_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (PA_MASC_SLOTS[i].vib == vib && PA_MASC_SLOTS[i].vac == vac) {
+      return &PA_MASC_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+bool pa_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
+                       PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  size_t n = strlen(stem_slp1);
+  if (n < 2 || stem_slp1[n - 1] != 'A') return false;
+  const PaSlot *slot = pa_slot_lookup(vib, vac);
+  if (!slot) return false;
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+  ctx_out->term_count = 1;
+  char base[TERM_VALUE_LEN] = {0};
+  size_t base_len = n - 1;
+  memcpy(base, stem_slp1, base_len);
+  base[base_len] = '\0';
+  char form[TERM_VALUE_LEN] = {0};
+  snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "pā-stem paradigm slot");
+  return true;
+}
+
+/* ── in-stem neuter (vAggmin-style) ────────────────────────────────── */
+
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  /* Result is X (= stem minus final "in") + suffix. */
+  const char  *suffix;
+  uint32_t     sutra_id;
+} InNSlot;
+
+static const InNSlot IN_NEUT_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "i",    802007},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "inI",  701073},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "Ini",  604003},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "i",    802007},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "inI",  701073},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "Ini",  604003},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "inA",  701012},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "iByAm",802007},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "iBiH", 802007},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "ine",  701012},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "iByAm",802007},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "iByaH",802007},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "inaH", 701012},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "iByAm",802007},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "iByaH",802007},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "inaH", 701012},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "inoH", 701012},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "inAm", 604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "ini",  701012},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "inoH", 701012},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "izu",  803059},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "i",    401002},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  "inI",  701073},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "Ini",  604003},
+};
+
+static const InNSlot *in_neut_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (IN_NEUT_SLOTS[i].vib == vib && IN_NEUT_SLOTS[i].vac == vac) {
+      return &IN_NEUT_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+bool in_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
+                       PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  size_t n = strlen(stem_slp1);
+  if (n < 2 || stem_slp1[n - 2] != 'i' || stem_slp1[n - 1] != 'n') return false;
+  const InNSlot *slot = in_neut_slot_lookup(vib, vac);
+  if (!slot) return false;
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_NAPUMSAKA, vib, vac);
+  ctx_out->term_count = 1;
+  /* Base = stem minus final "in". */
+  char base[TERM_VALUE_LEN] = {0};
+  size_t x_len = n - 2;
+  memcpy(base, stem_slp1, x_len);
+  base[x_len] = '\0';
+  char form[TERM_VALUE_LEN] = {0};
+  snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "in-stem neuter paradigm slot");
+  return true;
+}

@@ -54,4 +54,11 @@ bool in_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool vat_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
                         ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Story 4.12: pā-stem masculine root nouns (dvArapA) and in-stem
+   neuter (vAggmin). */
+bool pa_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool in_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif
