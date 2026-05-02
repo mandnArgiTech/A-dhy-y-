@@ -436,7 +436,17 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   if (n > 0 && (stem[n - 1] == 'o' || stem[n - 1] == 'O' || stem[n - 1] == 'e' || stem[n - 1] == 'E')) {
     *used_ec_ay = true;
   }
-  return append_with_vowel_sandhi(stem, stem_len, vik);
+  if (!append_with_vowel_sandhi(stem, stem_len, vik)) return false;
+  /* gaṇa-5 (svādi nu) and gaṇa-8 (tanādi u) strong-form guṇa: the
+     vikaraṇa-final u becomes o per 7.3.84 sārvadhātukārdhadhātukayoḥ
+     when the suffix is pit (ekavacana). For weak forms the u stays. */
+  if ((gana == 5 || gana == 8) && is_strong) {
+    size_t sl = strlen(stem);
+    if (sl > 0 && stem[sl - 1] == 'u') {
+      stem[sl - 1] = 'o';
+    }
+  }
+  return true;
 }
 
 static void set_single_term(PrakriyaCtx *ctx, const char *value) {
@@ -558,7 +568,7 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
      root vowel. ru + anti → ruvanti, vI + anti → viyanti (with I→i),
      yu + anti → yuvanti. This corresponds to the 6.4.77 acijñiti
      iyaṅ/uvaṅ + the underlying root vowel surfacing as a short. */
-  if (gana == 2 || gana == 3 || gana == 7) {
+  if (gana == 2 || gana == 3 || gana == 5 || gana == 7 || gana == 8) {
     size_t fl = strlen(form);
     char stem_final = fl > 0 ? form[fl - 1] : 0;
     char ending_initial = t->clean[0];
