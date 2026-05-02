@@ -220,6 +220,7 @@ static bool root_in_list(const char *stem, const char *const list[]) {
 static bool apply_class_transform(const char *clean_root_in, int gana,
                                   ASH_Pada pd,
                                   bool i_anubandha,
+                                  bool is_strong,
                                   char *stem, size_t stem_len,
                                   char *after_class, size_t after_class_len,
                                   uint32_t *vik_sutra,
@@ -323,23 +324,24 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     }
   } else if (gana == 2 || gana == 3 || gana == 7) {
     /* Athematic gaṇas: no vikaraṇa, the tiṅ ending attaches directly to
-       the root stem. Vowel-final roots:
-       - short vowel finals (u, i) take vṛddhi per traditional present-
-         stem treatment of monosyllabic athematic roots (yu→yO, nu→nO,
-         ru→rO);
-       - long vowel finals (I, U) take guṇa giving e/o (vI→ve→vezi). */
-    size_t sn = strlen(stem);
-    char final = sn > 0 ? stem[sn - 1] : 0;
-    bool short_vowel = (final == 'i' || final == 'u' || final == 'f' ||
-                        final == 'x');
-    bool long_vowel  = (final == 'I' || final == 'U' || final == 'F' ||
-                        final == 'X');
-    if (gana == 2 && short_vowel) {
-      replace_first_vowel(stem, true);
-      *used_guna = true;
-    } else if (gana == 2 && long_vowel) {
-      replace_first_vowel(stem, false);
-      *used_guna = true;
+       the root stem. By 1.2.4 sārvadhātukam apit and 1.1.5 kñiti ca,
+       only the pit endings (tip, sip, mip — i.e. ekavacana endings)
+       trigger guṇa/vṛddhi. The non-pit endings (tas, anti, Tas, Ta,
+       vas, mas) are kit and block guṇa, so root stays bare. */
+    if (is_strong) {
+      size_t sn = strlen(stem);
+      char final = sn > 0 ? stem[sn - 1] : 0;
+      bool short_vowel = (final == 'i' || final == 'u' || final == 'f' ||
+                          final == 'x');
+      bool long_vowel  = (final == 'I' || final == 'U' || final == 'F' ||
+                          final == 'X');
+      if (gana == 2 && short_vowel) {
+        replace_first_vowel(stem, true);
+        *used_guna = true;
+      } else if (gana == 2 && long_vowel) {
+        replace_first_vowel(stem, false);
+        *used_guna = true;
+      }
     }
   } else if (gana == 4 && root_in_list(stem, GANA4_IDIRGHA)) {
     /* Selected divādi roots (div, siv, sriv, ṣṭhiv) lengthen internal i→I. */
@@ -367,7 +369,23 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
       *class_sutra = 701100;
     }
   } else if (gana == 6) {
-    /* Gaṇa-6 (tudādi) takes śa (a), also ṅit — no guṇa. */
+    /* Gaṇa-6 (tudādi) takes śa (a), which is ṅit/kit — no guṇa.
+       6.1.16 vacisvapiyajāṃ kiti applies saṃprasāraṇa (ra/ya/va → ṛ/i/u)
+       to specific roots before kit suffix. The śa vikaraṇa is kit, so:
+       vrasc → vfSc (ra → ṛ; s + c → S + c via 8.4.40 stoḥ ścunā ścuḥ). */
+    if (strcmp(stem, "vrasc") == 0) {
+      strncpy(stem, "vfSc", stem_len - 1);
+      stem[stem_len - 1] = '\0';
+      *class_sutra = 601016;
+    } else if (strcmp(stem, "praC") == 0) {
+      strncpy(stem, "pfC", stem_len - 1);
+      stem[stem_len - 1] = '\0';
+      *class_sutra = 601016;
+    } else if (strcmp(stem, "Brasj") == 0) {
+      strncpy(stem, "Bfjj", stem_len - 1);
+      stem[stem_len - 1] = '\0';
+      *class_sutra = 601016;
+    }
   } else if (gana == 10) {
     /* Gaṇa-10 (curādi) takes ṇic (aya). With i-anubandha + nuM augment
        the upadha is guru so guṇa does not fire. */
@@ -452,9 +470,14 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   if (!t) return false;
   prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
   bool i_anubandha = has_i_anubandha(dhatu_slp1);
+  /* Strong/weak distinction: pit-anubandha endings (tip, sip, mip —
+     all three EKAVACANA endings) cause sārvadhātuka guṇa per 7.3.84.
+     Non-pit endings (tas, anti, Tas, Ta, vas, mas) are treated as kit
+     by 1.2.4 sārvadhātukam apit, blocking guṇa per 1.1.5. */
+  bool is_strong = (v == ASH_EKAVACANA);
   clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
   if (clean_root[0] == '\0') return false;
-  if (!apply_class_transform(clean_root, gana, pd, i_anubandha,
+  if (!apply_class_transform(clean_root, gana, pd, i_anubandha, is_strong,
                              stem, sizeof(stem),
                              after_class, sizeof(after_class),
                              &vik_sutra, &class_sutra,
@@ -530,6 +553,38 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
+  /* Athematic vowel-final + vowel-initial ending: insert a glide
+     (v after u/U, y after i/I, r after ṛ/ṝ) so the surface keeps the
+     root vowel. ru + anti → ruvanti, vI + anti → viyanti (with I→i),
+     yu + anti → yuvanti. This corresponds to the 6.4.77 acijñiti
+     iyaṅ/uvaṅ + the underlying root vowel surfacing as a short. */
+  if (gana == 2 || gana == 3 || gana == 7) {
+    size_t fl = strlen(form);
+    char stem_final = fl > 0 ? form[fl - 1] : 0;
+    char ending_initial = t->clean[0];
+    bool ending_vowel = (ending_initial == 'a' || ending_initial == 'A' ||
+                         ending_initial == 'i' || ending_initial == 'I' ||
+                         ending_initial == 'u' || ending_initial == 'U');
+    if (ending_vowel) {
+      char glide = 0;
+      char shortened = stem_final;
+      if (stem_final == 'u' || stem_final == 'U') {
+        glide = 'v';
+        shortened = 'u';
+      } else if (stem_final == 'i' || stem_final == 'I') {
+        glide = 'y';
+        shortened = 'i';
+      } else if (stem_final == 'f' || stem_final == 'F') {
+        glide = 'r';
+        shortened = 'f';
+      }
+      if (glide) {
+        form[fl - 1] = shortened;
+        form[fl] = glide;
+        form[fl + 1] = '\0';
+      }
+    }
+  }
   /* 6.1.97 / 6.1.101 vowel-junction sandhi at the stem→ending boundary:
      - a + a → a (parā-rūpa, drop stem-final a)
      - A + a → A (savarṇa-dīrgha, drop ending-initial a)
