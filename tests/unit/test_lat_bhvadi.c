@@ -166,6 +166,8 @@ void test_lat_pa_substitution(void) {
 }
 
 void test_lat_stha_substitution(void) {
+  /* The dhātupāṭha entry ष्ठा (zWA) is normalised to sWA via 6.1.64
+     dhātv-ādeḥ ṣaḥ saḥ; the substitution table then maps sWA → tizWa. */
   char out[64] = {0};
   bool ok = lat_bhvadi_derive("zWA", 1, ASH_PRATHAMA, ASH_EKAVACANA,
                               ASH_PARASMAI, out, sizeof(out));
@@ -182,6 +184,7 @@ void test_lat_drsh_substitution(void) {
 }
 
 void test_lat_sad_substitution(void) {
+  /* zad → sad via 6.1.64; substitution then maps sad → sId. */
   char out[64] = {0};
   bool ok = lat_bhvadi_derive("zad", 1, ASH_PRATHAMA, ASH_EKAVACANA,
                               ASH_PARASMAI, out, sizeof(out));

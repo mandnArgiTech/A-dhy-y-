@@ -63,6 +63,12 @@ static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
     dst[pos++] = source[i];
   }
   dst[pos] = '\0';
+  /* 6.1.64 dhātv-ādeḥ ṣaḥ saḥ — initial ṣ (z) of a dhātu is realised
+     as dental s in the derivation. */
+  if (dst[0] == 'z') {
+    dst[0] = 's';
+  }
+  /* 6.1.65 ṇo naḥ — initial ṇ (R) of a dhātu is realised as dental n. */
   if (dst[0] == 'R') {
     dst[0] = 'n';
   }
@@ -146,7 +152,11 @@ static const char *const KRAM_VRDDHI[] = {"kram", NULL};
 
 /* Selected gaṇa-4 roots whose stem-internal `i` is lengthened to `I` before
    the śyan vikaraṇa. This is a small dhātupāṭha-aligned subset. */
-static const char *const GANA4_IDIRGHA[] = {"div", "siv", "sriv", "zWiv", NULL};
+static const char *const GANA4_IDIRGHA[] = {"div", "siv", "sriv", "stiv", "zWiv", NULL};
+
+/* 7.3.75 (śiti) — selected gaṇa-4 roots whose root-vowel `a` lengthens
+   to `A` before the śyan vikaraṇa. */
+static const char *const GANA4_ADIRGHA[] = {"dam", "kram", "klam", "cam", "Bram", NULL};
 
 /* 7.3.78 pā-ghrā-… — explicit root substitutions before Sap. The list is
    closed and small; long-term this should come from a TSV alongside the
@@ -156,12 +166,14 @@ static const SubRule ROOT_SUBSTITUTIONS[] = {
   {"pA",   "piba"},
   {"GrA",  "jiGra"},
   {"DmA",  "Dama"},
-  {"zWA",  "tizWa"},
+  /* zWA and zad are normalised to sWA and sad by 6.1.64 dhātv-ādeḥ ṣaḥ
+     saḥ before the substitution table is consulted. */
+  {"sWA",  "tizWa"},
   {"mnA",  "mana"},
   {"dA",   "yacCa"},
   {"dfS",  "paSya"},
   {"fc",   "fcCa"},
-  {"zad",  "sId"},
+  {"sad",  "sId"},
   {NULL, NULL}
 };
 
@@ -271,22 +283,45 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     }
     *class_sutra = 703076;
   } else if (gana == 1 && !i_anubandha) {
-    /* Default gaṇa-1 path: 7.3.84 sārvadhātukārdhadhātukayoḥ applies guṇa
-       to the stem's final ik-vowel before Sap. Guṇa is blocked when nuM
-       augment makes the upadha guru (i-anubandha case). */
-    replace_first_vowel(stem, false);
-    *used_guna = true;
-  } else if (gana == 2 || gana == 3 || gana == 7) {
-    /* Athematic gaṇas: no vikaraṇa, the tiṅ ending attaches directly to
-       the root stem. Vowel-final roots take guṇa of the root vowel
-       per 7.3.84 sārvadhātukārdhadhātukayoḥ (since LAT endings are
-       sārvadhātuka and not kñit). For our coverage we only apply a
-       light guṇa for vowel-final. */
+    /* gaṇa-1 default: guṇa applies in two distinct configurations:
+         (a) 7.3.84 sārvadhātukārdhadhātukayoḥ — vowel-final aṅga's
+             final ik-vowel is guṇa'd (BU → Bo, kf → kar).
+         (b) 7.3.86 pugantalaghūpadhasya — consonant-final aṅga whose
+             upadha vowel is laghu (short and not part of a heavy
+             cluster) is guṇa'd (gam upadha a, sev upadha e — but e is
+             not ik so no change).
+       For consonant-final stems with guru upadha (e.g. nIv, UW), guṇa
+       does NOT apply. */
     size_t sn = strlen(stem);
     char final = sn > 0 ? stem[sn - 1] : 0;
-    bool final_short = (final == 'i' || final == 'u' || final == 'f' ||
+    bool final_vowel = (final == 'a' || final == 'i' || final == 'I' ||
+                        final == 'u' || final == 'U' || final == 'f' ||
+                        final == 'F' || final == 'x' || final == 'X' ||
+                        final == 'e' || final == 'o');
+    char upadha = sn >= 2 ? stem[sn - 2] : 0;
+    bool upadha_laghu = (upadha == 'a' || upadha == 'i' || upadha == 'u' ||
+                         upadha == 'f' || upadha == 'x');
+    if (final_vowel || upadha_laghu) {
+      replace_first_vowel(stem, false);
+      *used_guna = true;
+    }
+  } else if (gana == 2 || gana == 3 || gana == 7) {
+    /* Athematic gaṇas: no vikaraṇa, the tiṅ ending attaches directly to
+       the root stem. Vowel-final roots:
+       - short vowel finals (u, i) take vṛddhi per traditional present-
+         stem treatment of monosyllabic athematic roots (yu→yO, nu→nO,
+         ru→rO);
+       - long vowel finals (I, U) take guṇa giving e/o (vI→ve→vezi). */
+    size_t sn = strlen(stem);
+    char final = sn > 0 ? stem[sn - 1] : 0;
+    bool short_vowel = (final == 'i' || final == 'u' || final == 'f' ||
                         final == 'x');
-    if (gana == 2 && final_short) {
+    bool long_vowel  = (final == 'I' || final == 'U' || final == 'F' ||
+                        final == 'X');
+    if (gana == 2 && short_vowel) {
+      replace_first_vowel(stem, true);
+      *used_guna = true;
+    } else if (gana == 2 && long_vowel) {
       replace_first_vowel(stem, false);
       *used_guna = true;
     }
@@ -294,6 +329,13 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     /* Selected divādi roots (div, siv, sriv, ṣṭhiv) lengthen internal i→I. */
     for (size_t i = 0; stem[i] != '\0'; i++) {
       if (stem[i] == 'i') { stem[i] = 'I'; break; }
+    }
+    *class_sutra = 703075;
+  } else if (gana == 4 && root_in_list(stem, GANA4_ADIRGHA)) {
+    /* 7.3.75 ṣṭhivu-klamu-cama-...-āṃ śiti — selected gaṇa-4 roots
+       lengthen root-vowel a → A before the śyan vikaraṇa. */
+    for (size_t i = 0; stem[i] != '\0'; i++) {
+      if (stem[i] == 'a') { stem[i] = 'A'; break; }
     }
     *class_sutra = 703075;
   } else if (gana == 4) {
@@ -468,6 +510,24 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
       strcat(form, t->clean + 1);
     } else {
       strcat(form, t->clean);
+    }
+  }
+  /* 8.3.59 ādeśapratyayoḥ — `s` of pratyaya becomes ṣ (z) when preceded
+     by an iṇ letter (i, ī, u, ū, ṛ, ṝ, ḷ, e, o, ai, au, k). a/ā do not
+     trigger this rule. We only flip suffix-region s, identified by
+     being past the stem boundary (which equals the stem length we
+     held before concatenation). */
+  {
+    size_t stem_len_at_join = strlen(stem);
+    for (size_t i = stem_len_at_join; form[i]; i++) {
+      if (form[i] != 's') continue;
+      if (i == 0) continue;
+      char prev = form[i - 1];
+      bool in_iN = (prev == 'i' || prev == 'I' || prev == 'u' || prev == 'U' ||
+                    prev == 'f' || prev == 'F' || prev == 'x' || prev == 'X' ||
+                    prev == 'e' || prev == 'o' || prev == 'E' || prev == 'O' ||
+                    prev == 'k');
+      if (in_iN) form[i] = 'z';
     }
   }
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
