@@ -32,6 +32,16 @@ def nfc(text: str) -> str:
     return unicodedata.normalize("NFC", text or "")
 
 
+def alt_forms(text: str) -> list:
+    """Split oracle multi-form entries (joined by ',' or '-') into a list."""
+    s = nfc(text)
+    if "," in s:
+        return [p.strip() for p in s.split(",") if p.strip()]
+    if "-" in s:
+        return [p.strip() for p in s.split("-") if p.strip()]
+    return [s]
+
+
 def load_dhatu_map() -> Dict[Tuple[str, str], str]:
     mapping: Dict[Tuple[str, str], str] = {}
     with open(DATA_DHATUPATHA, encoding="utf-8") as f:
@@ -137,7 +147,7 @@ def run_comparison(filter_root: Optional[str], sample_size: int, require_rate: O
             continue
         ours_slp1, ours_deva = call_our_library(row["root"], row["gana"], purusha, vacana, pada)
         is_error = ours_slp1.startswith("ERROR:")
-        is_match = int((not is_error) and nfc(ours_deva) == row["oracle_deva"])
+        is_match = int((not is_error) and nfc(ours_deva) in alt_forms(row["oracle_deva"]))
         total += 1
         matched += is_match
         errors += int(is_error)

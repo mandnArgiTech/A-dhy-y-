@@ -219,12 +219,30 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   /* 7.1.58 idito num dhātoḥ — i-anubandha dhātus take a nuM augment
      inserted before the final consonant of the root in sārvadhātuka
      contexts. The nuM insertion blocks the regular guṇa path because
-     the upadha syllable becomes guru. */
+     the upadha syllable becomes guru. The nuM letter assimilates to
+     the homorganic nasal of the following consonant per 8.4.58
+     anusvārasya yayi parasavarṇaḥ. */
   if (i_anubandha) {
     size_t sn = strlen(stem);
     if (sn >= 2 && sn + 1 < stem_len) {
+      char final = stem[sn - 1];
+      char nasal = 'n';
+      /* Match nasal to the varga of the final consonant. */
+      switch (final) {
+        case 'k': case 'K': case 'g': case 'G':
+          nasal = 'N'; break;  /* ṅ */
+        case 'c': case 'C': case 'j': case 'J':
+          nasal = 'Y'; break;  /* ñ */
+        case 'w': case 'W': case 'q': case 'Q':
+          nasal = 'R'; break;  /* ṇ */
+        case 't': case 'T': case 'd': case 'D':
+          nasal = 'n'; break;  /* n */
+        case 'p': case 'P': case 'b': case 'B':
+          nasal = 'm'; break;  /* m */
+        default: nasal = 'n'; break;
+      }
       memmove(stem + sn, stem + sn - 1, 2);
-      stem[sn - 1] = 'n';
+      stem[sn - 1] = nasal;
       sn = strlen(stem);
       *class_sutra = 701058;
     }
@@ -267,9 +285,11 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   } else if (gana == 6) {
     /* Gaṇa-6 (tudādi) takes śa (a), also ṅit — no guṇa. */
   } else if (gana == 10) {
-    /* Gaṇa-10 (curādi) takes ṇic (aya); 7.3.84 guṇa applies because ṇic is
-       ṇit, not ṅit. */
-    if (root_in_list(stem, GANA10_UPADHA_ALENGTHEN)) {
+    /* Gaṇa-10 (curādi) takes ṇic (aya). With i-anubandha + nuM augment
+       the upadha is guru so guṇa does not fire. */
+    if (i_anubandha) {
+      /* nuM already inserted; no further transformation. */
+    } else if (root_in_list(stem, GANA10_UPADHA_ALENGTHEN)) {
       /* 7.2.116 ata upadhāyāḥ: penultimate `a` lengthens to `A`. */
       size_t sn = strlen(stem);
       if (sn >= 2 && stem[sn - 2] == 'a') {
@@ -277,7 +297,16 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
         *class_sutra = 702116;
       }
     } else {
-      replace_first_vowel(stem, false);
+      /* If the root ends in a vowel, 7.2.115 aco ñṇiti applies vṛddhi
+         to that vowel (ñic is ṇit). For consonant-final roots the
+         upadha-laghu rule 7.3.86 applies guṇa to the penultimate. */
+      size_t sn = strlen(stem);
+      char final = sn > 0 ? stem[sn - 1] : 0;
+      bool final_vowel = (final == 'a' || final == 'i' || final == 'I' ||
+                          final == 'u' || final == 'U' || final == 'f' ||
+                          final == 'F' || final == 'x' || final == 'X' ||
+                          final == 'e' || final == 'o');
+      replace_first_vowel(stem, final_vowel);
       *used_guna = true;
     }
   }
