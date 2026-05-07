@@ -285,6 +285,56 @@ void test_lat_trace_has_real_transitions(void) {
                            "at least 2 trace steps must have before != after");
 }
 
+/* Story 3.17: LAN (imperfect) — a-augment + secondary endings. */
+void test_lan_bhu_paradigm(void) {
+  char out[64] = {0};
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LAN, "BU", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("aBavat", out);
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LAN, "gam", 1, ASH_PRATHAMA, ASH_BAHUVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("agacCan", out);
+}
+
+/* Story 3.21: LOT (imperative) — distinct ending table; madhyama-eka
+   uses zero ending for vowel-final stems. */
+void test_lot_bhu_paradigm(void) {
+  char out[64] = {0};
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LOT, "BU", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("Bavatu", out);
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LOT, "BU", 1, ASH_MADHYAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("Bava", out);
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LOT, "BU", 1, ASH_UTTAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("BavAni", out);
+}
+
+/* Story 3.20: LRT (simple future) — sya/iṣya augment between root
+   and primary endings. */
+void test_lrt_paradigm(void) {
+  char out[64] = {0};
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LRT, "BU", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("Bavizyati", out);
+  TEST_ASSERT_TRUE(lakara_derive(ASH_LRT, "gam", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("gamizyati", out);
+}
+
+/* Story 3.22: VIDHILIN (optative) — yāsuṭ/iyāt augment merged with
+   secondary endings; thematic stems collapse to e + secondary. */
+void test_vidhilin_paradigm(void) {
+  char out[64] = {0};
+  TEST_ASSERT_TRUE(lakara_derive(ASH_VIDHILIM, "BU", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("Bavet", out);
+  TEST_ASSERT_TRUE(lakara_derive(ASH_VIDHILIM, "gam", 1, ASH_PRATHAMA, ASH_EKAVACANA,
+                                 ASH_PARASMAI, out, sizeof(out)));
+  TEST_ASSERT_EQUAL_STRING("gacCet", out);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_lat_bhvadi_one_bhu);
@@ -315,5 +365,9 @@ int main(void) {
   RUN_TEST(test_lat_strips_dhatupatha_upadesa);
   RUN_TEST(test_lat_strips_anunasika_marker);
   RUN_TEST(test_lat_trace_has_real_transitions);
+  RUN_TEST(test_lan_bhu_paradigm);
+  RUN_TEST(test_lot_bhu_paradigm);
+  RUN_TEST(test_lrt_paradigm);
+  RUN_TEST(test_vidhilin_paradigm);
   return UNITY_END();
 }

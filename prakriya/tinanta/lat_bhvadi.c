@@ -221,6 +221,7 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
                                   ASH_Pada pd,
                                   bool i_anubandha,
                                   bool is_strong,
+                                  bool skip_vikarana,
                                   char *stem, size_t stem_len,
                                   char *after_class, size_t after_class_len,
                                   uint32_t *vik_sutra,
@@ -280,13 +281,16 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   }
 
   /* 7.3.78 root substitution (pā → piba, sthā → tiṣṭha, dṛś → paśya, …)
-     fires *before* every other gaṇa-1 transformation. */
-  const char *sub = (gana == 1 && !i_anubandha) ? root_substitute_lookup(stem) : NULL;
+     fires *before* every other gaṇa-1 transformation. These present-
+     stem substitutions only apply when the gaṇa vikaraṇa is being
+     used (i.e. LAT/LAN/LOT/VIDHILIN). LRT/LUT/LIT/LUN bypass them. */
+  const char *sub = (gana == 1 && !i_anubandha && !skip_vikarana)
+                        ? root_substitute_lookup(stem) : NULL;
   if (sub) {
     strncpy(stem, sub, stem_len - 1);
     stem[stem_len - 1] = '\0';
     *class_sutra = 703078;
-  } else if (gana == 1 && root_in_list(stem, IV_GAM_YAM)) {
+  } else if (gana == 1 && !skip_vikarana && root_in_list(stem, IV_GAM_YAM)) {
     /* 7.3.77: only the four named roots get final consonant → cC. */
     if (n + 2 >= stem_len) return false;
     stem[n - 1] = 'c';
@@ -445,6 +449,33 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
   if (n > 0 && (stem[n - 1] == 'o' || stem[n - 1] == 'O' || stem[n - 1] == 'e' || stem[n - 1] == 'E')) {
     *used_ec_ay = true;
   }
+  /* For lakāras that introduce their own augment (LRT's sya, LUT's
+     tās, LIT's reduplication-stem) the gaṇa vikaraṇa is skipped: the
+     ending replaces it. Apply ec→ay sandhi at root final (already
+     handled above by the *used_ec_ay flag inspection on the post-
+     guṇa stem). */
+  if (skip_vikarana) {
+    /* If guṇa produced a final e/o, expand it via ec→ay so the stem
+       can host a vowel-initial augment correctly. */
+    if (*used_ec_ay) {
+      n = strlen(stem);
+      char last = stem[n - 1];
+      const char *rep = NULL;
+      switch (last) {
+        case 'o': rep = "av"; break;
+        case 'O': rep = "Av"; break;
+        case 'e': rep = "ay"; break;
+        case 'E': rep = "Ay"; break;
+        default: rep = NULL;
+      }
+      if (rep && n + 1 < stem_len) {
+        stem[n - 1] = rep[0];
+        stem[n] = rep[1];
+        stem[n + 1] = '\0';
+      }
+    }
+    return true;
+  }
   if (!append_with_vowel_sandhi(stem, stem_len, vik)) return false;
   /* gaṇa-5 (svādi nu) and gaṇa-8 (tanādi u) strong-form guṇa: the
      vikaraṇa-final u becomes o per 7.3.84 sārvadhātukārdhadhātukayoḥ
@@ -473,8 +504,9 @@ static void log_single_term_change(PrakriyaCtx *ctx, uint32_t sutra_id,
   set_single_term(ctx, after);
 }
 
-bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
-                           ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
+bool lakara_derive_ctx(ASH_Lakara lakara,
+                       const char *dhatu_slp1, int gana, ASH_Purusha p,
+                       ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
   const TingEntry *t;
   char clean_root[64] = {0};
   char after_class[64] = {0};
@@ -485,18 +517,25 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
   bool used_guna = false;
   bool used_ec_ay = false;
   if (!dhatu_slp1 || !ctx_out) return false;
-  t = ting_get(ASH_LAT, p, v, pd);
+  t = ting_get(lakara, p, v, pd);
   if (!t) return false;
-  prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, ASH_LAT, p, v, pd);
+  prakriya_init_tinanta(ctx_out, dhatu_slp1, gana, lakara, p, v, pd);
   bool i_anubandha = has_i_anubandha(dhatu_slp1);
   /* Strong/weak distinction: pit-anubandha endings (tip, sip, mip —
      all three EKAVACANA endings) cause sārvadhātuka guṇa per 7.3.84.
      Non-pit endings (tas, anti, Tas, Ta, vas, mas) are treated as kit
-     by 1.2.4 sārvadhātukam apit, blocking guṇa per 1.1.5. */
-  bool is_strong = (v == ASH_EKAVACANA);
+     by 1.2.4 sārvadhātukam apit, blocking guṇa per 1.1.5. For LOT
+     uttama-puruṣa (Ani/Ava/Ama) the suffix is pit, so all three
+     uttama forms also count as strong. */
+  bool is_strong = (v == ASH_EKAVACANA) ||
+                   (lakara == ASH_LOT && p == ASH_UTTAMA);
   clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
   if (clean_root[0] == '\0') return false;
+  /* LRT introduces its own sya augment that replaces the gaṇa
+     vikaraṇa. */
+  bool skip_vikarana = (lakara == ASH_LRT);
   if (!apply_class_transform(clean_root, gana, pd, i_anubandha, is_strong,
+                             skip_vikarana,
                              stem, sizeof(stem),
                              after_class, sizeof(after_class),
                              &vik_sutra, &class_sutra,
@@ -551,6 +590,51 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
                          "vikaraRa assignment");
   if (used_ec_ay) {
     log_single_term_change(ctx_out, 601078, after_class, stem, "eco'yavAyAvaH");
+  }
+  /* For LRT, after the (vikaraṇa-skipped) class transform we still
+     need to apply 7.3.84 guṇa to the root vowel since LRT endings
+     are sārvadhātuka. apply_class_transform skipped vikaraṇa append
+     but did NOT necessarily fire the gaṇa-1 default guṇa for non-
+     gaṇa-1 roots (e.g. kf gaṇa-8). Apply guṇa here as a safeguard. */
+  if (lakara == ASH_LRT) {
+    /* If stem still ends in/contains an unstrong ik vowel, apply guṇa. */
+    bool has_unstrong = false;
+    for (size_t i = 0; stem[i]; i++) {
+      char c = stem[i];
+      if (c == 'i' || c == 'u' || c == 'f' || c == 'x') { has_unstrong = true; break; }
+    }
+    if (has_unstrong && !used_guna) {
+      replace_first_vowel(stem, false);
+      used_guna = true;
+    }
+  }
+
+  /* 3.1.33 syatāsi luṭos — for LRT (lṛṭ), insert the `sya` augment
+     between stem and ending. seṭ-class roots take an iṭ before sya
+     (7.2.10 ekāca upadeśe). For LRT-specific seṭ-classification
+     most roots are seṭ; the truly aniṭ list (those that drop iṭ in
+     LRT) is closed and short. */
+  if (lakara == ASH_LRT) {
+    static const char *const LRT_ANIT_ROOTS[] = {
+      "ad", "vac", "vap", "vah", "vid", NULL
+    };
+    bool is_anit = false;
+    for (size_t i = 0; LRT_ANIT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, LRT_ANIT_ROOTS[i]) == 0) {
+        is_anit = true;
+        break;
+      }
+    }
+    char extended[128] = {0};
+    if (is_anit) {
+      snprintf(extended, sizeof(extended), "%ssya", stem);
+    } else {
+      snprintf(extended, sizeof(extended), "%sizya", stem);
+    }
+    log_single_term_change(ctx_out, 301033, stem, extended,
+                           "syatAsi luwoH");
+    strncpy(stem, extended, sizeof(stem) - 1);
+    stem[sizeof(stem) - 1] = '\0';
   }
   /* 7.3.101 ato dīrgho yaṅi — uttama-puruṣa endings begin with `m` or `v`
      in parasmaipada (mi, vas, mas) and `m`/`v` in ātmane (vahe, mahe).
@@ -619,10 +703,26 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
       strcat(form, t->clean);
     } else if (stem_final == 'A' && ending_initial == 'a') {
       strcat(form, t->clean + 1);
+    } else if (stem_final == 'a' && ending_initial == 'A') {
+      /* 6.1.101 savarṇa-dīrgha: a + A → A (drop stem-final a). */
+      form[fl - 1] = '\0';
+      strcat(form, t->clean);
     } else if (stem_final == 'I' && ending_initial == 'i') {
       strcat(form, t->clean + 1);
     } else if (stem_final == 'U' && ending_initial == 'u') {
       strcat(form, t->clean + 1);
+    } else if (stem_final == 'a' && ending_initial == 'e') {
+      /* 6.1.87 ad guṇaḥ: a + e → e (drop stem-final a). */
+      form[fl - 1] = '\0';
+      strcat(form, t->clean);
+    } else if (stem_final == 'a' && ending_initial == 'E') {
+      /* 6.1.88 vṛddhir eci: a + ai → ai (drop stem-final a). */
+      form[fl - 1] = '\0';
+      strcat(form, t->clean);
+    } else if (stem_final == 'a' && ending_initial == 'O') {
+      /* 6.1.88 vṛddhir eci: a + au → au. */
+      form[fl - 1] = '\0';
+      strcat(form, t->clean);
     } else {
       strcat(form, t->clean);
     }
@@ -700,14 +800,55 @@ bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
       log_single_term_change(ctx_out, 802066, before, form, "sasajuzo ruH");
     }
   }
+  /* 6.4.71 luṅ-laṅ-lṛṅ-kṣv aḍudāttaḥ — past-tense lakāras (LAN, LRN,
+     LUN) take an a-augment prepended to the form. Vowel sandhi at the
+     a- + root junction: a + a → A, a + i → e, a + u → o. */
+  if (lakara == ASH_LAN) {
+    char augmented[128] = {0};
+    char before[128] = {0};
+    strncpy(before, form, sizeof(before) - 1);
+    char first = form[0];
+    if (first == 'a') {
+      /* a + a → A (savarṇa-dīrgha 6.1.101). */
+      augmented[0] = 'A';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if (first == 'i' || first == 'I') {
+      /* a + i/I → e (guṇa 6.1.87). */
+      augmented[0] = 'e';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if (first == 'u' || first == 'U') {
+      /* a + u/U → o (guṇa 6.1.87). */
+      augmented[0] = 'o';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else {
+      augmented[0] = 'a';
+      strncpy(augmented + 1, form, sizeof(augmented) - 2);
+    }
+    augmented[sizeof(augmented) - 1] = '\0';
+    log_single_term_change(ctx_out, 604071, before, augmented,
+                           "luN-laN-lfN-kzv aDudAttaH");
+    strncpy(form, augmented, sizeof(form) - 1);
+    form[sizeof(form) - 1] = '\0';
+  }
+  return true;
+}
+
+bool lat_bhvadi_derive_ctx(const char *dhatu_slp1, int gana, ASH_Purusha p,
+                           ASH_Vacana v, ASH_Pada pd, PrakriyaCtx *ctx_out) {
+  return lakara_derive_ctx(ASH_LAT, dhatu_slp1, gana, p, v, pd, ctx_out);
+}
+
+bool lakara_derive(ASH_Lakara lakara,
+                   const char *dhatu_slp1, int gana, ASH_Purusha p,
+                   ASH_Vacana v, ASH_Pada pd, char *out_slp1, size_t out_len) {
+  PrakriyaCtx ctx = {0};
+  if (!out_slp1 || out_len == 0) return false;
+  if (!lakara_derive_ctx(lakara, dhatu_slp1, gana, p, v, pd, &ctx)) return false;
+  prakriya_current_form(&ctx, out_slp1, out_len);
   return true;
 }
 
 bool lat_bhvadi_derive(const char *dhatu_slp1, int gana, ASH_Purusha p,
                        ASH_Vacana v, ASH_Pada pd, char *out_slp1, size_t out_len) {
-  PrakriyaCtx ctx = {0};
-  if (!out_slp1 || out_len == 0) return false;
-  if (!lat_bhvadi_derive_ctx(dhatu_slp1, gana, p, v, pd, &ctx)) return false;
-  prakriya_current_form(&ctx, out_slp1, out_len);
-  return true;
+  return lakara_derive(ASH_LAT, dhatu_slp1, gana, p, v, pd, out_slp1, out_len);
 }

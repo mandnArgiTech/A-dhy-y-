@@ -184,7 +184,7 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
 
   f = ash_tinanta(db, "BU", 1, ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_FALSE(f.valid);
-  TEST_ASSERT_NOT_NULL(strstr(f.error, "only LAT"));
+  TEST_ASSERT_NOT_NULL(strstr(f.error, "not yet implemented"));
   ash_form_free(&f);
 
   f = ash_subanta(db, "", ASH_PUMS, ASH_PRATHAMA_VIB, ASH_EKAVACANA);
@@ -193,7 +193,7 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
 
   f = ash_tinanta(db, "BU", 1, ASH_LAT, (ASH_Purusha)99, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_FALSE(f.valid);
-  TEST_ASSERT_NOT_NULL(strstr(f.error, "lat derivation failed"));
+  TEST_ASSERT_NOT_NULL(strstr(f.error, "derivation failed"));
   ash_form_free(&f);
 
   f = ash_subanta(db, "unsupported", ASH_PUMS, ASH_PRATHAMA_VIB, ASH_EKAVACANA);
