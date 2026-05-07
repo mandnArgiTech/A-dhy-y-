@@ -70,6 +70,50 @@ static const TingEntry VIDHILIN_PARASMAI[9] = {
     {ASH_VIDHILIM, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "yAma", "ema", SJ_TING | SJ_PARASMAIPADA | SJ_SARVADHATUKA},
 };
 
+/* LUT (periphrastic future) — Story 3.19. The endings absorb the
+   tās augment so that the "stem" passed in only needs the root + iṭ.
+   3.4.78 also substitutes specific upadeśa endings for prathama
+   (DA, rau, ras → A, ArO, AraH). */
+static const TingEntry LUT_PARASMAI[9] = {
+    {ASH_LUT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "DA", "tA", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_PRATHAMA, ASH_DVIVACANA, ASH_PARASMAI, "rO", "tArO", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "raH", "tAraH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_MADHYAMA, ASH_EKAVACANA, ASH_PARASMAI, "sip", "tAsi", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_MADHYAMA, ASH_DVIVACANA, ASH_PARASMAI, "Tas", "tAsTaH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ta", "tAsTa", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_UTTAMA, ASH_EKAVACANA, ASH_PARASMAI, "mip", "tAsmi", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_UTTAMA, ASH_DVIVACANA, ASH_PARASMAI, "vas", "tAsvaH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUT, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "mas", "tAsmaH", SJ_TING | SJ_PARASMAIPADA},
+};
+
+/* LRN (conditional) — Story 3.25. Combines LRT's sya stem with LAN's
+   secondary endings + a-augment. Endings = LAN secondary endings. */
+static const TingEntry LRN_PARASMAI[9] = {
+    {ASH_LRN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "tip", "t", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_PRATHAMA, ASH_DVIVACANA, ASH_PARASMAI, "tas", "tAm", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ji", "an", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_MADHYAMA, ASH_EKAVACANA, ASH_PARASMAI, "sip", "H", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_MADHYAMA, ASH_DVIVACANA, ASH_PARASMAI, "Tas", "tam", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ta", "ta", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_UTTAMA, ASH_EKAVACANA, ASH_PARASMAI, "mip", "am", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_UTTAMA, ASH_DVIVACANA, ASH_PARASMAI, "vas", "va", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LRN, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "mas", "ma", SJ_TING | SJ_PARASMAIPADA},
+};
+
+/* ASIRLIN (benedictive) — Story 3.23. yāsuṭ + sIyuṭ + secondary
+   endings. The stem is bare root (suffix is kit, blocks guṇa). */
+static const TingEntry ASIRLIN_PARASMAI[9] = {
+    {ASH_ASHIRLIM, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "tip", "yAt", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_PRATHAMA, ASH_DVIVACANA, ASH_PARASMAI, "tas", "yAstAm", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ji", "yAsuH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_MADHYAMA, ASH_EKAVACANA, ASH_PARASMAI, "sip", "yAH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_MADHYAMA, ASH_DVIVACANA, ASH_PARASMAI, "Tas", "yAstam", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ta", "yAsta", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_UTTAMA, ASH_EKAVACANA, ASH_PARASMAI, "mip", "yAsam", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_UTTAMA, ASH_DVIVACANA, ASH_PARASMAI, "vas", "yAsva", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_ASHIRLIM, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "mas", "yAsma", SJ_TING | SJ_PARASMAIPADA},
+};
+
 /* LRT (simple future) — Story 3.20. Same endings as LAT (primary). */
 static const TingEntry LRT_PARASMAI[9] = {
     {ASH_LRT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "tip", "ti", SJ_TING | SJ_PARASMAIPADA},
@@ -98,6 +142,9 @@ const TingEntry *ting_get(ASH_Lakara l, ASH_Purusha p, ASH_Vacana v, ASH_Pada pd
     case ASH_LOT:      return &LOT_PARASMAI[idx];
     case ASH_VIDHILIM: return &VIDHILIN_PARASMAI[idx];
     case ASH_LRT:      return &LRT_PARASMAI[idx];
+    case ASH_LUT:      return &LUT_PARASMAI[idx];
+    case ASH_LRN:      return &LRN_PARASMAI[idx];
+    case ASH_ASHIRLIM:  return &ASIRLIN_PARASMAI[idx];
     default: return NULL;
   }
 }

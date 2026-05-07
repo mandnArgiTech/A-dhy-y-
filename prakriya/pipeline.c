@@ -288,11 +288,12 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
   if (!root_slp1 || root_slp1[0] == '\0') {
     return make_error_form("empty root");
   }
-  /* Story 3.17/3.20/3.21/3.22: LAT, LAN, LOT, VIDHILIN, LRT routed
-     through the parameterised lakara_derive_ctx. Other lakāras
-     (LIT/LUT/LUN/LRN/ASIRLIN) are not yet implemented. */
+  /* Stories 3.17/3.19/3.20/3.21/3.22/3.23/3.25 — LAT, LAN, LOT,
+     VIDHILIN, LRT, LUT, LRN, ASIRLIN routed through the parameterised
+     lakara_derive_ctx. LIT and LUN are not yet implemented. */
   if (l != ASH_LAT && l != ASH_LAN && l != ASH_LOT &&
-      l != ASH_VIDHILIM && l != ASH_LRT) {
+      l != ASH_VIDHILIM && l != ASH_LRT && l != ASH_LUT &&
+      l != ASH_LRN && l != ASH_ASHIRLIM) {
     return make_error_form("lakāra not yet implemented");
   }
   if (!lakara_derive_ctx(l, root_slp1, gana, pu, v, pd, &ctx)) {

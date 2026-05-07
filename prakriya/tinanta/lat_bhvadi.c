@@ -222,6 +222,7 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
                                   bool i_anubandha,
                                   bool is_strong,
                                   bool skip_vikarana,
+                                  bool block_guna,
                                   char *stem, size_t stem_len,
                                   char *after_class, size_t after_class_len,
                                   uint32_t *vik_sutra,
@@ -303,7 +304,7 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
       if (stem[i] == 'a') { stem[i] = 'A'; break; }
     }
     *class_sutra = 703076;
-  } else if (gana == 1 && !i_anubandha) {
+  } else if (gana == 1 && !i_anubandha && !block_guna) {
     /* gaṇa-1 default: guṇa applies in two distinct configurations:
          (a) 7.3.84 sārvadhātukārdhadhātukayoḥ — vowel-final aṅga's
              final ik-vowel is guṇa'd (BU → Bo, kf → kar).
@@ -312,7 +313,7 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
              cluster) is guṇa'd (gam upadha a, sev upadha e — but e is
              not ik so no change).
        For consonant-final stems with guru upadha (e.g. nIv, UW), guṇa
-       does NOT apply. */
+       does NOT apply. block_guna (set by ASIRLIN) suppresses entirely. */
     size_t sn = strlen(stem);
     char final = sn > 0 ? stem[sn - 1] : 0;
     bool final_vowel = (final == 'a' || final == 'i' || final == 'I' ||
@@ -456,8 +457,10 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
      guṇa stem). */
   if (skip_vikarana) {
     /* If guṇa produced a final e/o, expand it via ec→ay so the stem
-       can host a vowel-initial augment correctly. */
-    if (*used_ec_ay) {
+       can host a vowel-initial augment correctly. ASIRLIN's yA suffix
+       is consonant-initial and the ASIRLIN stem stays bare, so this
+       transformation doesn't apply there. */
+    if (*used_ec_ay && !block_guna) {
       n = strlen(stem);
       char last = stem[n - 1];
       const char *rep = NULL;
@@ -531,11 +534,16 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                    (lakara == ASH_LOT && p == ASH_UTTAMA);
   clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
   if (clean_root[0] == '\0') return false;
-  /* LRT introduces its own sya augment that replaces the gaṇa
-     vikaraṇa. */
-  bool skip_vikarana = (lakara == ASH_LRT);
+  /* LRT/LUT/LRN/ASIRLIN introduce their own augments (sya, tā,
+     a-sya, yA) that replace the gaṇa vikaraṇa. */
+  bool skip_vikarana = (lakara == ASH_LRT || lakara == ASH_LUT ||
+                        lakara == ASH_LRN || lakara == ASH_ASHIRLIM);
+  /* For ASIRLIN, the suffix is treated as kit (1.2.10 halaḥ śnaḥ
+     śānajbhyām), so guṇa is blocked entirely. */
+  bool block_guna_completely = (lakara == ASH_ASHIRLIM);
+  if (block_guna_completely) is_strong = false;
   if (!apply_class_transform(clean_root, gana, pd, i_anubandha, is_strong,
-                             skip_vikarana,
+                             skip_vikarana, block_guna_completely,
                              stem, sizeof(stem),
                              after_class, sizeof(after_class),
                              &vik_sutra, &class_sutra,
@@ -591,13 +599,13 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   if (used_ec_ay) {
     log_single_term_change(ctx_out, 601078, after_class, stem, "eco'yavAyAvaH");
   }
-  /* For LRT, after the (vikaraṇa-skipped) class transform we still
-     need to apply 7.3.84 guṇa to the root vowel since LRT endings
-     are sārvadhātuka. apply_class_transform skipped vikaraṇa append
-     but did NOT necessarily fire the gaṇa-1 default guṇa for non-
-     gaṇa-1 roots (e.g. kf gaṇa-8). Apply guṇa here as a safeguard. */
-  if (lakara == ASH_LRT) {
-    /* If stem still ends in/contains an unstrong ik vowel, apply guṇa. */
+  /* For LRT/LUT/LRN, after the (vikaraṇa-skipped) class transform we
+     still need to apply 7.3.84 guṇa to the root vowel since these
+     endings are sārvadhātuka/ārdhadhātuka. ASIRLIN suffix is kit
+     and is suppressed by block_guna_completely, so we explicitly
+     gate this fallback on it. */
+  if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN) &&
+      !block_guna_completely) {
     bool has_unstrong = false;
     for (size_t i = 0; stem[i]; i++) {
       char c = stem[i];
@@ -609,27 +617,36 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     }
   }
 
-  /* 3.1.33 syatāsi luṭos — for LRT (lṛṭ), insert the `sya` augment
-     between stem and ending. seṭ-class roots take an iṭ before sya
-     (7.2.10 ekāca upadeśe). For LRT-specific seṭ-classification
-     most roots are seṭ; the truly aniṭ list (those that drop iṭ in
-     LRT) is closed and short. */
-  if (lakara == ASH_LRT) {
-    static const char *const LRT_ANIT_ROOTS[] = {
+  /* 3.1.33 syatāsi luṭos — for LRT/LRN insert sya. For LUT the
+     ending table absorbs tā so we just need the iṭ. seṭ-class roots
+     get an iṭ before sya/tā (7.2.10 ekāca upadeśe). Most roots are
+     seṭ; the LRT-/LUT-specific aniṭ list is closed and short. */
+  if (lakara == ASH_LRT || lakara == ASH_LRN || lakara == ASH_LUT) {
+    static const char *const ANIT_ROOTS[] = {
       "ad", "vac", "vap", "vah", "vid", NULL
     };
     bool is_anit = false;
-    for (size_t i = 0; LRT_ANIT_ROOTS[i]; i++) {
-      if (strcmp(clean_root, LRT_ANIT_ROOTS[i]) == 0) {
+    for (size_t i = 0; ANIT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, ANIT_ROOTS[i]) == 0) {
         is_anit = true;
         break;
       }
     }
     char extended[128] = {0};
-    if (is_anit) {
-      snprintf(extended, sizeof(extended), "%ssya", stem);
+    if (lakara == ASH_LUT) {
+      /* LUT ending table already includes tā; just prepend iṭ if seṭ. */
+      if (is_anit) {
+        snprintf(extended, sizeof(extended), "%s", stem);
+      } else {
+        snprintf(extended, sizeof(extended), "%si", stem);
+      }
     } else {
-      snprintf(extended, sizeof(extended), "%sizya", stem);
+      /* LRT / LRN: append (i)sya to stem. */
+      if (is_anit) {
+        snprintf(extended, sizeof(extended), "%ssya", stem);
+      } else {
+        snprintf(extended, sizeof(extended), "%sizya", stem);
+      }
     }
     log_single_term_change(ctx_out, 301033, stem, extended,
                            "syatAsi luwoH");
@@ -803,7 +820,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   /* 6.4.71 luṅ-laṅ-lṛṅ-kṣv aḍudāttaḥ — past-tense lakāras (LAN, LRN,
      LUN) take an a-augment prepended to the form. Vowel sandhi at the
      a- + root junction: a + a → A, a + i → e, a + u → o. */
-  if (lakara == ASH_LAN) {
+  if (lakara == ASH_LAN || lakara == ASH_LRN) {
     char augmented[128] = {0};
     char before[128] = {0};
     strncpy(before, form, sizeof(before) - 1);
