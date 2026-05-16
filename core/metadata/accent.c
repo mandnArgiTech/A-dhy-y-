@@ -98,3 +98,93 @@ bool accent_compute_tinanta(const char *form_slp1, ASH_AccentMode mode,
   if (mode == ASH_ACCENT_NONE) { if (out && out_len > 0) out[0] = '\0'; return true; }
   return accent_all_anudatta(form_slp1, out, out_len);
 }
+
+/* ── Phase ζ extension: kṛt-derived accent (3.1.3) ──────────────── */
+
+bool accent_compute_krit(const char *form_slp1, int krit_type,
+                         ASH_AccentMode mode, char *out, size_t out_len) {
+  (void)krit_type;
+  if (!form_slp1 || !out || out_len == 0) return false;
+  if (mode == ASH_ACCENT_NONE) { out[0] = '\0'; return true; }
+  /* 3.1.3 ādyudāttaścit kṛd-pratyayāt: first vowel udātta, rest
+     anudātta. Some kṛt suffixes (e.g. tavyat, namul, ghañ, nyat)
+     instead trigger anta-udātta — caller can pass krit_type but
+     for the default 3.1.3 ādyudātta we set first-vowel udātta. */
+  size_t oi = 0;
+  bool seen_vowel = false;
+  for (size_t i = 0; form_slp1[i] && oi + 1 < out_len; i++) {
+    if (varna_is_vowel(form_slp1[i])) {
+      out[oi++] = seen_vowel ? ASH_ACCENT_ANUDATTA : ASH_ACCENT_UDATTA;
+      seen_vowel = true;
+    }
+  }
+  out[oi] = '\0';
+  return seen_vowel;
+}
+
+/* ── Phase ζ extension: compound (samāsa) accent (6.2.x) ────────── */
+
+bool accent_compute_samasa(const char *form_slp1, int samasa_type,
+                           ASH_AccentMode mode, char *out, size_t out_len) {
+  (void)samasa_type;
+  if (!form_slp1 || !out || out_len == 0) return false;
+  if (mode == ASH_ACCENT_NONE) { out[0] = '\0'; return true; }
+  /* 6.1.223 samāsasya: a compound has a single accent. Default for
+     tatpuruṣa per 6.2.139 gati-kāra-...-akoH samhitāyāmaH — final
+     vowel of the compound is udātta. avyayībhāva → ādyudātta per
+     6.2.121 (we approximate as final-udātta for simplicity). */
+  return accent_compute_subanta(form_slp1, mode, out, out_len);
+}
+
+/* ── Phase ζ extension: stem-specific override registry ─────────── */
+
+#define ACCENT_OVERRIDE_MAX 256
+typedef struct {
+  char stem[32];
+  char accent[16];
+} AccentOverride;
+static AccentOverride g_overrides[ACCENT_OVERRIDE_MAX];
+static int g_override_count = 0;
+
+bool accent_register_override(const char *stem_slp1, const char *accent) {
+  if (!stem_slp1 || !accent || g_override_count >= ACCENT_OVERRIDE_MAX) {
+    return false;
+  }
+  AccentOverride *e = &g_overrides[g_override_count++];
+  strncpy(e->stem, stem_slp1, sizeof(e->stem) - 1);
+  e->stem[sizeof(e->stem) - 1] = '\0';
+  strncpy(e->accent, accent, sizeof(e->accent) - 1);
+  e->accent[sizeof(e->accent) - 1] = '\0';
+  return true;
+}
+
+const char *accent_lookup_override(const char *stem_slp1) {
+  if (!stem_slp1) return NULL;
+  for (int i = 0; i < g_override_count; i++) {
+    if (strcmp(g_overrides[i].stem, stem_slp1) == 0) {
+      return g_overrides[i].accent;
+    }
+  }
+  return NULL;
+}
+
+/* Static constructor: seed the registry with a handful of canonical
+   phiṭ-sūtra 2-87 exceptions to demonstrate the framework.
+   Full coverage requires ingesting the 87-entry phit-sūtra data file
+   which is beyond this scaffold. */
+__attribute__((constructor))
+static void accent_seed_overrides(void) {
+  /* Phiṭ 1.4 mā-tā-pāṭalā ādi-r-udāttaḥ — these stems are
+     ādyudātta (first vowel udātta). */
+  accent_register_override("mAtf",   "UA");
+  accent_register_override("pAwalA", "UAA");
+  accent_register_override("pitf",   "UA");
+  accent_register_override("BrAtf",  "UA");
+  accent_register_override("svasf",  "UA");
+  /* Phiṭ 1.5 antāntayoḥ — antodātta for the last vowel set. */
+  accent_register_override("agni",   "AU");
+  accent_register_override("vAyu",   "AU");
+  accent_register_override("hari",   "AU");
+  /* Phiṭ 1.21 ud-antānāṃ — final udātta default (= phiṭ-1.1). */
+  /* Phiṭ 2.17 dvyacca-rūpa-ādi-r-udāttaḥ — for two-syllable rūpa-class. */
+}
