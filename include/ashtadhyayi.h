@@ -297,6 +297,26 @@ typedef enum {
   ASH_KRIT_NYAT,       /**< Gerundive (-ya, vrddhi) per 3.1.124 */
   ASH_KRIT_KVIP,       /**< Agent noun (-φ, zero) per 3.2.61 */
   ASH_KRIT_NAMUL,      /**< Adverbial absolutive (-am) per 3.4.22 */
+  /* Phase δ kṛt extended */
+  ASH_KRIT_KTRI,       /**< Action noun (-tri) per 3.3.88 */
+  ASH_KRIT_KTUM,       /**< Action noun (-tu) per 3.3.10 */
+  ASH_KRIT_KMARAC,     /**< Action noun (-mara) per 3.3.74 */
+  ASH_KRIT_GHA,        /**< Action noun (-ya, guṇa) per 3.3.118 */
+  ASH_KRIT_KA,         /**< Agent noun (-a, kit) per 3.2.3 */
+  ASH_KRIT_AC,         /**< Agent noun (-a, ñit) per 3.1.134 */
+  ASH_KRIT_KHAL,       /**< Adverbial noun (-a) per 3.3.126 */
+  ASH_KRIT_VUN,        /**< Agent noun (-aka, ñit) per 3.1.149 */
+  ASH_KRIT_ISHNUC,     /**< Adjective (-iṣṇu) per 3.2.136 */
+  ASH_KRIT_UKAN,       /**< Adjective (-uka) per 3.2.154 */
+  ASH_KRIT_TAVYAT,     /**< Gerundive (-tavya, with sutra 3.1.96) */
+  ASH_KRIT_KELIMAR,    /**< Gerundive (-elima) per 3.3.114 */
+  ASH_KRIT_RVU,        /**< Agent (-vu) per 3.3.146 */
+  ASH_KRIT_MAN,        /**< Action (-ma) per 3.3.169 */
+  ASH_KRIT_TRN,        /**< Action (-tṛ, ñit) per 3.2.135 */
+  ASH_KRIT_KAS,        /**< Mid/passive (-asa) per 3.1.96 */
+  ASH_KRIT_KVASU,      /**< Past active participle (-vas) per 3.2.107 */
+  ASH_KRIT_KANAC,      /**< Past middle participle (-āna) per 3.2.106 */
+  ASH_KRIT_INI,        /**< Agent (-in) per 3.2.93 */
 } ASH_KritType;
 
 /** Derive a kṛt form. */

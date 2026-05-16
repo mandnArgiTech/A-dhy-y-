@@ -29,6 +29,25 @@ static const char *krit_suffix_upadesa(ASH_KritType krit) {
     case ASH_KRIT_NYAT: return "Ryat";
     case ASH_KRIT_KVIP: return "kvip";
     case ASH_KRIT_NAMUL: return "Ramul";
+    case ASH_KRIT_KTRI: return "ktri";
+    case ASH_KRIT_KTUM: return "ktum";
+    case ASH_KRIT_KMARAC: return "kmarac";
+    case ASH_KRIT_GHA: return "Ga";
+    case ASH_KRIT_KA: return "ka";
+    case ASH_KRIT_AC: return "ac";
+    case ASH_KRIT_KHAL: return "Kal";
+    case ASH_KRIT_VUN: return "vun";
+    case ASH_KRIT_ISHNUC: return "iznuc";
+    case ASH_KRIT_UKAN: return "ukaY";
+    case ASH_KRIT_TAVYAT: return "tavyat";
+    case ASH_KRIT_KELIMAR: return "kelimar";
+    case ASH_KRIT_RVU: return "Rvu";
+    case ASH_KRIT_MAN: return "man";
+    case ASH_KRIT_TRN: return "tfn";
+    case ASH_KRIT_KAS: return "kas";
+    case ASH_KRIT_KVASU: return "kvasu";
+    case ASH_KRIT_KANAC: return "kAnac";
+    case ASH_KRIT_INI: return "ini";
     default: return NULL;
   }
 }
@@ -51,6 +70,25 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
     case ASH_KRIT_NYAT: return "ya";      /* vrddhi root + ya */
     case ASH_KRIT_KVIP: return "";        /* zero suffix */
     case ASH_KRIT_NAMUL: return "am";     /* guṇa root + am */
+    case ASH_KRIT_KTRI: return "tri";     /* kit, ktri */
+    case ASH_KRIT_KTUM: return "tu";      /* kit, ktu */
+    case ASH_KRIT_KMARAC: return "mara";  /* kit, mara */
+    case ASH_KRIT_GHA: return "ya";       /* ghana, guṇa + ya */
+    case ASH_KRIT_KA: return "a";         /* kit, a */
+    case ASH_KRIT_AC: return "a";         /* ac, guṇa + a */
+    case ASH_KRIT_KHAL: return "a";       /* khal, guṇa + a */
+    case ASH_KRIT_VUN: return "aka";      /* ñit, vṛddhi + aka */
+    case ASH_KRIT_ISHNUC: return "iznu";  /* ñit, guṇa + iṣṇu */
+    case ASH_KRIT_UKAN: return "uka";     /* ñit, guṇa + uka */
+    case ASH_KRIT_TAVYAT: return "tavya"; /* same as tavya */
+    case ASH_KRIT_KELIMAR: return "elima";/* kit, elima */
+    case ASH_KRIT_RVU: return "vu";       /* ñit, vṛddhi + vu */
+    case ASH_KRIT_MAN: return "ma";       /* kit, ma */
+    case ASH_KRIT_TRN: return "tf";       /* ñit, vṛddhi + tṛ (= tfc) */
+    case ASH_KRIT_KAS: return "asa";      /* kit, asa */
+    case ASH_KRIT_KVASU: return "vas";    /* kit, perfect active part */
+    case ASH_KRIT_KANAC: return "Ana";    /* kit, perfect middle part */
+    case ASH_KRIT_INI: return "in";       /* ñit, guṇa + in */
     default: return NULL;
   }
 }
@@ -59,12 +97,19 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
 static bool krit_is_kit(ASH_KritType krit) {
   return krit == ASH_KRIT_KTA || krit == ASH_KRIT_KTAVAT ||
          krit == ASH_KRIT_KTVA || krit == ASH_KRIT_KTIN ||
-         krit == ASH_KRIT_KYAP || krit == ASH_KRIT_KVIP;
+         krit == ASH_KRIT_KYAP || krit == ASH_KRIT_KVIP ||
+         krit == ASH_KRIT_KTRI || krit == ASH_KRIT_KTUM ||
+         krit == ASH_KRIT_KMARAC || krit == ASH_KRIT_KA ||
+         krit == ASH_KRIT_KELIMAR || krit == ASH_KRIT_MAN ||
+         krit == ASH_KRIT_KAS || krit == ASH_KRIT_KVASU ||
+         krit == ASH_KRIT_KANAC;
 }
 
 /* Whether a suffix triggers vṛddhi on the root vowel (ñit/ṇit). */
 static bool krit_triggers_vrddhi(ASH_KritType krit) {
-  return krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT;
+  return krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT ||
+         krit == ASH_KRIT_VUN  || krit == ASH_KRIT_RVU  ||
+         krit == ASH_KRIT_TRN;
 }
 
 /* Closed list of seṭ-class roots that take iṭ before niṣṭhā/tum/tvA.
@@ -309,10 +354,13 @@ static bool krit_rule_derive(const char *clean_root, ASH_KritType krit,
       strncpy(stem, gunaed, sizeof(stem) - 1);
       stem[sizeof(stem) - 1] = '\0';
     }
-    /* For vowel-initial suffixes (lyuṭ, Rvul, namul), apply 6.1.78
-       ec→ay if stem ends in e/o/E/O. */
+    /* For vowel-initial suffixes (lyuṭ, Rvul, namul, ac, khal,
+       ukan, ishnuc, ini), apply 6.1.78 ec→ay if stem ends in
+       e/o/E/O. */
     if (krit == ASH_KRIT_LYUT || krit == ASH_KRIT_NVUL ||
-        krit == ASH_KRIT_NAMUL) {
+        krit == ASH_KRIT_NAMUL || krit == ASH_KRIT_AC ||
+        krit == ASH_KRIT_KHAL || krit == ASH_KRIT_UKAN ||
+        krit == ASH_KRIT_ISHNUC || krit == ASH_KRIT_INI) {
       krit_apply_ec_to_ay(stem, sizeof(stem));
     }
   } else {
