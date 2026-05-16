@@ -850,6 +850,36 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
     }
 
+    /* 6.4.98 gama-hana-jana-Khana-Gasāṃ lopaḥ kṅiti — anudātta-upadeśa
+       roots (gam, han, jan, khan, ghas) drop their medial 'a' in LIT
+       weak forms (non-eka) — strong-eka stays jagAma / jahAna /
+       cakAra-style. The drop applies only when the root portion of
+       the reduplicated stem still contains a residual 'a' before the
+       final consonant. */
+    static const char *const GAM_CLASS[] = {
+      "gam", "han", "jan", "Kan", "Gas", NULL
+    };
+    bool is_gam_class = false;
+    for (size_t gi = 0; GAM_CLASS[gi]; gi++) {
+      if (strcmp(clean_root, GAM_CLASS[gi]) == 0) { is_gam_class = true; break; }
+    }
+    if (is_gam_class && v != ASH_EKAVACANA) {
+      size_t rl = strlen(reduped);
+      /* Find the residual 'a' between root_start and the final
+         consonant, and delete it. The root_start vowel is the
+         abhyāsa, so skip past it. */
+      if (rl > root_start + 1) {
+        /* Locate the 'a' in the root portion (it sits between two
+           consonants like in "jagam" → 'a' at index 3, root_start=2). */
+        for (size_t i = root_start; i < rl - 1; i++) {
+          if (reduped[i] == 'a' && !varna_is_vowel(reduped[i + 1])) {
+            memmove(reduped + i, reduped + i + 1, rl - i);
+            break;
+          }
+        }
+      }
+    }
+
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
     stem[sizeof(stem) - 1] = '\0';
