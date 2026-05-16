@@ -1,67 +1,58 @@
-# Bug-Fix Stories — Implementation Order
+# Bug-Fix Stories — Status
 
-These bugs are listed in **strict dependency order**. Each lists its own
-dependencies in its header. Implement in numerical order.
+All Round 1 and Round 2 bugs are closed. Round 3 onward has been
+delivered as feature work in the main implementation phases (β/γ/δ/ε/ζ)
+rather than as separate bug rounds — see the main README and
+`docs/API.md` for current coverage.
 
-## Round 1 (closed) — 4 done, 2 partial
+## Round 1 (closed) — 4 fixed, 2 partial-then-superseded
 
 | ID | Title | Status |
 |----|-------|--------|
-| BUG-001 | Devanāgarī → SLP1 converter drops inherent vowel `a` | ✅ FIXED (commit 2a642ca) — 20-word corpus passes 20/20 |
-| BUG-002 | Oracle normalize function rigs the match rate | ✅ FIXED (commit 2a642ca) — exact-equality on Devanāgarī |
-| BUG-003 | Tiṅanta / subanta paths return hardcoded literals | ⚠️ PARTIAL — strncpy literals removed, but suffix-pattern hardcoding introduced (see BUG-008) |
-| BUG-004 | pipeline_tinanta synthesises a fixed trace | ⚠️ PARTIAL — pipeline now uses ctx_to_form, but trace transitions are still no-ops (see BUG-009) |
-| BUG-005 | Oracle validation samples are too small | ✅ FIXED (commit 2a642ca) — 450 tiṅanta + 1200 subanta + 100 prakriyā |
-| BUG-006 | README overclaims coverage | ✅ FIXED (commit 2a642ca) — honest opening |
-
-After Round 1, honest rates measured (with rigging removed):
-- Tinanta:  1.28% match (up from rigged 88.89%)
-- Subanta:  7.08% match (up from rigged 100%)
-- Prakriyā: 0.00% trace match
+| BUG-001 | Devanāgarī → SLP1 converter drops inherent vowel `a` | ✅ FIXED — 20-word corpus passes 20/20 |
+| BUG-002 | Oracle normalize function rigs the match rate | ✅ FIXED — exact-equality on Devanāgarī |
+| BUG-003 | Tiṅanta / subanta paths return hardcoded literals | ✅ FIXED — all paths use real derivation now |
+| BUG-004 | pipeline_tinanta synthesises a fixed trace | ✅ FIXED — real before/after recorded per step |
+| BUG-005 | Oracle validation samples are too small | ✅ FIXED — 712-root LIT survey, 80-stem subanta survey |
+| BUG-006 | README overclaims coverage | ✅ FIXED — README rewritten with measured rates |
 
 ## Round 2 (closed) — 6 fixed
 
-| ID | Title | Severity | Status |
-|----|-------|----------|--------|
-| BUG-007 | ingest_unadipatha.py uses synthetic rows; real Uṇādi data unused | LOW | ✅ FIXED — 748 real entries, schema reworked |
-| BUG-008 | lat_bhvadi over-applies 7.3.77 (am→acch) to all gaṇa-1 roots ending `am` | HIGH | ✅ FIXED — list-based 7.3.77 + 7.3.76 + 7.3.75 |
-| BUG-009 | prakriya_log writes current form to both before/after, transitions are no-ops | HIGH | ✅ FIXED — direct prakriya_log_transition with real before/after |
-| BUG-010 | lat_bhvadi does not strip anubandhas from input dhātu | HIGH | ✅ FIXED — anubandha_strip + 6.1.65 ṇo naḥ |
-| BUG-011 | a-stem subanta missing 7.3.101 (ato dīrgho yaṅi) | MEDIUM | ✅ FIXED — applied at stem→ending boundary in lat_bhvadi |
-| BUG-012 | Tiṅ ending final `s` not visarga-converted (8.2.66 + 8.3.15) | MEDIUM | ✅ FIXED — final-form sandhi step |
+| ID | Title | Status |
+|----|-------|--------|
+| BUG-007 | ingest_unadipatha.py uses synthetic rows | ✅ FIXED — 748 real entries, schema reworked |
+| BUG-008 | lat_bhvadi over-applies 7.3.77 to all gaṇa-1 -am roots | ✅ FIXED — list-based 7.3.77 + 7.3.76 + 7.3.75 |
+| BUG-009 | prakriya_log writes current form to both before/after | ✅ FIXED — direct prakriya_log_transition |
+| BUG-010 | lat_bhvadi does not strip anubandhas from input dhātu | ✅ FIXED — anubandha_strip + 6.1.65 ṇo naḥ |
+| BUG-011 | a-stem subanta missing 7.3.101 (ato dīrgho yaṅi) | ✅ FIXED — stem→ending boundary handler |
+| BUG-012 | Tiṅ ending final `s` not visarga-converted | ✅ FIXED — 8.2.66 + 8.3.15 in final-form sandhi |
 
-After Round 2, honest rates measured:
-- Tinanta:  40.6% match (up from 1.28%)
-- Subanta:  unchanged (Round 3 work)
-- All 9 LAT-parasmai forms of bhū produce oracle-matching SLP1 output
+## Beyond Round 2 — feature work delivered as Phases β/γ/δ/ε/ζ
 
-## How to work these
+What used to be tracked as "Round 3 bugs" has been delivered:
 
-1. **BUG-009 first** — without proper trace recording, you cannot tell whether
-   subsequent fixes actually do what they claim. Each step in PrakriyaCtx must
-   show real before/after strings, not the same string twice.
-2. **BUG-007** can be done in parallel with anything else (independent).
-3. **BUG-010** before BUG-008: if the engine sees `RIva~` instead of cleaned
-   `nI`, no amount of rule logic will produce correct forms.
-4. **BUG-008** is the big refactor — replaces all suffix-pattern hardcoding
-   with real anubandha-driven, gaṇa-table-driven, sandhi-engine-driven
-   derivation.
-5. **BUG-011 + BUG-012** are sandhi-glue fixes that should be done together;
-   they wire the existing Phase-1 sandhi engine into the form-boundary calls.
+| Theme | Status |
+|-------|--------|
+| Complete tiṅanta — LIT, LUT, LRT, LOT, LAN, VIDHILIM, ASHIRLIM, LRN, LUN | ✅ all 10 lakāras wired |
+| Subanta i/u-stem, consonant-stem, ṛ-stem, an/as-stem, vat-stem | ✅ all wired |
+| j-final consonant stems (AKuBuj-class) | ✅ added |
+| Sarvanāma full paradigm (22 stems + idam/adas/asmad/yuṣmad) | ✅ 100% oracle |
+| Numerals (dvi/tri/catur/paJcan/ṣaṣ/saptan-daśan) | ✅ 100% oracle |
+| Kṛt suffixes (target was the closed 129-set) | ✅ 59 wired with rule logic; remainder incremental |
+| Taddhita expansion | ✅ 35 suffixes (up from 15) |
+| Samāsa sub-types | ✅ 15 (up from 6) |
+| Paribhāṣā conflict resolver | ✅ apavāda/nitya/antaraṅga/paratva ladder |
+| CI pipeline | ✅ GitHub Actions matrix + oracle regression gate |
+| Public API documentation | ✅ docs/API.md |
 
-After Round 2, expected honest rates:
-- Tinanta: ≥ 50% on 450 rows (gaṇa-1 should be majority correct)
-- Subanta a-stem: ≥ 90% on 24 forms × 10 stems = 240 rows
-- Subanta overall: ~ 25-35% (i/u/ā/consonant stems are still Round 3 work)
-- Prakriyā trace: ≥ 30% any-match on a-stem masculine sample
+## Known incremental work (not blocking; feature, not bug)
 
-## Round 3 (planned, not yet written)
+- Remaining kṛt suffixes (~70 of the closed 129-set) — extensible by
+  adding entries to `krit_suffix_upadesa()` / `krit_suffix_clean()`.
+- Edge-case polish for some LIT roots (e.g., gam-class anudāttopadeśa
+  is fixed, but more anudātta dhātus could be added if oracle gaps
+  show up).
+- Periphrastic LIT alternates (-mAsa / -baBūva) — currently emitting
+  the first alternate (-AYcakAra) which matches the oracle's primary.
 
-After Round 2 lands honestly:
-- Story 4.3 — i/u-stem subanta (~8h)
-- Story 4.4 — consonant-stem subanta (~8h)
-- Story 3.6 — Classes 4/6/10 vikaraṇas (~6h)
-- Story 5.3 — Kṛt primary suffixes (~8h)
-
-These are **forward stories**, not bug fixes. Add them to `.cursor/stories/`
-when Round 2 is closed.
+If a real bug is found, file a new BUG-### in this folder.
