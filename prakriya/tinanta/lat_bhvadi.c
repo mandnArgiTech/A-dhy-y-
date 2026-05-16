@@ -876,9 +876,14 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       bool long_initial = (first == 'I' || first == 'U' || first == 'F' ||
                            first == 'e' || first == 'o' ||
                            first == 'E' || first == 'O');
-      bool short_iu_with_anubandha = i_anubandha &&
-                                     (first == 'i' || first == 'u');
-      if (long_initial || short_iu_with_anubandha) {
+      /* 3.1.36 ijādeśca gurumato'naṛcchaḥ — vowel-initial dhātus
+         whose upadhā becomes guru (via num insertion for i-anubandha,
+         or originally) take periphrastic LIT. Short ṛ-initial roots
+         like fji~ → fnj qualify the same way as i/u-anubandha. */
+      bool short_iuf_with_anubandha = i_anubandha &&
+                                      (first == 'i' || first == 'u' ||
+                                       first == 'f');
+      if (long_initial || short_iuf_with_anubandha) {
         lit_periphrastic = true;
       }
     }
@@ -1128,6 +1133,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        restoration. */
     if (initial_was_sa) {
       sandhi_apply_satva(reduped, root_start);
+      /* The companion retroflex restoration: when the upadeśa
+         cluster was ṣṭ (z+w) — flattened to s+t by 6.1.64 — the
+         abhyāsa-reduplication path keeps the cluster as 'st' in the
+         root portion. After ṣatva re-fronts the s back to ṣ, also
+         restore the retroflex 't' to 'ṭ' (w) in that root position
+         so the surface form matches the original ṣṭ cluster
+         (ṣṭuc, ṣṭip, ṣṭep classes). */
+      if (dhatu_slp1 && dhatu_slp1[0] == 'z' && dhatu_slp1[1] == 'w') {
+        for (size_t i = root_start; reduped[i]; i++) {
+          if (reduped[i] == 'z' && reduped[i + 1] == 't') {
+            reduped[i + 1] = 'w';
+            break;
+          }
+        }
+      }
     }
 
     /* 7.2.10 ekāca upadeśe — aniṭ roots refuse the iṭ-augment that the
@@ -1380,9 +1400,47 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     stem[sizeof(stem) - 1] = '\0';
     used_guna = false;
   }
+  /* Aniṭ check for ASHIRLIM-A / LUN-A: when the dhātu is aniṭ
+     (Mādhava col-9 'A'), the ātmanepada s-aorist / sīsaṭ-ASHIRLIM
+     endings drop their iṭ-augment 'i' and the surface ṣ-of-sic
+     (post-iN) reverts to 's'. We also block guṇa on the root
+     vowel since the resulting suffix is kit. */
+  static const char *const ANIT_GANA1_ROOTS_FULL[] = {
+    "Baj","Bf","Cyu","De","Df","DmA","DrE","Dru","Dvf","DyE",
+    "Gas","Gf","GrA","Gu","KE","Ku","Nu","SE","Sad","Sap",
+    "Siz","SrA","SrE","Sru","SyE","cyu","dA","dE","dah","danS",
+    "de","dfS","drE","dru","du","dvf","dyE","f","gA","gE",
+    "gam","gf","glE","gu","had","hf","hve","hvf","jE","jf",
+    "ji","jri","jyu","kE","kfz","klu","kruS","ku","kzE","kzi",
+    "laB","me","mih","mlE","mnA","nI","nam","pA","pE","pac",
+    "plu","pru","pyE","rE","raB","ram","ranj","ru","ruh","sE",
+    "sRE","sTA","sad","sanj","sf","sfp","skand","smf","smi",
+    "srE","sru","stE","styE","su","svanj","tap","tip","trE",
+    "tviz","tyaj","u","vE","vah","vap","vas","ve","vf","viz",
+    "vye","yaB","yaj","yam",
+    "ad", "vac", "vid",
+    NULL
+  };
+  bool is_anit_atmane = false;
+  if ((lakara == ASH_ASHIRLIM || lakara == ASH_LUN) && pd == ASH_ATMANE &&
+      !i_anubandha) {
+    for (size_t i = 0; ANIT_GANA1_ROOTS_FULL[i]; i++) {
+      if (strcmp(clean_root, ANIT_GANA1_ROOTS_FULL[i]) == 0) {
+        is_anit_atmane = true; break;
+      }
+    }
+  }
+  /* Reset stem to bare clean_root for aniṭ-ātmane: the kit-suffix
+     blocks the guṇa already applied in apply_class_transform. */
+  if (is_anit_atmane) {
+    strncpy(stem, clean_root, sizeof(stem) - 1);
+    stem[sizeof(stem) - 1] = '\0';
+    used_guna = false;
+  }
   if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN ||
        lakara == ASH_LUN) &&
-      !block_guna_completely && !i_anubandha && !lun_root_aorist) {
+      !block_guna_completely && !i_anubandha && !lun_root_aorist &&
+      !is_anit_atmane) {
     bool has_unstrong = false;
     size_t unstrong_pos = 0;
     for (size_t i = 0; stem[i]; i++) {
@@ -1457,6 +1515,44 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   if (lun_root_aorist && pd == ASH_PARASMAI) {
     int idx = (int)p * 3 + (int)v;
     if (idx >= 0 && idx < 9) t = &LUN_ROOT_AORIST_P[idx];
+  }
+
+  /* Aniṭ-ātmane ending override: drop the iṭ 'i' from the LUN/
+     ASHIRLIM ending. Without the iN-vowel before the sic-s, both
+     the s itself (ṣ → s) and the immediately-following retroflex
+     stops (ṭ → t, ṭh → th) lose their retroflexion since 8.3.59 /
+     8.4.41 no longer apply. Only the FIRST z+w/W cluster reverts —
+     downstream retroflexes (like the 'z' in 'sIzwa' / 'sIzWAH'
+     occurring after the long 'I' sīsaṭ vowel) keep their ṣ since
+     the long 'I' is itself iN. */
+  if (is_anit_atmane && t && t->clean && t->clean[0] == 'i') {
+    static char anit_atmane_buf[24];
+    const char *src = t->clean + 1;  /* skip iṭ 'i' */
+    size_t out_idx = 0;
+    bool first_z_seen = false;
+    for (size_t i = 0; src[i] && out_idx + 1 < sizeof(anit_atmane_buf); i++) {
+      char c = src[i];
+      if (c == 'z' && !first_z_seen) {
+        anit_atmane_buf[out_idx++] = 's';
+        first_z_seen = true;
+        /* If next char is retroflex w/W (from 8.4.41 ṣṭunā), revert
+           to dental t/T. */
+        if (src[i + 1] == 'w') {
+          anit_atmane_buf[out_idx++] = 't';
+          i++;
+        } else if (src[i + 1] == 'W') {
+          anit_atmane_buf[out_idx++] = 'T';
+          i++;
+        }
+      } else {
+        anit_atmane_buf[out_idx++] = c;
+      }
+    }
+    anit_atmane_buf[out_idx] = '\0';
+    static TingEntry anit_atmane_local;
+    anit_atmane_local = *t;
+    anit_atmane_local.clean = anit_atmane_buf;
+    t = &anit_atmane_local;
   }
 
   /* 3.1.33 syatāsi luṭos — for LRT/LRN insert sya. For LUT the
@@ -1704,6 +1800,65 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       strcat(form, t->clean);
     } else {
       strcat(form, t->clean);
+    }
+  }
+  /* Aniṭ-ātmane cluster sandhi at the stem-ending junction:
+     - 8.2.26 jharo jhari savarṇe: stop + s + dental stop drops the
+       internal s (tip + s + ta → tipta; tip + s + TAH → tipTAH).
+     - 8.2.40 jhalāṃ jaś jhaśi: voiceless stop becomes voiced
+       (= jaś) before a voiced aspirate (jhaś); the internal s also
+       drops in this configuration (tip + s + Dvam → tibDvam). */
+  if (is_anit_atmane) {
+    size_t fl = strlen(form);
+    /* Pass 1 — 8.2.26 jharo jhari savarṇe with sic-s: stop + s +
+       dental stop drops the s. Stop + s + voiced asp drops s AND
+       voices the preceding stop (8.2.40 jhalāṃ jaś jhaśi). */
+    for (size_t i = 0; i + 2 < fl; i++) {
+      char a = form[i], b = form[i + 1], c = form[i + 2];
+      bool a_voiceless_stop = (a == 'p' || a == 'P' || a == 't' || a == 'T' ||
+                               a == 'k' || a == 'K' || a == 'c' || a == 'C' ||
+                               a == 'w' || a == 'W');
+      bool c_dent_unvoiced = (c == 't' || c == 'T');
+      bool c_voiced_asp = (c == 'D' || c == 'B' || c == 'J' || c == 'G' ||
+                           c == 'Q');
+      if (a_voiceless_stop && b == 's' && c_dent_unvoiced) {
+        memmove(form + i + 1, form + i + 2, fl - i - 1);
+        fl--;
+        break;
+      } else if (a_voiceless_stop && b == 's' && c_voiced_asp) {
+        char voiced = a;
+        switch (a) {
+          case 'p': case 'P': voiced = 'b'; break;
+          case 't': case 'T': voiced = 'd'; break;
+          case 'k': case 'K': voiced = 'g'; break;
+          case 'c': case 'C': voiced = 'j'; break;
+          case 'w': case 'W': voiced = 'q'; break;
+        }
+        form[i] = voiced;
+        memmove(form + i + 1, form + i + 2, fl - i - 1);
+        fl--;
+        break;
+      }
+    }
+    /* Pass 2 — 8.2.40 jhalāṃ jaś jhaśi at a bare stop+voiced-asp
+       junction (no intervening s): voice the preceding stop. */
+    for (size_t i = 0; i + 1 < fl; i++) {
+      char a = form[i], b = form[i + 1];
+      bool a_voiceless_stop = (a == 'p' || a == 'P' || a == 't' || a == 'T' ||
+                               a == 'k' || a == 'K' || a == 'c' || a == 'C' ||
+                               a == 'w' || a == 'W');
+      bool b_voiced_asp = (b == 'D' || b == 'B' || b == 'J' || b == 'G' ||
+                           b == 'Q');
+      if (a_voiceless_stop && b_voiced_asp) {
+        switch (a) {
+          case 'p': case 'P': form[i] = 'b'; break;
+          case 't': case 'T': form[i] = 'd'; break;
+          case 'k': case 'K': form[i] = 'g'; break;
+          case 'c': case 'C': form[i] = 'j'; break;
+          case 'w': case 'W': form[i] = 'q'; break;
+        }
+        break;
+      }
     }
   }
   /* Nasal place assimilation (cluster surface rule corresponding to

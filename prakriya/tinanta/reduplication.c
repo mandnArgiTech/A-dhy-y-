@@ -149,11 +149,15 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
       merged_iu = 'U';
     }
     /* Multi-consonant cluster: use "An"-abhyāsa pattern for any
-       vowel-initial root (covers ard, arc, idi, uK after num). */
-    if (cons_after >= 2) {
+       vowel-initial root (covers ard, arc, idi, uK after num).
+       Short ṛ-initial roots like fj, fc also use An-abhyāsa even
+       with a single consonant following the ṛ (oracle: fj → Anfje). */
+    bool rinit_single = (root_v == 'f' && cons_after >= 1);
+    if (cons_after >= 2 || rinit_single) {
       char vowel_for_an = merged_a ? merged_a :
                           (merged_iu == 'I' ? 'I' :
-                           merged_iu == 'U' ? 'U' : 0);
+                           merged_iu == 'U' ? 'U' :
+                           (root_v == 'f') ? 'A' : 0);
       if (vowel_for_an) {
         if (pos + 2 + n + 1 > out_len) return false;
         out[pos++] = vowel_for_an;
