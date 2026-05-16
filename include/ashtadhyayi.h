@@ -288,6 +288,15 @@ typedef enum {
   ASH_KRIT_KTVA,       /**< Absolutive without prefix (-tvā) */
   ASH_KRIT_TUM,        /**< Infinitive (-tum) */
   ASH_KRIT_LYUT,       /**< Action noun (-ana, also called lyuṭ) */
+  /* Phase δ kṛt expansion */
+  ASH_KRIT_GHAN,       /**< Action noun (-a / vrddhi-root) per 3.3.18 */
+  ASH_KRIT_NVUL,       /**< Agent noun (-aka) per 3.1.133 */
+  ASH_KRIT_TRC,        /**< Agent noun (-tṛ) per 3.1.133 */
+  ASH_KRIT_KTIN,       /**< Action noun (-ti) per 3.3.94 */
+  ASH_KRIT_KYAP,       /**< Gerundive (-ya, kit) per 3.1.106 */
+  ASH_KRIT_NYAT,       /**< Gerundive (-ya, vrddhi) per 3.1.124 */
+  ASH_KRIT_KVIP,       /**< Agent noun (-φ, zero) per 3.2.61 */
+  ASH_KRIT_NAMUL,      /**< Adverbial absolutive (-am) per 3.4.22 */
 } ASH_KritType;
 
 /** Derive a kṛt form. */

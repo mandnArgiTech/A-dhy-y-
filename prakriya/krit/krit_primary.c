@@ -21,6 +21,14 @@ static const char *krit_suffix_upadesa(ASH_KritType krit) {
     case ASH_KRIT_KTVA: return "ktvA";
     case ASH_KRIT_TUM: return "tumun";
     case ASH_KRIT_LYUT: return "lyuw";
+    case ASH_KRIT_GHAN: return "Gan";
+    case ASH_KRIT_NVUL: return "Rvul";
+    case ASH_KRIT_TRC: return "tfc";
+    case ASH_KRIT_KTIN: return "ktin";
+    case ASH_KRIT_KYAP: return "kyap";
+    case ASH_KRIT_NYAT: return "Ryat";
+    case ASH_KRIT_KVIP: return "kvip";
+    case ASH_KRIT_NAMUL: return "Ramul";
     default: return NULL;
   }
 }
@@ -35,6 +43,14 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
     case ASH_KRIT_KTVA: return "tvA";
     case ASH_KRIT_TUM: return "tum";
     case ASH_KRIT_LYUT: return "ana";
+    case ASH_KRIT_GHAN: return "a";       /* vrddhi root + a */
+    case ASH_KRIT_NVUL: return "aka";     /* guṇa root + aka */
+    case ASH_KRIT_TRC: return "tf";       /* guṇa root + tṛ */
+    case ASH_KRIT_KTIN: return "ti";      /* zero-grade root + ti */
+    case ASH_KRIT_KYAP: return "ya";      /* kit, no guṇa */
+    case ASH_KRIT_NYAT: return "ya";      /* vrddhi root + ya */
+    case ASH_KRIT_KVIP: return "";        /* zero suffix */
+    case ASH_KRIT_NAMUL: return "am";     /* guṇa root + am */
     default: return NULL;
   }
 }
@@ -42,7 +58,13 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
 /* Whether a suffix is k-it (k anubandha) — blocks guṇa/vṛddhi by 1.1.5. */
 static bool krit_is_kit(ASH_KritType krit) {
   return krit == ASH_KRIT_KTA || krit == ASH_KRIT_KTAVAT ||
-         krit == ASH_KRIT_KTVA;
+         krit == ASH_KRIT_KTVA || krit == ASH_KRIT_KTIN ||
+         krit == ASH_KRIT_KYAP || krit == ASH_KRIT_KVIP;
+}
+
+/* Whether a suffix triggers vṛddhi on the root vowel (ñit/ṇit). */
+static bool krit_triggers_vrddhi(ASH_KritType krit) {
+  return krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT;
 }
 
 /* Closed list of seṭ-class roots that take iṭ before niṣṭhā/tum/tvA.
@@ -50,6 +72,10 @@ static bool krit_is_kit(ASH_KritType krit) {
    the seed list keeps the story self-contained. */
 static const char *const SET_ROOTS[] = {
   "pat", "vad", "vand", "kuq", "siv", "kup", "siD", "Bram", "klam",
+  /* Phase δ — extended seṭ-list per dhātupāṭha 'S' column for common
+     gaṇa-1 roots */
+  "BU", "Bav", "BAz", "vart", "ji", "nI", "smf", "han", "dah",
+  "ruh", "khan", "jan", "edh", "kuS",
   NULL
 };
 
@@ -245,19 +271,48 @@ static bool krit_rule_derive(const char *clean_root, ASH_KritType krit,
   const char *clean_suffix = krit_suffix_clean(krit);
   if (!clean_suffix || !out || out_len == 0) return false;
   bool kit = krit_is_kit(krit);
+  bool wants_vrddhi = krit_triggers_vrddhi(krit);
   char stem[TERM_VALUE_LEN] = {0};
   strncpy(stem, clean_root, sizeof(stem) - 1);
   stem[sizeof(stem) - 1] = '\0';
-  if (!kit) {
-    /* TUM and LYUT are not kit; apply 7.3.84 guṇa. */
+  if (wants_vrddhi) {
+    /* 7.2.115/116 vṛddhi for ñit/ṇit suffixes (GHaN, NyaT). */
+    size_t sn = strlen(stem);
+    for (size_t i = 0; i < sn; i++) {
+      char c = stem[i];
+      char v = varna_vrddhi(c);
+      if (v != c) {
+        if (c == 'f' || c == 'F' || c == 'x' || c == 'X') {
+          /* f → Ar, x → Al: insert tail r/l. */
+          char tail = (c == 'x' || c == 'X') ? 'l' : 'r';
+          if (sn + 1 < sizeof(stem)) {
+            memmove(stem + i + 2, stem + i + 1, sn - i);
+            stem[i] = v;
+            stem[i + 1] = tail;
+            sn++;
+          }
+        } else {
+          stem[i] = v;
+        }
+        break;
+      }
+    }
+    /* GHaN suffix is vowel-initial (a); apply 6.1.78 ec→ay at the
+       boundary so e/o/E/O before -a become ay/av/Ay/Av. */
+    if (krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT) {
+      krit_apply_ec_to_ay(stem, sizeof(stem));
+    }
+  } else if (!kit) {
+    /* Apply 7.3.84 guṇa for ñit/non-kit suffixes. */
     char gunaed[TERM_VALUE_LEN] = {0};
     if (krit_apply_guna(stem, gunaed, sizeof(gunaed))) {
       strncpy(stem, gunaed, sizeof(stem) - 1);
       stem[sizeof(stem) - 1] = '\0';
     }
-    /* For LYUT (vowel-initial suffix `ana`), apply 6.1.78 ec→ay if
-       stem ends in e/o/E/O. */
-    if (krit == ASH_KRIT_LYUT) {
+    /* For vowel-initial suffixes (lyuṭ, Rvul, namul), apply 6.1.78
+       ec→ay if stem ends in e/o/E/O. */
+    if (krit == ASH_KRIT_LYUT || krit == ASH_KRIT_NVUL ||
+        krit == ASH_KRIT_NAMUL) {
       krit_apply_ec_to_ay(stem, sizeof(stem));
     }
   } else {
@@ -276,16 +331,31 @@ static bool krit_rule_derive(const char *clean_root, ASH_KritType krit,
       }
     }
   }
-  /* iṭ insertion for seṭ-class roots before kit/non-kit consonant suffixes
-     starting with a `t`. The actual rule is more complex; this approximates
-     the dominant case for KTA/KTVA/TUM. LYUT (ana) is vowel-initial so iṭ
-     does not apply there. */
+  /* iṭ insertion for seṭ-class roots before consonant-initial suffixes
+     starting with a `t` (kta, ktvA, tum, tavya, tfc). 7.2.10 aniṭ list
+     blocks iṭ. For kit suffixes (kta, ktvA), vowel-final aniṭ roots
+     (BU, kf etc.) block iṭ even though they're in the seṭ list overall
+     — kit blocks iṭ per 7.2.11 śryukaH kiti. */
   bool need_it = false;
   if (clean_suffix[0] == 't' && root_is_set(clean_root)) {
-    need_it = true;
+    /* Skip iṭ for kit suffixes when the root is vowel-final
+       (7.2.11 śryukaH kiti). */
+    bool vowel_final = false;
+    size_t rn = strlen(clean_root);
+    if (rn > 0) {
+      char rf = clean_root[rn - 1];
+      vowel_final = (rf == 'a' || rf == 'i' || rf == 'u' || rf == 'f' ||
+                     rf == 'A' || rf == 'I' || rf == 'U' || rf == 'F' ||
+                     rf == 'e' || rf == 'o' || rf == 'E' || rf == 'O' ||
+                     rf == 'x' || rf == 'X');
+    }
+    need_it = !(kit && vowel_final);
   }
   char joined[TERM_VALUE_LEN * 2] = {0};
   if (need_it) {
+    /* iṭ becomes a vowel between stem and suffix; apply 6.1.78 ec→ay
+       at the stem/iṭ boundary if stem ends in e/o/E/O. */
+    krit_apply_ec_to_ay(stem, sizeof(stem));
     snprintf(joined, sizeof(joined), "%si%s", stem, clean_suffix);
   } else {
     snprintf(joined, sizeof(joined), "%s%s", stem, clean_suffix);
