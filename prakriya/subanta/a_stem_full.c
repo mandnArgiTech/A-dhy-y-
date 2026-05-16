@@ -79,7 +79,7 @@ static bool natva_is_blocker(char c) {
     case 't': case 'T': case 'd': case 'D':
     case 'c': case 'C': case 'j': case 'J': case 'Y':
     case 'w': case 'W': case 'q': case 'Q':
-    case 'S': case 's':
+    case 'R': case 'S': case 's':
     case 'l':
       return true;
   }
@@ -91,7 +91,7 @@ static void apply_natva(const char *stem, char *form) {
   bool seen = false;
   for (size_t i = 0; form[i]; i++) {
     char c = form[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+    if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
       seen = true;
     } else if (natva_is_blocker(c)) {
       seen = false;

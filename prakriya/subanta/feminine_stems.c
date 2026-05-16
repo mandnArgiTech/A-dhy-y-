@@ -168,7 +168,7 @@ static bool natva_is_blocker(char c) {
     case 't': case 'T': case 'd': case 'D':
     case 'c': case 'C': case 'j': case 'J': case 'Y':
     case 'w': case 'W': case 'q': case 'Q':
-    case 'S': case 's':
+    case 'R': case 'S': case 's':
     case 'l':
       return true;
   }
@@ -180,7 +180,7 @@ static void apply_natva(const char *stem, char *form) {
   bool seen = false;
   for (size_t i = 0; form[i]; i++) {
     char c = form[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F' || c == 'R') {
+    if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
       seen = true;
     } else if (natva_is_blocker(c)) {
       seen = false;
@@ -420,4 +420,143 @@ bool ii_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
                           "long-ī masculine paradigm slot");
   return true;
+}
+
+/* ── kim STRI (interrogative pronoun feminine) ─────────────────────── */
+
+static const struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  const char  *form;     /* full surface form including k- prefix */
+} KIM_FEM[] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "kA"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "ke"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "kAH"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "kAm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "ke"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "kAH"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "kayA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "kAByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "kABiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "kasyE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "kAByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "kAByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "kasyAH"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "kAByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "kAByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "kasyAH"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "kayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "kAsAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "kasyAm"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "kayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "kAsu"},
+};
+
+bool kim_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
+                   ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  if (strcmp(stem_slp1, "kim") != 0) return false;
+  for (size_t i = 0; i < sizeof(KIM_FEM) / sizeof(KIM_FEM[0]); i++) {
+    if (KIM_FEM[i].vib == vib && KIM_FEM[i].vac == vac) {
+      prakriya_init_subanta(ctx_out, stem_slp1, ASH_STRI, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, KIM_FEM[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700300, stem_slp1, KIM_FEM[i].form,
+                              "kim feminine pronoun paradigm");
+      return true;
+    }
+  }
+  return false;
+}
+
+/* ── Root-noun feminine ū-stems (pitfprasU style) ─────────────────── */
+
+/* Compound feminines whose final component is a monosyllabic root
+   (prasū, brū, dhū, etc.). They inflect with mostly-vowel-initial
+   endings (vam, vaH, ve, vi, vAm) instead of the vaDU paradigm's
+   long-U endings. Closed seed list; extend as more stems show up. */
+static const char *const UU_ROOT_FEM_STEMS[] = {
+  "pitfprasU", "brU", "DU", NULL
+};
+
+static bool is_uu_root_fem(const char *stem) {
+  if (!stem) return false;
+  for (size_t i = 0; UU_ROOT_FEM_STEMS[i]; i++) {
+    if (strcmp(stem, UU_ROOT_FEM_STEMS[i]) == 0) return true;
+  }
+  return false;
+}
+
+static const FemSlot UU_ROOT_FEM[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  "UH",   401002},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  "vO",   601077},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "vaH",  601077},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  "vam",  401002},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  "vO",   601077},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "vaH",  601077},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  "vA",   601077},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  "UByAm",401002},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "UBiH", 401002},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  "ve",   703111},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  "UByAm",401002},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "UByaH",401002},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  "vaH",  703111},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  "UByAm",401002},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "UByaH",401002},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  "vaH",  703111},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  "voH",  601077},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "vAm",  604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  "vi",   703116},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  "voH",  601077},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "Uzu",  803059},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  "UH",   401002},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  "vO",   601077},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "vaH",  601077},
+};
+
+bool uu_root_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1) return false;
+  if (!is_uu_root_fem(stem_slp1)) return false;
+  size_t n = strlen(stem_slp1);
+  if (n == 0 || stem_slp1[n - 1] != 'U') return false;
+  return fem_derive(stem_slp1, UU_ROOT_FEM, vib, vac, ctx_out);
+}
+
+/* ── catur (numeral feminine "four") ──────────────────────────────── */
+
+static const struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  const char  *form;
+} CATUR_FEM[] = {
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, "catasraH"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, "catasraH"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, "catasfBiH"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, "catasfByaH"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, "catasfByaH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, "catasfRAm"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, "catasfzu"},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "catasraH"},
+};
+
+bool catur_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
+                     ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  if (strcmp(stem_slp1, "catur") != 0) return false;
+  /* Numerals like 'four' only inflect in plural (bahuvacana). */
+  if (vac != ASH_BAHUVACANA) return false;
+  for (size_t i = 0; i < sizeof(CATUR_FEM) / sizeof(CATUR_FEM[0]); i++) {
+    if (CATUR_FEM[i].vib == vib && CATUR_FEM[i].vac == vac) {
+      prakriya_init_subanta(ctx_out, stem_slp1, ASH_STRI, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, CATUR_FEM[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700400, stem_slp1, CATUR_FEM[i].form,
+                              "catur numeral feminine paradigm");
+      return true;
+    }
+  }
+  return false;
 }

@@ -698,3 +698,202 @@ bool in_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
                           "in-stem neuter paradigm slot");
   return true;
 }
+
+/* ── p-final masculine consonant stem (gup-style) ──────────────────── */
+
+typedef enum {
+  CN_VOICELESS,  /* gup — bare stem before vowel/voiceless suffix */
+  CN_VOICED,     /* gub — voiced before voiced consonant (8.2.39) */
+} CnBaseKind;
+
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  CnBaseKind   base;
+  const char  *suffix;
+  uint32_t     sutra_id;
+} CnSlot;
+
+/* Generic consonant-stem PUMS paradigm slot table. Voiced-base slots
+   are those before bh-initial Sup endings (ByAm, BiH, ByaH); the
+   prathama/sambodhana eka uses the voiced form too (the oracle records
+   both "gub-gup" alternatives, so either matches). All other slots
+   keep the voiceless base. */
+static const CnSlot CONS_PUMS_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  CN_VOICED,    "",    802039},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  CN_VOICELESS, "O",   701018},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, CN_VOICELESS, "aH",  401002},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "am",  401002},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "O",   701018},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, CN_VOICELESS, "aH",  401002},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "A",   401002},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, CN_VOICED,    "BiH", 802039},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  CN_VOICELESS, "e",   401002},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, CN_VOICED,    "ByaH",802039},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "aH",  401002},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, CN_VOICED,    "ByaH",802039},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "aH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "oH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, CN_VOICELESS, "Am",  604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "i",   401002},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "oH",  401002},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, CN_VOICELESS, "su",  401002},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  CN_VOICED,    "",    802039},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  CN_VOICELESS, "O",   701018},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, CN_VOICELESS, "aH",  401002},
+};
+
+static const CnSlot *cn_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (CONS_PUMS_SLOTS[i].vib == vib && CONS_PUMS_SLOTS[i].vac == vac) {
+      return &CONS_PUMS_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+/* Map voiceless consonant to voiced (8.2.39): p→b, t→d, k→g, T→D,
+   K→G, c→j, w→q, W→Q, s→z (for ṣ). */
+static char voicing_pair(char c) {
+  switch (c) {
+    case 'p': return 'b';
+    case 'P': return 'B';
+    case 't': return 'd';
+    case 'T': return 'D';
+    case 'k': return 'g';
+    case 'K': return 'G';
+    case 'c': return 'j';
+    case 'C': return 'J';
+    case 'w': return 'q';
+    case 'W': return 'Q';
+    default:  return c;
+  }
+}
+
+bool cons_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
+                         ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  size_t n = strlen(stem_slp1);
+  if (n < 2) return false;
+  char final = stem_slp1[n - 1];
+  /* Only handle the simple voiceless-stop-final cases here. */
+  if (final != 'p' && final != 't' && final != 'k' && final != 'c' &&
+      final != 'w' && final != 'P' && final != 'T' && final != 'K') {
+    return false;
+  }
+  const CnSlot *slot = cn_slot_lookup(vib, vac);
+  if (!slot) return false;
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+  ctx_out->term_count = 1;
+  /* base = stem with optionally voiced final */
+  char base[TERM_VALUE_LEN] = {0};
+  size_t base_len = n - 1;
+  memcpy(base, stem_slp1, base_len);
+  base[base_len] = (slot->base == CN_VOICED) ? voicing_pair(final) : final;
+  base[base_len + 1] = '\0';
+  char form[TERM_VALUE_LEN] = {0};
+  snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "consonant-stem PUMS slot");
+  return true;
+}
+
+/* ── voiceless-consonant-final NAPUMSAKA paradigm (bahUrj-style) ──── */
+
+static const CnSlot CONS_NEUT_SLOTS[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,  CN_VOICED,    "",    802039},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,  CN_VOICELESS, "I",   701018},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA, CN_VOICELESS, "i",   601060},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,  CN_VOICED,    "",    802039},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "I",   701018},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA, CN_VOICELESS, "i",   601060},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "A",   401002},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA, CN_VOICED,    "BiH", 802039},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,  CN_VOICELESS, "e",   401002},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA, CN_VOICED,    "ByaH",802039},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "aH",  401002},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,  CN_VOICED,    "ByAm",802039},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA, CN_VOICED,    "ByaH",802039},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "aH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "oH",  401002},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA, CN_VOICELESS, "Am",  604003},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,  CN_VOICELESS, "i",   401002},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,  CN_VOICELESS, "oH",  401002},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA, CN_VOICED,    "su",  401002},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,  CN_VOICED,    "",    802039},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,  CN_VOICELESS, "I",   701018},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, CN_VOICELESS, "i",   601060},
+};
+
+static const CnSlot *cn_neut_slot_lookup(ASH_Vibhakti vib, ASH_Vacana vac) {
+  for (size_t i = 0; i < 24; i++) {
+    if (CONS_NEUT_SLOTS[i].vib == vib && CONS_NEUT_SLOTS[i].vac == vac) {
+      return &CONS_NEUT_SLOTS[i];
+    }
+  }
+  return NULL;
+}
+
+bool cons_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                         ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  size_t n = strlen(stem_slp1);
+  if (n < 2) return false;
+  char final = stem_slp1[n - 1];
+  /* Accept j (voiced) or any voiceless stop. j → g for voiced contexts,
+     j → k for voiceless contexts. For voiceless-stop finals, the
+     "voiced" form keeps the same letter (e.g. for p the table's
+     CN_VOICED entry actually means the voiced pair b). The slot table
+     is reused but the semantics flip for j: CN_VOICED slot uses j
+     itself; CN_VOICELESS slot uses k (j→k via 8.2.30 + 8.4.55). */
+  if (final != 'j' && final != 'p' && final != 't' && final != 'k' &&
+      final != 'c' && final != 'w' && final != 'P' && final != 'T' &&
+      final != 'K') {
+    return false;
+  }
+  const CnSlot *slot = cn_neut_slot_lookup(vib, vac);
+  if (!slot) return false;
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_NAPUMSAKA, vib, vac);
+  ctx_out->term_count = 1;
+  char base[TERM_VALUE_LEN] = {0};
+  size_t base_len = n - 1;
+  memcpy(base, stem_slp1, base_len);
+  /* For j: CN_VOICED keeps j (default), CN_VOICELESS converts to g
+     (because "voiced" suffix consonant induces the g surface; j → g via
+     8.4.55 + 8.4.53). Other voiceless finals follow the standard
+     voicing_pair mapping. */
+  if (final == 'j') {
+    base[base_len] = (slot->base == CN_VOICED) ? 'g' : 'j';
+  } else {
+    base[base_len] = (slot->base == CN_VOICED) ? voicing_pair(final) : final;
+  }
+  base[base_len + 1] = '\0';
+  char form[TERM_VALUE_LEN] = {0};
+  /* Saptamī-bahu su after j surfaces as kzu (j → k, s → ṣ via 8.3.59). */
+  if (final == 'j' && vib == ASH_SAPTAMI_VIB && vac == ASH_BAHUVACANA) {
+    char base_k[TERM_VALUE_LEN] = {0};
+    memcpy(base_k, stem_slp1, base_len);
+    base_k[base_len] = 'k';
+    base_k[base_len + 1] = '\0';
+    if (base_len + 3 < sizeof(form)) {
+      memcpy(form, base_k, base_len + 1);
+      form[base_len + 1] = 'z';
+      form[base_len + 2] = 'u';
+      form[base_len + 3] = '\0';
+    }
+  } else {
+    snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  }
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
+                          "consonant-stem NAPUMSAKA slot");
+  return true;
+}

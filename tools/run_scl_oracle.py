@@ -49,9 +49,12 @@ def alt_forms(text: str) -> list:
     s = nfc(text)
     if s.startswith("हे "):
         s = s[len("हे "):]
+    parts = [s]
     if "-" in s:
-        return [p.strip() for p in s.split("-") if p.strip()]
-    return [s]
+        parts = [p.strip() for p in s.split("-") if p.strip()]
+    # Strip the "हे " sambodhana prefix from each alternative as well
+    # (some oracle rows have it on every alt: "हे X-हे Y").
+    return [p[len("हे "):] if p.startswith("हे ") else p for p in parts]
 
 
 def _to_enum_case(vibhakti: str) -> str:
@@ -163,6 +166,10 @@ def run_comparison(filter_stem: Optional[str], sample_size: int, require_rate: O
         is_error = ours_slp1.startswith("ERROR:")
         ours_norm = normalize_compare(ours_deva)
         oracle_alts = alt_forms(row["form_deva"])
+        # Skip empty-oracle rows; the dataset uses empty cells for
+        # paradigm slots that were not validated upstream.
+        if not row["form_deva"].strip():
+            continue
         is_match = int((not is_error) and ours_norm in oracle_alts)
         total += 1; matched += is_match; errors += int(is_error)
         klass = stem_class(row["stem_slp1"])

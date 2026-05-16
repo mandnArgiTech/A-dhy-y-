@@ -288,11 +288,16 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
   if (!root_slp1 || root_slp1[0] == '\0') {
     return make_error_form("empty root");
   }
-  if (l != ASH_LAT) {
-    return make_error_form("only LAT implemented");
+  /* Stories 3.17/3.19/3.20/3.21/3.22/3.23/3.25 — LAT, LAN, LOT,
+     VIDHILIN, LRT, LUT, LRN, ASIRLIN routed through the parameterised
+     lakara_derive_ctx. LIT and LUN are not yet implemented. */
+  if (l != ASH_LAT && l != ASH_LAN && l != ASH_LOT &&
+      l != ASH_VIDHILIM && l != ASH_LRT && l != ASH_LUT &&
+      l != ASH_LRN && l != ASH_ASHIRLIM) {
+    return make_error_form("lakāra not yet implemented");
   }
-  if (!lat_bhvadi_derive_ctx(root_slp1, gana, pu, v, pd, &ctx)) {
-    return make_error_form("lat derivation failed");
+  if (!lakara_derive_ctx(l, root_slp1, gana, pu, v, pd, &ctx)) {
+    return make_error_form("derivation failed");
   }
   return ctx_to_form(&ctx);
 }
@@ -320,7 +325,19 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_PUMS && last == 'A') {
+  if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
+    /* Story 4.15: kim feminine pronominal paradigm. */
+    ok = kim_stri_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && strcmp(normalized, "catur") == 0) {
+    /* Phase α: catur numeral feminine. */
+    ok = catur_stri_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'U' &&
+             (strcmp(normalized, "pitfprasU") == 0 ||
+              strcmp(normalized, "brU") == 0 ||
+              strcmp(normalized, "DU") == 0)) {
+    /* Phase α: root-noun feminine ū-stems (pitfprasU etc.). */
+    ok = uu_root_fem_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && last == 'A') {
     /* Story 4.12: monosyllabic root-noun paradigm (dvArapA, maDupA,
        agniDmA, somapA, viSvapA — all "X-pA" / "X-DmA" compounds). */
     ok = pa_stem_masc_full(normalized, vib, v, &ctx);
@@ -381,6 +398,17 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
              normalized[nlen - 2] == 'a' && normalized[nlen - 1] == 't') {
     /* Story 4.11: vat/mat/at-stem PUMS (SfRvat, BagavatI, ...). */
     ok = vat_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_PUMS && nlen >= 2 &&
+             (last == 'p' || last == 'P' || last == 'k' || last == 'K' ||
+              last == 't' || last == 'T' || last == 'c' || last == 'w')) {
+    /* Story 4.14: voiceless-stop-final consonant PUMS (gup, marut). */
+    ok = cons_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && nlen >= 2 &&
+             (last == 'j' || last == 'p' || last == 'k' || last == 't' ||
+              last == 'P' || last == 'K' || last == 'T' || last == 'c' ||
+              last == 'w')) {
+    /* Story 4.14: voiced-j or voiceless-stop NAPUMSAKA (bahUrj). */
+    ok = cons_stem_neut_full(normalized, vib, v, &ctx);
   } else if (i_stem_can_handle(normalized)) {
     ok = i_stem_derive(normalized, li, vib, v, &ctx);
   } else if (u_stem_can_handle(normalized)) {
