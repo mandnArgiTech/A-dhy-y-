@@ -328,6 +328,15 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
     /* Story 4.15: kim feminine pronominal paradigm. */
     ok = kim_stri_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && strcmp(normalized, "catur") == 0) {
+    /* Phase α: catur numeral feminine. */
+    ok = catur_stri_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && last == 'U' &&
+             (strcmp(normalized, "pitfprasU") == 0 ||
+              strcmp(normalized, "brU") == 0 ||
+              strcmp(normalized, "DU") == 0)) {
+    /* Phase α: root-noun feminine ū-stems (pitfprasU etc.). */
+    ok = uu_root_fem_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && last == 'A') {
     /* Story 4.12: monosyllabic root-noun paradigm (dvArapA, maDupA,
        agniDmA, somapA, viSvapA — all "X-pA" / "X-DmA" compounds). */

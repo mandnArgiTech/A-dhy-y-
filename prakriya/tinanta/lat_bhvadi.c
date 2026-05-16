@@ -601,11 +601,12 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   }
   /* For LRT/LUT/LRN, after the (vikaraṇa-skipped) class transform we
      still need to apply 7.3.84 guṇa to the root vowel since these
-     endings are sārvadhātuka/ārdhadhātuka. ASIRLIN suffix is kit
-     and is suppressed by block_guna_completely, so we explicitly
-     gate this fallback on it. */
+     endings are sārvadhātuka/ārdhadhātuka. Skip when:
+     - ASIRLIN suppresses guṇa (block_guna_completely), OR
+     - i-anubandha already inserted nuM (makes upadha guru, blocking
+       7.3.86 guṇa per laghu requirement). */
   if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN) &&
-      !block_guna_completely) {
+      !block_guna_completely && !i_anubandha) {
     bool has_unstrong = false;
     for (size_t i = 0; stem[i]; i++) {
       char c = stem[i];

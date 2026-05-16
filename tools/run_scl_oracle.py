@@ -49,9 +49,12 @@ def alt_forms(text: str) -> list:
     s = nfc(text)
     if s.startswith("हे "):
         s = s[len("हे "):]
+    parts = [s]
     if "-" in s:
-        return [p.strip() for p in s.split("-") if p.strip()]
-    return [s]
+        parts = [p.strip() for p in s.split("-") if p.strip()]
+    # Strip the "हे " sambodhana prefix from each alternative as well
+    # (some oracle rows have it on every alt: "हे X-हे Y").
+    return [p[len("हे "):] if p.startswith("हे ") else p for p in parts]
 
 
 def _to_enum_case(vibhakti: str) -> str:

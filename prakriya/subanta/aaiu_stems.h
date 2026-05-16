@@ -57,4 +57,10 @@ bool z_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool kim_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
                    ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* Phase α: root-noun feminine ū-stems (pitfprasU); catur numeral fem. */
+bool uu_root_fem_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool catur_stri_full(const char *stem_slp1, ASH_Vibhakti vib,
+                     ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #endif
