@@ -340,6 +340,24 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
        only the pit endings (tip, sip, mip — i.e. ekavacana endings)
        trigger guṇa/vṛddhi. The non-pit endings (tas, anti, Tas, Ta,
        vas, mas) are kit and block guṇa, so root stays bare. */
+    /* gaṇa-7 (rudhādi) śnam vikaraṇa: insert 'na' (strong) or 'n'
+       (weak) before the final consonant of the root.
+       rudh → rurnaDh (strong eka) → ruRaDh via natva, then ending
+       'ti' → ruRadDi via cluster.
+       rudh → runDh (weak) → runDtaH → runDdhaH. */
+    if (gana == 7 && !skip_vikarana) {
+      size_t sn = strlen(stem);
+      if (sn >= 2) {
+        const char *infix = is_strong ? "na" : "n";
+        size_t inflen = strlen(infix);
+        /* Insert before the final consonant. */
+        size_t insert_at = sn - 1;
+        if (sn + inflen < stem_len) {
+          memmove(stem + insert_at + inflen, stem + insert_at, sn - insert_at + 1);
+          memcpy(stem + insert_at, infix, inflen);
+        }
+      }
+    }
     /* gaṇa-3 (juhotyādi) reduplicates the root (6.1.10 ślau) before
        attaching the athematic ending. Reduplicate first, then apply
        guṇa to the LAST vowel of the reduplicated form for strong
@@ -530,6 +548,20 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     size_t sl = strlen(stem);
     if (sl > 0 && stem[sl - 1] == 'u') {
       stem[sl - 1] = 'o';
+    }
+  }
+  /* Gaṇa-9 (kryādi) śnā vikaraṇa weak-form alternations per 6.4.113
+     śnābhyastayoḥ ātaḥ: in weak forms (kit/ṅit endings), the
+     vikaraṇa-A is replaced by I before consonant-initial endings.
+     For vowel-initial endings the A drops entirely. The append
+     above places "nA" at the end; we trim/replace here. */
+  if (gana == 9 && !is_strong) {
+    size_t sl = strlen(stem);
+    if (sl > 0 && stem[sl - 1] == 'A') {
+      /* Replace 'A' with 'I' as a default; the form-builder will
+         drop the I again when concatenating a vowel-initial ending
+         via the existing a+a → a sandhi (treat 'I' analogously). */
+      stem[sl - 1] = 'I';
     }
   }
   return true;
@@ -1356,6 +1388,12 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       strcat(form, t->clean + 1);
     } else if (stem_final == 'U' && ending_initial == 'u') {
       strcat(form, t->clean + 1);
+    } else if (gana == 9 && stem_final == 'I' &&
+               (ending_initial == 'a' || ending_initial == 'A')) {
+      /* Gaṇa-9 weak: śnā-I drops before vowel-initial endings,
+         leaving just the n. krIRI + anti → krIRanti. */
+      form[fl - 1] = '\0';
+      strcat(form, t->clean);
     } else if (stem_final == 'a' && ending_initial == 'e') {
       /* 6.1.87 ad guṇaḥ: a + e → e (drop stem-final a). */
       form[fl - 1] = '\0';
