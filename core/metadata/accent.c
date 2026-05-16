@@ -126,14 +126,51 @@ bool accent_compute_krit(const char *form_slp1, int krit_type,
 
 bool accent_compute_samasa(const char *form_slp1, int samasa_type,
                            ASH_AccentMode mode, char *out, size_t out_len) {
-  (void)samasa_type;
   if (!form_slp1 || !out || out_len == 0) return false;
   if (mode == ASH_ACCENT_NONE) { out[0] = '\0'; return true; }
-  /* 6.1.223 samāsasya: a compound has a single accent. Default for
-     tatpuruṣa per 6.2.139 gati-kāra-...-akoH samhitāyāmaH — final
-     vowel of the compound is udātta. avyayībhāva → ādyudātta per
-     6.2.121 (we approximate as final-udātta for simplicity). */
-  return accent_compute_subanta(form_slp1, mode, out, out_len);
+  /* 6.1.223 samāsasya — a compound has a single accent. Each samāsa
+     sub-type assigns the udātta to a specific syllable per the 6.2.x
+     differentiated rules:
+       avyayībhāva (6.2.121 avyayībhāve cākāle): ādyudātta (first
+         syllable udātta).
+       tatpuruṣa  (6.2.139 gati-kārakopapadāt kṛt): final vowel of
+         the uttara-pada is udātta. We approximate as last-vowel-of-
+         whole-form udātta when we don't have a member split.
+       karmadhāraya (6.2.1 bahuvrīhau prakṛtyā pūrva-padam …): the
+         second member retains its lexical accent → last-vowel udātta.
+       bahuvrīhi (6.2.1 prakṛtyā pūrva-padam bahuvrīhau): first
+         member retains accent → ādyudātta of the compound.
+       dvandva (6.1.223 + 6.2.131): each member retains accent — we
+         approximate with last-vowel-udātta on the second member.
+       dvigu (6.2.29 dvigor lup): ādyudātta.
+   */
+  /* Enum tags (must match ASH_SamasaType in ashtadhyayi.h). */
+  enum {
+    ST_TATPURUSHA = 0, ST_KARMADHARAYA, ST_BAHUVRIHI, ST_DVANDVA,
+    ST_AVYAYIBHAVA, ST_DVIGU, ST_UPAPADA, ST_NAN, ST_PRAADI, ST_GATI,
+    ST_DASHA_BV, ST_ITARETARA_DV, ST_SAMAHARA_DV, ST_VIBHAKTI_T, ST_UPAMAANA_K
+  };
+  bool first_udatta = (samasa_type == ST_AVYAYIBHAVA ||
+                      samasa_type == ST_DVIGU ||
+                      samasa_type == ST_BAHUVRIHI ||
+                      samasa_type == ST_DASHA_BV ||
+                      samasa_type == ST_NAN);
+  /* Count vowels. */
+  size_t total_vowels = 0;
+  for (size_t i = 0; form_slp1[i]; i++) {
+    if (varna_is_vowel(form_slp1[i])) total_vowels++;
+  }
+  if (total_vowels == 0) { out[0] = '\0'; return false; }
+  size_t target_vowel_index = first_udatta ? 0 : (total_vowels - 1);
+  size_t oi = 0, vowel_idx = 0;
+  for (size_t i = 0; form_slp1[i] && oi + 1 < out_len; i++) {
+    if (!varna_is_vowel(form_slp1[i])) continue;
+    out[oi++] = (vowel_idx == target_vowel_index) ? ASH_ACCENT_UDATTA
+                                                  : ASH_ACCENT_ANUDATTA;
+    vowel_idx++;
+  }
+  out[oi] = '\0';
+  return true;
 }
 
 /* ── Phase ζ extension: stem-specific override registry ─────────── */
@@ -174,8 +211,8 @@ const char *accent_lookup_override(const char *stem_slp1) {
    which is beyond this scaffold. */
 __attribute__((constructor))
 static void accent_seed_overrides(void) {
-  /* Phiṭ 1.4 mā-tā-pāṭalā ādi-r-udāttaḥ — kinship/relative stems
-     are ādyudātta (first vowel udātta). */
+  /* ── Pariśiṣṭa-1: ādi-r-udāttaḥ (first-vowel udātta) ─────────── */
+  /* Phiṭ 1.4 mā-tā-pāṭalā: kinship + flower-class. */
   accent_register_override("mAtf",    "UA");
   accent_register_override("pitf",    "UA");
   accent_register_override("BrAtf",   "UA");
@@ -187,30 +224,94 @@ static void accent_seed_overrides(void) {
   accent_register_override("apAlankA","UAAA");
   accent_register_override("ambA",    "UA");
   accent_register_override("sAgara",  "UAA");
-  /* Phiṭ 1.5 antāntayoḥ — antodātta for the listed set. */
+  /* Phiṭ 1.6 nañ-paryāyāṇām: a-initial negatives. */
+  accent_register_override("akSara",  "UAA");
+  accent_register_override("amftya",  "UAA");
+  accent_register_override("aBaya",   "UAA");
+  accent_register_override("alpa",    "UA");
+  /* Phiṭ 1.7 cīvarānta yuvarājādīnām: yuva-rāja, naya-rāja class. */
+  accent_register_override("yuvarAja","UAAA");
+  accent_register_override("nararAja","UAAA");
+  /* Phiṭ 1.13 madhyodātta words. */
+  accent_register_override("kavaca",  "AUA");
+  accent_register_override("DanuS",   "AU");
+  /* Phiṭ 1.17 mānya-ādi: respectable terms ādyudātta. */
+  accent_register_override("mAnya",   "UA");
+  accent_register_override("pUjya",   "UA");
+  /* Phiṭ 1.21 ut-anta-saṃyogāntayoḥ: covers default phiṭ-1.1 case. */
+  /* Phiṭ 1.24 kakuda-ādi-r-udāttam. */
+  accent_register_override("kakuda",  "UAA");
+  accent_register_override("kakuBa",  "UAA");
+
+  /* ── Pariśiṣṭa-2: antodātta exceptions ───────────────────────── */
+  /* Phiṭ 1.5 antāntayoḥ. */
   accent_register_override("agni",    "AU");
   accent_register_override("vAyu",    "AU");
   accent_register_override("hari",    "AU");
   accent_register_override("guru",    "AU");
   accent_register_override("dEva",    "AU");
-  /* Phiṭ 1.6 nañ-paryāyaṇāmādir akāra-r-udāttaḥ — a-initial negatives
-     have ādyudātta on the negation 'a'. */
-  accent_register_override("akSara",  "UAA");
-  accent_register_override("amftya",  "UAA");
-  /* Phiṭ 1.7 cīvarānta yuvarājādīnāṃ — yuva-rāja class ādyudātta. */
-  accent_register_override("yuvarAja","UAAA");
-  /* Phiṭ 1.13 madhyodātta exceptions. */
-  accent_register_override("kavaca",  "AUA");
-  accent_register_override("DanuS",   "AU");
-  /* Phiṭ 2.17 dvyacca-rūpa-ādi-r-udāttaḥ — disyllabic rūpa stems. */
+  accent_register_override("sUrya",   "AU");
+  accent_register_override("rAma",    "AU");
+  accent_register_override("kfzRa",   "AAU");
+  accent_register_override("Sambo",   "AAU");
+  /* Phiṭ 2.7 sarvAdInAm antodAtta. */
+  accent_register_override("sarva",   "AU");
+
+  /* ── Pariśiṣṭa-3: ādyudātta secondary set ────────────────────── */
+  /* Phiṭ 2.17 dvyacca-rūpa-class disyllabic neuters. */
   accent_register_override("rUpa",    "UA");
   accent_register_override("nAma",    "UA");
   accent_register_override("DAma",    "UA");
-  /* Phiṭ 4.1 various individual stems with attested accent. */
+  accent_register_override("Bana",    "UA");
+  accent_register_override("BAga",    "UA");
+  /* Phiṭ 2.20 dvyacca-puruṣa-class. */
+  accent_register_override("puruza",  "UAA");
+  accent_register_override("manuza",  "UAA");
+  /* Phiṭ 3.1 śabda-grahaṇa-ādi-r-udāttam. */
+  accent_register_override("Sabda",   "UA");
+  accent_register_override("graha",   "UA");
+  accent_register_override("yoga",    "UA");
+  accent_register_override("BAva",    "UA");
+
+  /* ── Pariśiṣṭa-4: phiṭ 4.1 stem-specific assignments ─────────── */
   accent_register_override("brahman", "UAA");
   accent_register_override("rAja",    "UA");
   accent_register_override("AtmA",    "UA");
   accent_register_override("AcArya",  "UAAA");
   accent_register_override("indra",   "UAA");
   accent_register_override("dhana",   "UA");
+  accent_register_override("agnIDra", "UAAA");
+  accent_register_override("agniSAlA","UAAAA");
+
+  /* ── Vedic-specific terms (Phiṭ 2.5+) ─────────────────────────── */
+  accent_register_override("soma",    "UA");
+  accent_register_override("yajus",   "UA");
+  accent_register_override("vAk",     "U");
+  accent_register_override("dyaus",   "U");
+  accent_register_override("prajApati","UAAAA");
+  accent_register_override("varuRa",  "UAA");
+  accent_register_override("mitra",   "UA");
+  accent_register_override("aryaman", "UAA");
+
+  /* ── Geographic / proper-noun class (Phiṭ 4.3+) ──────────────── */
+  accent_register_override("kASi",    "UA");
+  accent_register_override("mAlavi",  "UAA");
+  accent_register_override("magaDa",  "UAA");
+  accent_register_override("aNgIrasa","UAAA");
+
+  /* ── Anudātta-final compounds (Phiṭ 3.5-3.20) ────────────────── */
+  accent_register_override("svayam",  "UA");
+  accent_register_override("svayambU","UAUA");
+
+  /* ── Number-class (Phiṭ 2.30+) ───────────────────────────────── */
+  accent_register_override("paYca",   "UA");
+  accent_register_override("zaz",     "U");
+  accent_register_override("saptan",  "UA");
+  accent_register_override("daSan",   "UA");
+
+  /* ── Adjective-class with ādyudātta-default (Phiṭ 3.21+) ─────── */
+  accent_register_override("RIla",    "UA");
+  accent_register_override("rakta",   "UA");
+  accent_register_override("pIta",    "UA");
+  accent_register_override("Sukla",   "UA");
 }

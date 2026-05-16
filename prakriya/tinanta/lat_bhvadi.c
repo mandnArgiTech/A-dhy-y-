@@ -737,23 +737,59 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       {"saR", "sasAna"},
       {"pER", "pipERa"}, {"prER", "piprERa"},
       {"CadiH", "cacCAda"},
+      /* sūrkṣ (initial s, was-not-z): susūrkṣa; ṣūrkṣya (initial ṣ): suzūkṣya.
+         Distinguish via the discriminator suffix '@1' for was-z. */
       {"sUrkz", "susUrkza"},
-      {"sUrkzy", "suzUkzya"},
+      {"sUrkzy@1", "suzUkzya"},  /* initial was-ṣ */
+      {"sUrkzy",   "susUrkzya"}, /* initial was-s */
       {"sasj", "sasajja"},
       {"sTiv", "tizWeva"},
       {"kzIv", "cikzeva"},
+      /* Periphrastic LIT with extended stem for specific roots. */
+      {"gup", "gopAyAYcakAra"},
+      {"DUp", "DUpAyAYcakAra"},
+      {"urv", "UrvAYcakAra"},
+      {"kit", "cikitsAYcakAra"},
+      {"uC",  "uYCAYcakAra"},     /* uCi~ — i-anubandha → num+parasavarṇa */
+      {"ucC", "ucCAYcakAra"},     /* uCI~ — post-ch-doubling */
+      {"uz",  "uvoza"},
       {NULL, NULL},
     };
     bool strong_p_eka_check = (pd == ASH_PARASMAI && v == ASH_EKAVACANA &&
                               (p == ASH_PRATHAMA || p == ASH_UTTAMA));
     if (strong_p_eka_check) {
+      /* Build a discriminated key for roots whose original initial
+         was ṣ: append "@1" so the override can distinguish identical
+         post-clean roots that came from different originals (e.g.
+         sUrkzya~ vs zUrkzya~ both clean to "sUrkzy"). */
+      char keyed[80];
+      if (initial_was_sa) {
+        snprintf(keyed, sizeof(keyed), "%s@1", clean_root);
+      } else {
+        snprintf(keyed, sizeof(keyed), "%s", clean_root);
+      }
+      /* Try keyed first (with @1 discriminator for was-ṣ roots);
+         fall back to plain clean_root. */
+      const char *match_form = NULL;
       for (size_t i = 0; LIT_OVERRIDE_TABLE[i].root; i++) {
-        if (strcmp(clean_root, LIT_OVERRIDE_TABLE[i].root) == 0) {
-          strncpy(stem, LIT_OVERRIDE_TABLE[i].aux_form, sizeof(stem) - 1);
-          stem[sizeof(stem) - 1] = '\0';
-          periphrastic_lit_used = true;
-          goto lit_done;
+        if (strcmp(keyed, LIT_OVERRIDE_TABLE[i].root) == 0) {
+          match_form = LIT_OVERRIDE_TABLE[i].aux_form;
+          break;
         }
+      }
+      if (!match_form) {
+        for (size_t i = 0; LIT_OVERRIDE_TABLE[i].root; i++) {
+          if (strcmp(clean_root, LIT_OVERRIDE_TABLE[i].root) == 0) {
+            match_form = LIT_OVERRIDE_TABLE[i].aux_form;
+            break;
+          }
+        }
+      }
+      if (match_form) {
+        strncpy(stem, match_form, sizeof(stem) - 1);
+        stem[sizeof(stem) - 1] = '\0';
+        periphrastic_lit_used = true;
+        goto lit_done;
       }
     }
     /* 3.1.35-36 periphrastic LIT (LIT-paribhāṣā): for vowel-initial
@@ -1582,17 +1618,14 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
           case 'b': devoiced = 'p'; break;
         }
         form[i] = devoiced;
-      } else if (b == 's' && (a == 'c' || a == 'j')) {
-        /* 8.2.30 coḥ kuḥ before sibilant: c → k, j → g.
-           Following s/ṣ will then ṣatva if preceded by k via 8.3.59
-           (we leave that to sandhi_apply_satva). */
-        form[i] = (a == 'c') ? 'k' : 'g';
-        if (i > 0 && form[i - 1] == 'Y') form[i - 1] = 'N';
-      } else if ((b == 't' || b == 'T') && (a == 'c' || a == 'j')) {
-        /* 8.2.30 coḥ kuḥ: palatal at end → velar before consonant.
-           c → k, j → g. Then jaś re-applies if needed.
+      } else if ((b == 's' || b == 't' || b == 'T') &&
+                 (a == 'c' || a == 'j')) {
+        /* 8.2.30 coḥ kuḥ + 8.4.55 khari ca: palatal → velar before
+           consonant; before a voiceless (s/t/T) the velar is voiceless
+           (c → k, j → k). Before a voiced consonant (handled
+           elsewhere) it'd be g.
            Also re-classify preceding palatal nasal Y → velar N. */
-        form[i] = (a == 'c') ? 'k' : 'g';
+        form[i] = 'k';  /* both c and j go to k before voiceless */
         if (i > 0 && form[i - 1] == 'Y') form[i - 1] = 'N';
       }
     }
