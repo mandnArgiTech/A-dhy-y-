@@ -678,10 +678,18 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        first vowel is i/I/u/U/e/o/E/O (NOT 'a') with i-anubandha use
        periphrastic LIT. 'a'-initial roots (ati, adi, arda) stay on
        the An-abhyāsa reduplication path. */
-    if (clean_root[0] != '\0' && i_anubandha) {
+    if (clean_root[0] != '\0') {
       char first = clean_root[0];
-      if (first == 'i' || first == 'I' || first == 'u' || first == 'U' ||
-          first == 'e' || first == 'o' || first == 'E' || first == 'O') {
+      /* 3.1.36 ijādeśca gurumato'naṛcchaḥ — vowel-initial roots
+         (excluding 'a') whose first vowel is long (E, O, I, U, F)
+         OR whose i-anubandha will introduce num (making upadhā guru)
+         take periphrastic LIT. */
+      bool long_initial = (first == 'I' || first == 'U' || first == 'F' ||
+                           first == 'e' || first == 'o' ||
+                           first == 'E' || first == 'O');
+      bool short_iu_with_anubandha = i_anubandha &&
+                                     (first == 'i' || first == 'u');
+      if (long_initial || short_iu_with_anubandha) {
         lit_periphrastic = true;
       }
     }
@@ -876,10 +884,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                              upadha == 'f' || upadha == 'x');
         bool laghu = upadha_short && (cons_after <= 1);
         bool vowel_final = (cons_after == 0);
-        bool strong13 = (p != ASH_MADHYAMA);  /* 1eka or 3eka */
+        /* P 1eka/3eka are ñit/ṇit (Ral) so trigger 7.2.115/116 vṛddhi
+           and 7.3.86 guṇa. Ā 1eka/3eka are kit/ṅit, so 1.1.5 blocks
+           guṇa/vṛddhi. P 2eka (Tal) is ṇit, gets guṇa but not vṛddhi.
+           Ā 2eka (TAs) is kit, blocks. */
+        bool strong13 = (p != ASH_MADHYAMA) && (pd == ASH_PARASMAI);
         bool do_change = false;
         bool do_vrddhi = false;
-        if (vowel_final && upadha_short) {
+        /* In LIT, Ā endings (te, AtAm, Ja, TAs, ize, ATAm, iDve,
+           e, ivahe, imahe) are kit per 1.2.4 vac-class, blocking
+           1.1.5 guṇa/vṛddhi. Skip the whole strong-form logic for
+           Ā. P endings keep the normal upadhā-aware path below. */
+        bool lit_parasmai = (pd == ASH_PARASMAI);
+        if (!lit_parasmai) {
+          /* Ā in LIT: bare reduplicated stem, no upadhā change. */
+        } else if (vowel_final && upadha_short) {
           /* kf, nI etc. with SHORT vowel: 1eka/3eka vrddhi; 2eka guṇa. */
           do_change = true;
           do_vrddhi = strong13;
@@ -894,7 +913,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
             do_change = strong13;
             do_vrddhi = true;
           } else {
-            /* 7.3.86 guṇa for laghu i/u/f upadhā in all eka forms. */
+            /* 7.3.86 guṇa for laghu i/u/f upadhā in all eka forms (P only). */
             do_change = true;
             do_vrddhi = false;
           }
