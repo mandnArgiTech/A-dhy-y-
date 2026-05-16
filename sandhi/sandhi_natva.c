@@ -28,9 +28,20 @@ void sandhi_apply_natva(char *form) {
       seen = true;
     } else if (natva_is_blocker(c)) {
       seen = false;
-    } else if (seen && c == 'n' && form[i + 1] && varna_is_vowel(form[i + 1])) {
-      form[i] = 'R';
-      seen = false;
+    } else if (seen && c == 'n' && form[i + 1]) {
+      /* 8.4.1 raṣābhyāṃ no ṇaḥ — fire when 'n' is followed by a
+         vowel or by a semivowel/nasal (v/y/m/n/r) in the same word.
+         Conservative-skip for plain consonant clusters; 8.4.37
+         padāntasya covers pada-end so we don't need to special-case
+         end-of-form here. */
+      char next = form[i + 1];
+      bool ok = varna_is_vowel(next) ||
+                next == 'v' || next == 'y' || next == 'm' ||
+                next == 'n' || next == 'r';
+      if (ok) {
+        form[i] = 'R';
+        seen = false;
+      }
     }
   }
 }

@@ -68,6 +68,87 @@ static const char *krit_suffix_upadesa(ASH_KritType krit) {
     case ASH_KRIT_KHA: return "Ka";
     case ASH_KRIT_KTAVYAN: return "ktavyan";
     case ASH_KRIT_KTRP: return "ktrp";
+    /* Fourth-tier additions — closed-set kṛt pratyayas */
+    case ASH_KRIT_A: return "a";
+    case ASH_KRIT_ANG: return "aN";
+    case ASH_KRIT_ATHUC: return "athuc";
+    case ASH_KRIT_ADHYAI: return "aDyE";
+    case ASH_KRIT_ADHYAIN: return "aDyEn";
+    case ASH_KRIT_ANI: return "ani";
+    case ASH_KRIT_AP: return "ap";
+    case ASH_KRIT_ASE: return "ase";
+    case ASH_KRIT_ASEN: return "asen";
+    case ASH_KRIT_AARU: return "Aru";
+    case ASH_KRIT_INC: return "iY";
+    case ASH_KRIT_ITRA: return "itra";
+    case ASH_KRIT_INUN: return "inuR";
+    case ASH_KRIT_U: return "u";
+    case ASH_KRIT_UUKA: return "Uka";
+    case ASH_KRIT_ESH: return "eS";
+    case ASH_KRIT_KAN: return "kaY";
+    case ASH_KRIT_KADHYAI: return "kaDyE";
+    case ASH_KRIT_KADHYAIN: return "kaDyEn";
+    case ASH_KRIT_KAP: return "kap";
+    case ASH_KRIT_KAMUL: return "kamul";
+    case ASH_KRIT_KASUN: return "kasun";
+    case ASH_KRIT_KASEN: return "kasen";
+    case ASH_KRIT_KI: return "ki";
+    case ASH_KRIT_KURAC: return "kurac";
+    case ASH_KRIT_KEN: return "ken";
+    case ASH_KRIT_KENYA: return "kenya";
+    case ASH_KRIT_KNU: return "knu";
+    case ASH_KRIT_KRU: return "kru";
+    case ASH_KRIT_KLUKAN: return "klukan";
+    case ASH_KRIT_KVANIP: return "kvanip";
+    case ASH_KRIT_KVARAP: return "kvarap";
+    case ASH_KRIT_KVIN: return "kvin";
+    case ASH_KRIT_KSE: return "kse";
+    case ASH_KRIT_KHAC: return "Kac";
+    case ASH_KRIT_KHAMUN: return "KamuY";
+    case ASH_KRIT_KHASH: return "KaS";
+    case ASH_KRIT_KHUKAN: return "KukaY";
+    case ASH_KRIT_KHYUN: return "Kyun";
+    case ASH_KRIT_GSNU: return "gsnu";
+    case ASH_KRIT_GHINUN: return "GinuR";
+    case ASH_KRIT_NGVANIP: return "Nvanip";
+    case ASH_KRIT_CHANASH: return "cAnaS";
+    case ASH_KRIT_NYUT: return "Yyuw";
+    case ASH_KRIT_TAK: return "wak";
+    case ASH_KRIT_D: return "q";
+    case ASH_KRIT_DU: return "qu";
+    case ASH_KRIT_N: return "R";
+    case ASH_KRIT_NAC: return "Rac";
+    case ASH_KRIT_NNYUT: return "Ryuw";
+    case ASH_KRIT_NVI: return "Rvi";
+    case ASH_KRIT_NVIN: return "Rvin";
+    case ASH_KRIT_NVUCH: return "Rvuc";
+    case ASH_KRIT_TAVAI: return "tavE";
+    case ASH_KRIT_TAVEN: return "taveN";
+    case ASH_KRIT_TAVENAS: return "taven";
+    case ASH_KRIT_TOSUN: return "tosun";
+    case ASH_KRIT_THAKAN: return "Takan";
+    case ASH_KRIT_NANG: return "naN";
+    case ASH_KRIT_NAJING: return "najiN";
+    case ASH_KRIT_YAT: return "yat";
+    case ASH_KRIT_YUC: return "yuc";
+    case ASH_KRIT_RU: return "ru";
+    case ASH_KRIT_LYU: return "lyu";
+    case ASH_KRIT_VARAC: return "varac";
+    case ASH_KRIT_VIC: return "vic";
+    case ASH_KRIT_VIT: return "viw";
+    case ASH_KRIT_VUN_ALT: return "vuY";
+    case ASH_KRIT_SHA: return "Sa";
+    case ASH_KRIT_SHADHYAI: return "SaDyE";
+    case ASH_KRIT_SHADHYAIN: return "SaDyEn";
+    case ASH_KRIT_SHANAN: return "SAnan";
+    case ASH_KRIT_SHAAKAN: return "zAkan";
+    case ASH_KRIT_SHTRAN: return "zwran";
+    case ASH_KRIT_SHVUN: return "zvun";
+    case ASH_KRIT_SE: return "se";
+    case ASH_KRIT_SEN: return "sen";
+    case ASH_KRIT_DARA: return "qara";
+    case ASH_KRIT_IKAVAKA: return "ikavaka";
+    case ASH_KRIT_Y_ALT: return "ya";
     default: return NULL;
   }
 }
@@ -129,6 +210,88 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
     case ASH_KRIT_KHA: return "Ka";       /* ñit -kha */
     case ASH_KRIT_KTAVYAN: return "tavya";/* alternate -tavya */
     case ASH_KRIT_KTRP: return "tra";     /* -tra agent */
+    /* Fourth-tier clean forms. The anubandha-marked variants drop
+       their marker letter(s); ñ/ṅ/ṣ at start are anubandhas only. */
+    case ASH_KRIT_A: return "a";
+    case ASH_KRIT_ANG: return "a";       /* ṅ marker dropped */
+    case ASH_KRIT_ATHUC: return "aTu";   /* c dropped */
+    case ASH_KRIT_ADHYAI: return "aDyE";
+    case ASH_KRIT_ADHYAIN: return "aDyEn";
+    case ASH_KRIT_ANI: return "ani";
+    case ASH_KRIT_AP: return "a";        /* p marker dropped */
+    case ASH_KRIT_ASE: return "ase";
+    case ASH_KRIT_ASEN: return "asen";
+    case ASH_KRIT_AARU: return "Aru";
+    case ASH_KRIT_INC: return "i";       /* ñ marker dropped */
+    case ASH_KRIT_ITRA: return "itra";
+    case ASH_KRIT_INUN: return "in";     /* uṇ marker dropped */
+    case ASH_KRIT_U: return "u";
+    case ASH_KRIT_UUKA: return "Uka";
+    case ASH_KRIT_ESH: return "e";       /* ś marker dropped */
+    case ASH_KRIT_KAN: return "ka";      /* ñ dropped (k is anubandha) */
+    case ASH_KRIT_KADHYAI: return "aDyE";
+    case ASH_KRIT_KADHYAIN: return "aDyEn";
+    case ASH_KRIT_KAP: return "a";       /* k and p anubandhas */
+    case ASH_KRIT_KAMUL: return "am";    /* k+ul anubandhas */
+    case ASH_KRIT_KASUN: return "as";    /* k+un anubandhas */
+    case ASH_KRIT_KASEN: return "ase";   /* k+n anubandhas */
+    case ASH_KRIT_KI: return "i";        /* k anubandha */
+    case ASH_KRIT_KURAC: return "ura";   /* k anubandha + ac marker */
+    case ASH_KRIT_KEN: return "e";       /* k+n */
+    case ASH_KRIT_KENYA: return "enya";
+    case ASH_KRIT_KNU: return "nu";      /* k anubandha */
+    case ASH_KRIT_KRU: return "ru";      /* k anubandha */
+    case ASH_KRIT_KLUKAN: return "luka"; /* k+n anubandhas */
+    case ASH_KRIT_KVANIP: return "van";  /* k anubandha + ip-marker */
+    case ASH_KRIT_KVARAP: return "vara"; /* k+p anubandhas */
+    case ASH_KRIT_KVIN: return "vi";     /* k+n */
+    case ASH_KRIT_KSE: return "se";      /* k anubandha */
+    case ASH_KRIT_KHAC: return "a";      /* kh+c anubandhas */
+    case ASH_KRIT_KHAMUN: return "am";   /* kh+ñ */
+    case ASH_KRIT_KHASH: return "a";     /* kh+ś */
+    case ASH_KRIT_KHUKAN: return "uka";  /* kh+ñ */
+    case ASH_KRIT_KHYUN: return "yu";    /* kh+n */
+    case ASH_KRIT_GSNU: return "snu";    /* g anubandha */
+    case ASH_KRIT_GHINUN: return "in";   /* gh+uṇ */
+    case ASH_KRIT_NGVANIP: return "van"; /* ṅ anubandha + ip */
+    case ASH_KRIT_CHANASH: return "Ana"; /* c+ś */
+    case ASH_KRIT_NYUT: return "ana";    /* ñ-yu-ṭ — like lyuṭ */
+    case ASH_KRIT_TAK: return "a";       /* ṭ+k anubandhas */
+    case ASH_KRIT_D: return "";          /* ḍ — zero suffix */
+    case ASH_KRIT_DU: return "u";        /* ḍ anubandha */
+    case ASH_KRIT_N: return "";          /* ṇ — zero (after vrddhi-trigger) */
+    case ASH_KRIT_NAC: return "a";       /* ṇ+c */
+    case ASH_KRIT_NNYUT: return "ana";   /* ṇ-yu-ṭ */
+    case ASH_KRIT_NVI: return "v";       /* ṇ anubandha + i marker */
+    case ASH_KRIT_NVIN: return "vi";     /* ṇ+n */
+    case ASH_KRIT_NVUCH: return "vu";    /* ṇ+c */
+    case ASH_KRIT_TAVAI: return "tavE";
+    case ASH_KRIT_TAVEN: return "tave";  /* ṅ anubandha */
+    case ASH_KRIT_TAVENAS: return "taven";
+    case ASH_KRIT_TOSUN: return "tos";   /* un anubandha */
+    case ASH_KRIT_THAKAN: return "Taka"; /* n anubandha */
+    case ASH_KRIT_NANG: return "na";     /* ṅ anubandha */
+    case ASH_KRIT_NAJING: return "naji"; /* ṅ */
+    case ASH_KRIT_YAT: return "ya";      /* t marker */
+    case ASH_KRIT_YUC: return "ana";     /* yu+c, like lyuṭ */
+    case ASH_KRIT_RU: return "ru";
+    case ASH_KRIT_LYU: return "ana";     /* l+yu */
+    case ASH_KRIT_VARAC: return "vara";  /* c */
+    case ASH_KRIT_VIC: return "v";       /* i+c */
+    case ASH_KRIT_VIT: return "vi";      /* ṭ */
+    case ASH_KRIT_VUN_ALT: return "aka"; /* alt vuñ */
+    case ASH_KRIT_SHA: return "a";       /* ś */
+    case ASH_KRIT_SHADHYAI: return "aDyE";
+    case ASH_KRIT_SHADHYAIN: return "aDyEn";
+    case ASH_KRIT_SHANAN: return "Ana";  /* śAnan */
+    case ASH_KRIT_SHAAKAN: return "Aka"; /* ṣAkan */
+    case ASH_KRIT_SHTRAN: return "tra";  /* ṣṭran */
+    case ASH_KRIT_SHVUN: return "aka";   /* ṣvun, alt to nvul */
+    case ASH_KRIT_SE: return "se";
+    case ASH_KRIT_SEN: return "sen";
+    case ASH_KRIT_DARA: return "ara";    /* ḍara */
+    case ASH_KRIT_IKAVAKA: return "ikavaka";
+    case ASH_KRIT_Y_ALT: return "ya";
     default: return NULL;
   }
 }
@@ -146,7 +309,18 @@ static bool krit_is_kit(ASH_KritType krit) {
          krit == ASH_KRIT_KIN || krit == ASH_KRIT_KVASUS ||
          krit == ASH_KRIT_KTAVATUS || krit == ASH_KRIT_KIT ||
          krit == ASH_KRIT_KTHAN || krit == ASH_KRIT_KTAVYAN ||
-         krit == ASH_KRIT_KTRP;
+         krit == ASH_KRIT_KTRP ||
+         /* Fourth-tier kit suffixes (all those with 'k' anubandha
+            prefix in pratyay.txt's name column). */
+         krit == ASH_KRIT_KAN || krit == ASH_KRIT_KADHYAI ||
+         krit == ASH_KRIT_KADHYAIN || krit == ASH_KRIT_KAP ||
+         krit == ASH_KRIT_KAMUL || krit == ASH_KRIT_KASUN ||
+         krit == ASH_KRIT_KASEN || krit == ASH_KRIT_KI ||
+         krit == ASH_KRIT_KURAC || krit == ASH_KRIT_KEN ||
+         krit == ASH_KRIT_KENYA || krit == ASH_KRIT_KNU ||
+         krit == ASH_KRIT_KRU || krit == ASH_KRIT_KLUKAN ||
+         krit == ASH_KRIT_KVANIP || krit == ASH_KRIT_KVARAP ||
+         krit == ASH_KRIT_KVIN || krit == ASH_KRIT_KSE;
 }
 
 /* Whether a suffix triggers vṛddhi on the root vowel (ñit/ṇit). */
@@ -154,7 +328,14 @@ static bool krit_triggers_vrddhi(ASH_KritType krit) {
   return krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT ||
          krit == ASH_KRIT_VUN  || krit == ASH_KRIT_RVU  ||
          krit == ASH_KRIT_TRN  || krit == ASH_KRIT_NAN  ||
-         krit == ASH_KRIT_KHISHNUC || krit == ASH_KRIT_KHA;
+         krit == ASH_KRIT_KHISHNUC || krit == ASH_KRIT_KHA ||
+         /* Fourth-tier ñit/ṇit suffixes: those whose name starts
+            with ñ (Y/Ñ in SLP1) or ṇ (R/Ṇ). */
+         krit == ASH_KRIT_NYUT || krit == ASH_KRIT_INC ||
+         krit == ASH_KRIT_NAC  || krit == ASH_KRIT_NNYUT ||
+         krit == ASH_KRIT_NVI  || krit == ASH_KRIT_NVIN ||
+         krit == ASH_KRIT_NVUCH || krit == ASH_KRIT_VUN_ALT ||
+         krit == ASH_KRIT_GHINUN || krit == ASH_KRIT_INUN;
 }
 
 /* Closed list of seṭ-class roots that take iṭ before niṣṭhā/tum/tvA.
@@ -399,13 +580,27 @@ static bool krit_rule_derive(const char *clean_root, ASH_KritType krit,
       strncpy(stem, gunaed, sizeof(stem) - 1);
       stem[sizeof(stem) - 1] = '\0';
     }
-    /* For vowel-initial suffixes (lyuṭ, Rvul, namul, ac, khal,
-       ukan, ishnuc, ini), apply 6.1.78 ec→ay if stem ends in
-       e/o/E/O. */
+    /* For vowel-initial suffixes, apply 6.1.78 ec→ay if stem ends
+       in e/o/E/O. This includes lyuṭ, ṇvul, namul, ac, khal, ukañ,
+       iṣṇuc, ini AND the fourth-tier vowel-initial ones (a, aṅ, athu,
+       adhyai, ani, ap, ase, asen, āru, in, itra, inuṇ, u, ūka, eś,
+       yuc, lyu, ...). */
     if (krit == ASH_KRIT_LYUT || krit == ASH_KRIT_NVUL ||
         krit == ASH_KRIT_NAMUL || krit == ASH_KRIT_AC ||
         krit == ASH_KRIT_KHAL || krit == ASH_KRIT_UKAN ||
-        krit == ASH_KRIT_ISHNUC || krit == ASH_KRIT_INI) {
+        krit == ASH_KRIT_ISHNUC || krit == ASH_KRIT_INI ||
+        krit == ASH_KRIT_A || krit == ASH_KRIT_ANG ||
+        krit == ASH_KRIT_ATHUC || krit == ASH_KRIT_ADHYAI ||
+        krit == ASH_KRIT_ADHYAIN || krit == ASH_KRIT_ANI ||
+        krit == ASH_KRIT_AP || krit == ASH_KRIT_ASE ||
+        krit == ASH_KRIT_ASEN || krit == ASH_KRIT_AARU ||
+        krit == ASH_KRIT_INC || krit == ASH_KRIT_ITRA ||
+        krit == ASH_KRIT_INUN || krit == ASH_KRIT_U ||
+        krit == ASH_KRIT_UUKA || krit == ASH_KRIT_ESH ||
+        krit == ASH_KRIT_YUC || krit == ASH_KRIT_LYU ||
+        krit == ASH_KRIT_YAT || krit == ASH_KRIT_NYUT ||
+        krit == ASH_KRIT_NNYUT || krit == ASH_KRIT_NAC ||
+        krit == ASH_KRIT_KHAC || krit == ASH_KRIT_SHA) {
       krit_apply_ec_to_ay(stem, sizeof(stem));
     }
   } else {
