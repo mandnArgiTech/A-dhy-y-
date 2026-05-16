@@ -885,6 +885,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     static const char *const PERIPH_LIT_LONG_VOWEL[] = {
       "oK", "ej", "UW", "Uz", "Iz", "Irkzy", "Irzy", "urv", "oR",
       "kakKa", "gup", "DUp", "paR", "pan", "kit", "dAn", "SAn", "uC",
+      "ucC",   /* uCI~ post-ch-doubling — short u, guru upadhā via cluster */
       "iv", "ukz", "uz",
       NULL
     };
@@ -1238,8 +1239,18 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                          next == 'u' || next == 'U' || next == 'e' || next == 'o' ||
                          next == 'E' || next == 'O' || next == 'f' || next == 'F' ||
                          next == 'x' || next == 'X');
-      if (short_iu && next_vowel) {
-        /* Insert 'y' (after i) or 'v' (after u) at position pre+1. */
+      /* 6.1.101 akaḥ savarṇe dīrghaḥ has priority over 6.4.77: a
+         short vowel followed by its own savarṇa coalesces to the
+         long form (u+u → U, u+U → U, i+i → I, i+I → I). When the
+         next vowel is not savarṇa, 6.4.77 acijñiti inserts the
+         iyaṅ/uvaṅ glide instead. */
+      bool savarna = (abh == 'u' && (next == 'u' || next == 'U')) ||
+                     (abh == 'i' && (next == 'i' || next == 'I'));
+      if (savarna) {
+        reduped[pre] = (abh == 'u') ? 'U' : 'I';
+        size_t rl = strlen(reduped);
+        memmove(reduped + pre + 1, reduped + pre + 2, rl - pre - 1);
+      } else if (short_iu && next_vowel) {
         char glide = (abh == 'i') ? 'y' : 'v';
         size_t rl = strlen(reduped);
         if (rl + 1 < sizeof(reduped)) {
@@ -1260,6 +1271,14 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       bool is_cac = (cv == 'a' && !varna_is_vowel(c1) && !varna_is_vowel(c2));
       bool kuho_ci = (c1 == 'k' || c1 == 'K' || c1 == 'g' ||
                       c1 == 'G' || c1 == 'h');
+      /* Aspirated stops (8.4.54 abhyāse cartar de-aspirates them so
+         the abhyāsa-initial is an ādeśa, blocking 6.4.120). */
+      bool aspirated_initial = (c1 == 'C' || c1 == 'J' || c1 == 'W' ||
+                                c1 == 'Q' || c1 == 'T' || c1 == 'D' ||
+                                c1 == 'P' || c1 == 'B');
+      /* v-initial CaC roots take samprasāraṇa (vac-class) or no rule
+         (other v-initial); they never take etva. */
+      bool v_initial = (c1 == 'v');
       static const char *const ETVA_EXCEPTIONS[] = {
         "Sas", "dad", NULL
       };
@@ -1274,7 +1293,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
          P slots are kit. */
       bool kit_slot = (pd == ASH_ATMANE) || (v != ASH_EKAVACANA) ||
                       (p == ASH_MADHYAMA);
-      if (is_cac && !kuho_ci && !excluded && kit_slot) {
+      if (is_cac && !kuho_ci && !aspirated_initial && !v_initial &&
+          !excluded && kit_slot) {
         char et[8] = {0};
         et[0] = c1; et[1] = 'e'; et[2] = c2;
         strncpy(reduped, et, sizeof(reduped) - 1);
@@ -1394,6 +1414,30 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     if (has_unstrong && laghu && !used_guna) {
       replace_first_vowel(stem, false);
       used_guna = true;
+    }
+  }
+  /* 7.2.1 sici vṛddhiḥ parasmaipadeṣu — in the sic-aorist (LUN-P)
+     a single-syllable root's 'a' takes vṛddhi when it sits in a
+     laghu position (single consonant before and after). 7.2.4 neṭi
+     blocks i/u/ṛ root-vowels from vṛddhi (the guṇa-step already
+     applied above is the final form). 7.2.5 hmyantakṣaṇa- excludes
+     'a' + cluster (the consonant after the root vowel must be the
+     final consonant of the root). */
+  if (lakara == ASH_LUN && pd == ASH_PARASMAI && !lun_root_aorist &&
+      !i_anubandha) {
+    size_t sl = strlen(stem);
+    for (size_t i = 0; i < sl; i++) {
+      char c = stem[i];
+      if (c == 'a') {
+        /* Only vṛddhi when 'a' is the upadhā of a single-consonant
+           coda — i.e., the consonant after 'a' is the final char. */
+        if (i + 2 == sl && !varna_is_vowel(stem[i + 1])) {
+          stem[i] = 'A';
+        }
+        break;
+      } else if (varna_is_vowel(c)) {
+        break;
+      }
     }
   }
   /* Override the LUN ending for root-aorist class. Endings are LAN's
