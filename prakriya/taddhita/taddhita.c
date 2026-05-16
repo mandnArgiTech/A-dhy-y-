@@ -30,6 +30,27 @@ static const TaddhitaSpec TADDHITA_SPECS[] = {
     {TD_MAYA, "maya", "maya", 501115, false},
     {TD_AANA, "Ana", "Ana", 401076, false},
     {TD_VYA, "vya", "vya", 502094, false},
+    /* Phase δ extensions */
+    {TD_TAL, "tal", "tA", 501119, false},
+    {TD_TVAL, "tval", "tva", 501119, false},
+    {TD_INI, "ini", "in", 502115, false},
+    {TD_VINI, "vini", "vin", 502121, false},
+    {TD_LAC, "lac", "la", 502097, false},
+    {TD_NA, "na", "na", 502027, false},
+    {TD_THAK, "Tak", "ika", 401083, true},
+    {TD_THAN, "Tan", "Ta", 502051, false},
+    {TD_VATUP, "vatup", "vat", 502094, false},
+    {TD_DA, "da", "da", 502108, false},
+    {TD_DVAYASAC, "dvayasac", "dvayasa", 502037, false},
+    {TD_DAGHNAC, "daGnac", "daGna", 502037, false},
+    {TD_MAATRAC, "mAtrac", "mAtra", 502037, false},
+    {TD_KALPAP, "kalpap", "kalpa", 503067, false},
+    {TD_DESHIYAR, "deSIyar", "deSIya", 503067, false},
+    {TD_TVAN, "tvan", "tva", 501119, false},
+    {TD_THAL, "Tal", "Ta", 502051, false},
+    {TD_AIYA, "Eya", "eya", 401122, true},
+    {TD_DHAN, "Dan", "Da", 503042, false},
+    {TD_VAT2, "vat", "vat", 501115, false},
 };
 
 /* Returns suffix metadata by enum tag. */
