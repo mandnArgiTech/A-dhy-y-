@@ -356,6 +356,16 @@ typedef enum {
   ASH_SAMASA_DVANDVA,
   ASH_SAMASA_AVYAYIBHAVA,
   ASH_SAMASA_DVIGU,
+  /* Phase δ samāsa expansion — special sub-types */
+  ASH_SAMASA_UPAPADA_TATPURUSHA,   /**< Upapada-tat (2.2.19) */
+  ASH_SAMASA_NAN_TATPURUSHA,       /**< Naṃ-tat (2.2.6) */
+  ASH_SAMASA_PRAADI_TATPURUSHA,    /**< Prādi-tat (2.2.18) */
+  ASH_SAMASA_GATI_TATPURUSHA,      /**< Gati-tat (2.2.18) */
+  ASH_SAMASA_DASHA_BAHUVRIHI,      /**< Daśa-bahuvrīhi compound number */
+  ASH_SAMASA_ITARETARA_DVANDVA,    /**< Itaretara-dvandva (2.2.29) */
+  ASH_SAMASA_SAMAHARA_DVANDVA,     /**< Samāhāra-dvandva (singular collective) */
+  ASH_SAMASA_VIBHAKTI_TATPURUSHA,  /**< Vibhakti-tat (2.2.8 ṣaṣṭhī) */
+  ASH_SAMASA_UPAMAANA_KARMADHARAYA,/**< Upamāna-karmadh. (2.1.55) */
 } ASH_SamasaType;
 
 /**

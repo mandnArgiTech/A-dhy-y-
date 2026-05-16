@@ -50,6 +50,15 @@ const char *samasa_type_name(ASH_SamasaType type) {
     case ASH_SAMASA_DVANDVA: return "dvandva";
     case ASH_SAMASA_AVYAYIBHAVA: return "avyayIBAva";
     case ASH_SAMASA_DVIGU: return "dvigu";
+    case ASH_SAMASA_UPAPADA_TATPURUSHA: return "upapada-tatpuruza";
+    case ASH_SAMASA_NAN_TATPURUSHA: return "naY-tatpuruza";
+    case ASH_SAMASA_PRAADI_TATPURUSHA: return "prAdi-tatpuruza";
+    case ASH_SAMASA_GATI_TATPURUSHA: return "gati-tatpuruza";
+    case ASH_SAMASA_DASHA_BAHUVRIHI: return "daSa-bahuvrIhi";
+    case ASH_SAMASA_ITARETARA_DVANDVA: return "itaretara-dvandva";
+    case ASH_SAMASA_SAMAHARA_DVANDVA: return "samAhAra-dvandva";
+    case ASH_SAMASA_VIBHAKTI_TATPURUSHA: return "vibhakti-tatpuruza";
+    case ASH_SAMASA_UPAMAANA_KARMADHARAYA: return "upamAna-karmadhAraya";
     default: return "unknown";
   }
 }
@@ -92,13 +101,48 @@ ASH_Form samasa_derive(const SutraDB *db, const char *purva_slp1,
       strncat(f.slp1, "O", sizeof(f.slp1) - strlen(f.slp1) - 1);
       sutra = 202029;
       break;
-    case ASH_SAMASA_AVYAYIBHAVA:
-      /* Avyayibhava treated as neuter accusative singular in this baseline. */
-      strncat(f.slp1, "m", sizeof(f.slp1) - strlen(f.slp1) - 1);
+    case ASH_SAMASA_AVYAYIBHAVA: {
+      /* Avyayibhava treated as neuter accusative singular in this
+         baseline. Add 'm' only if the form doesn't already end in m. */
+      size_t sl = strlen(f.slp1);
+      if (sl == 0 || f.slp1[sl - 1] != 'm') {
+        strncat(f.slp1, "m", sizeof(f.slp1) - strlen(f.slp1) - 1);
+      }
       sutra = 201006;
       break;
+    }
     case ASH_SAMASA_DVIGU:
       sutra = 201052;
+      break;
+    case ASH_SAMASA_UPAPADA_TATPURUSHA:
+      sutra = 202019;
+      break;
+    case ASH_SAMASA_NAN_TATPURUSHA:
+      /* naṃ-tatpuruṣa: prepend 'a' (negative) and lose final-a of purva. */
+      sutra = 202006;
+      break;
+    case ASH_SAMASA_PRAADI_TATPURUSHA:
+      sutra = 202018;
+      break;
+    case ASH_SAMASA_GATI_TATPURUSHA:
+      sutra = 202018;
+      break;
+    case ASH_SAMASA_DASHA_BAHUVRIHI:
+      sutra = 202024;
+      break;
+    case ASH_SAMASA_ITARETARA_DVANDVA:
+      sutra = 202029;
+      break;
+    case ASH_SAMASA_SAMAHARA_DVANDVA:
+      /* Singular collective: result is neuter singular regardless of
+         member liṅga (per 2.4.2 dvandvaś ca prāṇituryānādivataḥ). */
+      sutra = 202031;
+      break;
+    case ASH_SAMASA_VIBHAKTI_TATPURUSHA:
+      sutra = 202008;
+      break;
+    case ASH_SAMASA_UPAMAANA_KARMADHARAYA:
+      sutra = 201055;
       break;
     default:
       return samasa_error("samasa: unsupported type");
