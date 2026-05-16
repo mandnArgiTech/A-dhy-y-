@@ -40,7 +40,9 @@ void test_lakara_name_and_sarvadhatuka(void) {
 }
 
 void test_ting_get_rejects_invalid_lakara(void) {
-  const TingEntry *t = ting_get(ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+  /* ASH_LUN is the last unimplemented lakāra; ting_get returns NULL
+     for entries that aren't yet wired. */
+  const TingEntry *t = ting_get(ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_NULL(t);
 }
 

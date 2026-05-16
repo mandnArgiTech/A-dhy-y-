@@ -114,6 +114,20 @@ static const TingEntry ASIRLIN_PARASMAI[9] = {
     {ASH_ASHIRLIM, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "mas", "yAsma", SJ_TING | SJ_PARASMAIPADA},
 };
 
+/* LIT (perfect) — Story 3.18. Endings are Ṇal, atus, us, Thal,
+   athuH, a, ṇal-am, va, ma. Built on the reduplicated stem. */
+static const TingEntry LIT_PARASMAI[9] = {
+    {ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "Ral", "a", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_PRATHAMA, ASH_DVIVACANA, ASH_PARASMAI, "atus", "atuH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "us", "uH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_MADHYAMA, ASH_EKAVACANA, ASH_PARASMAI, "Tal", "iTa", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_MADHYAMA, ASH_DVIVACANA, ASH_PARASMAI, "aTus", "aTuH", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "a", "a", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_UTTAMA, ASH_EKAVACANA, ASH_PARASMAI, "Ralam", "a", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_UTTAMA, ASH_DVIVACANA, ASH_PARASMAI, "va", "iva", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LIT, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "ma", "ima", SJ_TING | SJ_PARASMAIPADA},
+};
+
 /* LRT (simple future) — Story 3.20. Same endings as LAT (primary). */
 static const TingEntry LRT_PARASMAI[9] = {
     {ASH_LRT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "tip", "ti", SJ_TING | SJ_PARASMAIPADA},
@@ -144,7 +158,8 @@ const TingEntry *ting_get(ASH_Lakara l, ASH_Purusha p, ASH_Vacana v, ASH_Pada pd
     case ASH_LRT:      return &LRT_PARASMAI[idx];
     case ASH_LUT:      return &LUT_PARASMAI[idx];
     case ASH_LRN:      return &LRN_PARASMAI[idx];
-    case ASH_ASHIRLIM:  return &ASIRLIN_PARASMAI[idx];
+    case ASH_ASHIRLIM: return &ASIRLIN_PARASMAI[idx];
+    case ASH_LIT:      return &LIT_PARASMAI[idx];
     default: return NULL;
   }
 }

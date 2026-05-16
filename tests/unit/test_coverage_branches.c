@@ -185,7 +185,9 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   TEST_ASSERT_NOT_NULL(strstr(f.error, "empty root"));
   ash_form_free(&f);
 
-  f = ash_tinanta(db, "BU", 1, ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+  /* LIT now produces SOME form (basic reduplication infra, not yet
+     oracle-matching). Use LUN to test the "not yet implemented" path. */
+  f = ash_tinanta(db, "BU", 1, ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_FALSE(f.valid);
   TEST_ASSERT_NOT_NULL(strstr(f.error, "not yet implemented"));
   ash_form_free(&f);
@@ -489,7 +491,8 @@ void test_guna_vikaranas_lakara_misc_branches(void) {
   TEST_ASSERT_TRUE(gana_uses_vrddhi(10));
   TEST_ASSERT_FALSE(gana_uses_vrddhi(6));
 
-  TEST_ASSERT_NULL(ting_get(ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI));
+  /* ASH_LUN is the last unimplemented lakāra; ting_get returns NULL. */
+  TEST_ASSERT_NULL(ting_get(ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI));
   TEST_ASSERT_NULL(ting_get(ASH_LAT, (ASH_Purusha)99, ASH_EKAVACANA, ASH_PARASMAI));
   TEST_ASSERT_EQUAL_STRING("unknown", lakara_name((ASH_Lakara)99));
   TEST_ASSERT_FALSE(lakara_is_sarvadhatuka(ASH_LIT));

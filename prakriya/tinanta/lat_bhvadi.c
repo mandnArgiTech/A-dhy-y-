@@ -6,6 +6,7 @@
 #include "anubandha.h"
 #include "samjna.h"
 #include "sandhi_natva.h"
+#include "reduplication.h"
 #include <string.h>
 
 /* Reduce a dhātupāṭha upadeśa form to the clean root used in derivation.
@@ -538,7 +539,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   /* LRT/LUT/LRN/ASIRLIN introduce their own augments (sya, tā,
      a-sya, yA) that replace the gaṇa vikaraṇa. */
   bool skip_vikarana = (lakara == ASH_LRT || lakara == ASH_LUT ||
-                        lakara == ASH_LRN || lakara == ASH_ASHIRLIM);
+                        lakara == ASH_LRN || lakara == ASH_ASHIRLIM ||
+                        lakara == ASH_LIT);
   /* For ASIRLIN, the suffix is treated as kit (1.2.10 halaḥ śnaḥ
      śānajbhyām), so guṇa is blocked entirely. */
   bool block_guna_completely = (lakara == ASH_ASHIRLIM);
@@ -550,6 +552,39 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                              &vik_sutra, &class_sutra,
                              &used_guna, &used_ec_ay)) {
     return false;
+  }
+  /* Story 3.18 LIT — replace the post-class-transform stem with the
+     reduplicated form. For strong forms (eka) vrddhi applies, for
+     weak forms (dvi/bahu) the stem keeps the reduplicated root with
+     no further guṇa. Special root-replacement table handles the
+     historic irregulars (gam → ja+gam → jagāma, kṛ → ca+kar →
+     cakāra, etc.). */
+  if (lakara == ASH_LIT) {
+    char reduped[64] = {0};
+    /* For LIT use the bare clean_root, not the post-class stem. */
+    if (!reduplicate(clean_root, reduped, sizeof(reduped))) {
+      return false;
+    }
+    /* Strong forms: apply vrddhi to root vowel (7.2.115 aco ñṇiti).
+       The strong slots in LIT are prathama-eka and uttama-eka. */
+    bool lit_strong = (v == ASH_EKAVACANA && p != ASH_MADHYAMA);
+    if (lit_strong) {
+      /* Find the root portion (skip the abhyāsa: first cons + vowel,
+         or just first vowel for vowel-initial roots). */
+      size_t root_start = 0;
+      while (root_start < strlen(reduped) && !varna_is_vowel(reduped[root_start])) root_start++;
+      root_start++;  /* past the first vowel of abhyāsa */
+      /* Apply vrddhi to the next vowel encountered (the root vowel). */
+      char tmp[64];
+      strncpy(tmp, reduped + root_start, sizeof(tmp) - 1);
+      tmp[sizeof(tmp) - 1] = '\0';
+      replace_first_vowel(tmp, true);
+      strncpy(reduped + root_start, tmp, sizeof(reduped) - root_start - 1);
+      reduped[sizeof(reduped) - 1] = '\0';
+    }
+    log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
+    strncpy(stem, reduped, sizeof(stem) - 1);
+    stem[sizeof(stem) - 1] = '\0';
   }
   /* 8.4.1 + 8.4.2 ṇatva post-process. The unified helper handles
      n + vowel adjacency. Retroflex stop (q/Q/w/W) targets are

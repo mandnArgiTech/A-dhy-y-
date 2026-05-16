@@ -56,6 +56,7 @@ set(PRAKRIYA_SRC
     prakriya/tinanta/ting.c
     prakriya/tinanta/lat_bhvadi.c
     prakriya/tinanta/vikaranas.c
+    prakriya/tinanta/reduplication.c
     prakriya/subanta/vibhakti.c
     prakriya/subanta/a_stem.c
     prakriya/subanta/a_stem_full.c
