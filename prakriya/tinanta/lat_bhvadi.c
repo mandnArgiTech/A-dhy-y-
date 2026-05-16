@@ -50,7 +50,14 @@ static bool has_i_anubandha(const char *s) {
   return s[n - 2] == 'i' && s[n - 1] == '~';
 }
 
-static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
+/* Returns true iff the dhātu, after stripping anubandhas, originally
+   began with ṣ (z) and was thus subject to 6.1.64 dhātv-ādeḥ ṣaḥ saḥ.
+   This flag is needed so that LIT reduplication's 8.3.59 ṣatva pass
+   can be applied only to roots whose initial 's' is really an ādeśa,
+   not to roots whose initial s/sk/sp/etc. is a genuine root-s. */
+static void clean_dhatu_upadesa_ex(const char *src, char *dst, size_t dst_len,
+                                   bool *initial_was_sa) {
+  if (initial_was_sa) *initial_was_sa = false;
   if (!src || !dst || dst_len == 0) return;
   dst[0] = '\0';
   const char *source = src;
@@ -65,21 +72,19 @@ static void clean_dhatu_upadesa(const char *src, char *dst, size_t dst_len) {
     dst[pos++] = source[i];
   }
   dst[pos] = '\0';
-  /* 6.1.64 dhātv-ādeḥ ṣaḥ saḥ — initial ṣ (z) of a dhātu is realised
-     as dental s in the derivation. When ṣ is part of a ṣṭ-cluster
-     (zw in SLP1), the following ṭ also de-retroflexes to t (zwUp →
-     stUp per 8.4.41 in reverse for dhātu-initial). */
   if (dst[0] == 'z') {
+    if (initial_was_sa) *initial_was_sa = true;
     dst[0] = 's';
     if (dst[1] == 'w') dst[1] = 't';
     if (dst[1] == 'W') dst[1] = 'T';
   }
-  /* 6.1.65 ṇo naḥ — initial ṇ (R) of a dhātu is realised as dental n.
-     Also apply when ṇ stands second after a converted ṣ (zRA → snA),
-     i.e. anywhere within the dhātu-initial cluster. */
   if (dst[0] == 'R') dst[0] = 'n';
   if (dst[0] == 's' && dst[1] == 'R') dst[1] = 'n';
 }
+
+/* Kept for source-level documentation; the _ex variant is used. */
+#define clean_dhatu_upadesa(src, dst, dst_len) \
+    clean_dhatu_upadesa_ex((src), (dst), (dst_len), NULL)
 
 static void replace_first_vowel(char *root, bool vrddhi) {
   if (!root) return;
@@ -534,7 +539,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      uttama forms also count as strong. */
   bool is_strong = (v == ASH_EKAVACANA) ||
                    (lakara == ASH_LOT && p == ASH_UTTAMA);
-  clean_dhatu_upadesa(dhatu_slp1, clean_root, sizeof(clean_root));
+  bool initial_was_sa = false;
+  clean_dhatu_upadesa_ex(dhatu_slp1, clean_root, sizeof(clean_root), &initial_was_sa);
   if (clean_root[0] == '\0') return false;
   /* LRT/LUT/LRN/ASIRLIN introduce their own augments (sya, tā,
      a-sya, yA) that replace the gaṇa vikaraṇa. */
@@ -688,10 +694,13 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     }
     (void)root_vowel_final;
 
-    /* 8.3.59 ādeśapratyayoḥ: 's' inside the post-abhyāsa root portion
-       becomes 'ṣ' (z) when preceded by an iṇ-vowel from the abhyāsa
-       or earlier. Skip the abhyāsa itself (first root_start chars). */
-    sandhi_apply_satva(reduped, root_start);
+    /* 8.3.59 ādeśapratyayoḥ: only fires when the dhātu-initial 's'
+       is an ādeśa from ṣ (per 6.1.64). For roots that originally
+       began with plain 's' (skud, smṛ, snā), no ṣatva in abhyāsa
+       restoration. */
+    if (initial_was_sa) {
+      sandhi_apply_satva(reduped, root_start);
+    }
 
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
