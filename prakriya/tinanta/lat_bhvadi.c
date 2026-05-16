@@ -578,6 +578,66 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   bool initial_was_sa = false;
   clean_dhatu_upadesa_ex(dhatu_slp1, clean_root, sizeof(clean_root), &initial_was_sa);
   if (clean_root[0] == '\0') return false;
+
+  bool ch_i_anubandha = has_i_anubandha(dhatu_slp1);
+
+  /* 8.2.76 r-vor upadhāyā dīrghaḥ — an ik-upadhā (i/u/ṛ) before
+     r/v + final-consonant context lengthens to I/U/F. Applies to
+     roots like turv, hurC, mūrch, sphurC. Fires once at clean-root
+     so all downstream derivations see the long-vowel form. */
+  {
+    size_t cl = strlen(clean_root);
+    for (size_t i = 1; i + 1 < cl; i++) {
+      char vowel = clean_root[i];
+      char next = clean_root[i + 1];
+      bool is_short_ik = (vowel == 'i' || vowel == 'u' || vowel == 'f');
+      bool next_is_rv = (next == 'r' || next == 'v');
+      if (is_short_ik && next_is_rv && i + 2 < cl) {
+        /* Position i+2 should be another consonant for the upadhā
+           context to apply. */
+        char after = clean_root[i + 2];
+        bool after_is_cons = !varna_is_vowel(after);
+        if (after_is_cons) {
+          /* Lengthen. */
+          if (vowel == 'i') clean_root[i] = 'I';
+          else if (vowel == 'u') clean_root[i] = 'U';
+          else if (vowel == 'f') clean_root[i] = 'F';
+          break;
+        }
+      }
+    }
+  }
+  /* 6.1.73 che ca — a vowel before ch (C in SLP1) takes a prosthetic
+     't' realized as 'c' (8.4.40 stoḥ ścunā ścuḥ), so an internal "VC"
+     becomes "VcC". Apply at clean-root time so the doubled cluster
+     is visible to all downstream upadhā-laghu checks and vrddhi/
+     guṇa decisions. yuC → yucC → no guṇa, lacC → no vrddhi.
+     Skip for i-anubandha roots — those will get a num augment
+     before the final consonant (7.1.58 idito num), making the cluster
+     "nC" / "YC" rather than "VC". The nasal already serves the
+     buffering function that ch-doubling would. */
+  if (!ch_i_anubandha) {
+    char rebuilt[64] = {0};
+    size_t cl = strlen(clean_root), oi = 0;
+    for (size_t i = 0; i < cl && oi + 2 < sizeof(rebuilt); i++) {
+      char c = clean_root[i];
+      if (c == 'C' && i > 0) {
+        char prev = clean_root[i - 1];
+        bool vowel = (prev == 'a' || prev == 'A' || prev == 'i' || prev == 'I' ||
+                      prev == 'u' || prev == 'U' || prev == 'f' || prev == 'F' ||
+                      prev == 'x' || prev == 'X' || prev == 'e' || prev == 'o' ||
+                      prev == 'E' || prev == 'O');
+        bool already_doubled = (i >= 1 && clean_root[i - 1] == 'c');
+        if (vowel && !already_doubled) {
+          rebuilt[oi++] = 'c';
+        }
+      }
+      rebuilt[oi++] = c;
+    }
+    rebuilt[oi] = '\0';
+    strncpy(clean_root, rebuilt, sizeof(clean_root) - 1);
+    clean_root[sizeof(clean_root) - 1] = '\0';
+  }
   /* Periphrastic LIT short-circuit: form already contains the
      auxiliary, skip the ending-concat path. */
   bool periphrastic_lit_used = false;
@@ -718,6 +778,46 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     if (reduped[0] && varna_is_vowel(reduped[0]) && reduped[root_start] == 'n' &&
         varna_is_vowel(reduped[root_start + 1])) {
       root_start++;  /* skip the abhyāsa-final 'n' */
+    }
+
+    /* 6.1.73 che ca — apply ch-doubling at the abhyāsa→root boundary
+       too: when the abhyāsa's final vowel meets a C-initial root
+       (e.g. Cam → caCam → cacCam). */
+    {
+      char rebuilt[64] = {0};
+      size_t rl = strlen(reduped), oi = 0;
+      for (size_t i = 0; i < rl && oi + 2 < sizeof(rebuilt); i++) {
+        char c = reduped[i];
+        if (c == 'C' && i > 0) {
+          char prev = reduped[i - 1];
+          bool vowel = (prev == 'a' || prev == 'A' || prev == 'i' || prev == 'I' ||
+                        prev == 'u' || prev == 'U' || prev == 'f' || prev == 'F' ||
+                        prev == 'x' || prev == 'X' || prev == 'e' || prev == 'o' ||
+                        prev == 'E' || prev == 'O');
+          bool already_doubled = (i >= 1 && reduped[i - 1] == 'c');
+          if (vowel && !already_doubled) rebuilt[oi++] = 'c';
+        }
+        rebuilt[oi++] = c;
+      }
+      rebuilt[oi] = '\0';
+      if (strcmp(reduped, rebuilt) != 0) {
+        /* If we inserted, the position of root_start may have shifted
+           if the insertion was before it. Recompute. */
+        size_t shift = strlen(rebuilt) - rl;
+        if (shift > 0) {
+          /* The 'c' was inserted at some position i; if i < root_start
+             we need to bump root_start. Simpler: rescan. */
+          strncpy(reduped, rebuilt, sizeof(reduped) - 1);
+          reduped[sizeof(reduped) - 1] = '\0';
+          root_start = 0;
+          while (root_start < strlen(reduped) && !varna_is_vowel(reduped[root_start])) root_start++;
+          root_start++;
+          if (reduped[0] && varna_is_vowel(reduped[0]) && reduped[root_start] == 'n' &&
+              varna_is_vowel(reduped[root_start + 1])) {
+            root_start++;
+          }
+        }
+      }
     }
 
     /* Classify the root for LIT treatment.
