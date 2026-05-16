@@ -47,6 +47,8 @@ bool as_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
                        ASH_Vacana vac, PrakriyaCtx *ctx_out);
 bool r_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+bool r_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
+                      ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
 /* Story 4.11: in-stems (guRin) and vat/mat-stems (SfRvat). */
 bool in_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,

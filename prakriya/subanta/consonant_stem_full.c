@@ -297,9 +297,21 @@ static bool r_build_bases(const char *stem, char *guna, char *weak,
   if (stem[n - 1] != 'f') return false;
   size_t x_len = n - 1;
   if (x_len + 3 > buf_len) return false;
-  /* GUNA: X + ar (ṛ → ar by 7.1.96) */
+  /* GUNA: X + ar (ṛ → ar by 7.1.96). In sarvanāmasthāna the 'a' is
+     lengthened to 'A' per 6.4.11 (ataḥ saṃhitāyām) for agent-noun
+     (-tṛ-suffix-derived) stems, but NOT for kinship terms (mātṛ,
+     pitṛ etc.). We use a closed kinship list and default-lengthen. */
   memcpy(guna, stem, x_len);
-  guna[x_len] = 'a';
+  static const char *const KINSHIP_RSTEMS[] = {
+    "mAtf", "pitf", "BrAtf", "svasf", "duhitf", "napAt", "nApit", "yAtf",
+    NULL,
+  };
+  bool is_kinship = false;
+  for (size_t k = 0; KINSHIP_RSTEMS[k]; k++) {
+    if (strcmp(stem, KINSHIP_RSTEMS[k]) == 0) { is_kinship = true; break; }
+  }
+  /* Agent-noun: lengthen. Kinship: short. */
+  guna[x_len] = is_kinship ? 'a' : 'A';
   guna[x_len + 1] = 'r';
   guna[x_len + 2] = '\0';
   /* WEAK: full stem (keeps ṛ) */
@@ -331,14 +343,33 @@ bool r_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
                      sizeof(guna))) return false;
   const RSlot *slot = r_slot_lookup(vib, vac);
   if (!slot) return false;
+  /* 6.4.10 sarvanāmasthāne cāsambuddhau — lengthening of -ar- → -Ār-
+     only fires in sarvanāmasthāna (1/2-eka through 2-dvi). The
+     SAPTAMI-EKA and sambodhana-dvi/bahu cases also use R_GUNA but
+     should keep the short 'a'. r_build_bases sets the long form by
+     default for non-kinship; if this slot is not sarvanāmasthāna,
+     downgrade to short 'a'. */
+  bool sarvanamasthana = (vib == ASH_PRATHAMA_VIB ||
+                          (vib == ASH_DVITIYA_VIB &&
+                           vac != ASH_BAHUVACANA));
+  char short_guna[64];
+  if (slot->base == R_GUNA && !sarvanamasthana &&
+      strlen(guna) >= 2 && guna[strlen(guna) - 2] == 'A') {
+    strncpy(short_guna, guna, sizeof(short_guna) - 1);
+    short_guna[sizeof(short_guna) - 1] = '\0';
+    short_guna[strlen(short_guna) - 2] = 'a';
+  } else {
+    strncpy(short_guna, guna, sizeof(short_guna) - 1);
+    short_guna[sizeof(short_guna) - 1] = '\0';
+  }
   const char *base;
   switch (slot->base) {
-    case R_GUNA:    base = guna;      break;
-    case R_WEAK:    base = weak;      break;
-    case R_DROP_F:  base = drop_f;    break;
-    case R_LONG:    base = long_base; break;
-    case R_FINAL_A: base = final_a;   break;
-    case R_VOC:     base = voc;       break;
+    case R_GUNA:    base = short_guna; break;
+    case R_WEAK:    base = weak;       break;
+    case R_DROP_F:  base = drop_f;     break;
+    case R_LONG:    base = long_base;  break;
+    case R_FINAL_A: base = final_a;    break;
+    case R_VOC:     base = voc;        break;
     default: return false;
   }
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
@@ -352,6 +383,46 @@ bool r_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
   prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,
                           "f-stem paradigm slot");
+  return true;
+}
+
+/* ── ṛ-stem NAPUMSAKA paradigm (āśaṃsitṛ-style) ───────────────────── */
+/* The neuter ṛ-stem differs from PUMS only in 1/2 vacana: 1/2-eka
+ * are the bare stem, 1/2-dvi suffix -Rī (with R), 1/2-bahu have long-ṝ
+ * + Rni cluster. 3-7 vacana share the PUMS pattern. */
+bool r_stem_neut_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
+                      PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  size_t n = strlen(stem_slp1);
+  if (n == 0 || stem_slp1[n - 1] != 'f') return false;
+  char x[64];
+  size_t x_len = n - 1;
+  if (x_len + 4 >= sizeof(x)) return false;
+  memcpy(x, stem_slp1, x_len);
+  x[x_len] = '\0';
+  prakriya_init_subanta(ctx_out, stem_slp1, ASH_NAPUMSAKA, vib, vac);
+  ctx_out->term_count = 1;
+  char form[TERM_VALUE_LEN] = {0};
+  bool nom_acc = (vib == ASH_PRATHAMA_VIB || vib == ASH_DVITIYA_VIB);
+  if (nom_acc && vac == ASH_EKAVACANA) {
+    /* Bare stem. */
+    snprintf(form, sizeof(form), "%sf", x);
+  } else if (nom_acc && vac == ASH_DVIVACANA) {
+    snprintf(form, sizeof(form), "%sfRI", x);
+  } else if (nom_acc && vac == ASH_BAHUVACANA) {
+    snprintf(form, sizeof(form), "%sFRi", x);
+  } else {
+    /* 3-7 same as PUMS. Delegate. */
+    PrakriyaCtx tmp = {0};
+    if (!r_stem_masc_full(stem_slp1, vib, vac, &tmp)) return false;
+    if (tmp.term_count > 0) {
+      strncpy(form, tmp.terms[0].value, sizeof(form) - 1);
+    }
+  }
+  strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+  ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+  prakriya_log_transition(ctx_out, 701084, stem_slp1, form,
+                          "f-stem NAPUMSAKA paradigm");
   return true;
 }
 

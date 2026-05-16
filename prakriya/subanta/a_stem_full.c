@@ -115,8 +115,130 @@ static bool a_stem_full_derive(const char *stem_slp1, const ASlot *table,
   return true;
 }
 
+/* 2.4.59 lup + 7.4.59 hrasvaḥ — for gotra-pratyaya stems (Agastya,
+ * gAlava, etc.), the gotra-suffix drops in BAHUVACANA and the
+ * initial vṛddhi-A reverts to short a. Closed seed list. Returns
+ * the derived stem and i/as classification. */
+typedef struct {
+  const char *full_stem;     /* e.g. "Agastya", "ANgirasa" */
+  const char *short_stem;    /* e.g. "agasti", "aNgiras" */
+  bool is_as_stem;           /* aṅgiras → as-stem-style 3-7 bahu */
+  bool is_i_stem;            /* agasti → i-stem-style 1-2 bahu */
+} GotraOverride;
+
+static const GotraOverride GOTRA_TABLE[] = {
+  {"Agastya",  "agasti",   false, true},
+  {"ANgirasa", "aNgiras",  true,  false},
+  {"gAlava",   "galava",   false, false},
+  {NULL, NULL, false, false},
+};
+
+static const GotraOverride *find_gotra(const char *stem) {
+  for (int i = 0; GOTRA_TABLE[i].full_stem; i++) {
+    if (strcmp(stem, GOTRA_TABLE[i].full_stem) == 0)
+      return &GOTRA_TABLE[i];
+  }
+  return NULL;
+}
+
 bool a_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
                       PrakriyaCtx *ctx_out) {
+  /* 2.4.59 gotra-luk in BAHUVACANA: switch stem and paradigm. */
+  if (vac == ASH_BAHUVACANA) {
+    const GotraOverride *g = find_gotra(stem_slp1);
+    if (g) {
+      char form[TERM_VALUE_LEN] = {0};
+      const char *suffix = NULL;
+      if (g->is_i_stem) {
+        switch (vib) {
+          case ASH_PRATHAMA_VIB:   suffix = "ayaH"; break;
+          case ASH_DVITIYA_VIB:    suffix = "In";   break;
+          case ASH_TRITIYA_VIB:    suffix = "BiH";  break;
+          case ASH_CATURTHI_VIB:   suffix = "ByaH"; break;
+          case ASH_PANCAMI_VIB:    suffix = "ByaH"; break;
+          case ASH_SHASTHI_VIB:    suffix = "nAm";  break;
+          case ASH_SAPTAMI_VIB:    suffix = "zu";   break;
+          default: suffix = NULL;
+        }
+        if (suffix) {
+          if (vib == ASH_PRATHAMA_VIB) {
+            /* i-stem 1bahu: drop final i and use -ayaH (guṇa).
+               agasti + jas → agastay + aH = agastayaH. */
+            size_t sl = strlen(g->short_stem);
+            char trunc[64];
+            strncpy(trunc, g->short_stem, sl - 1);
+            trunc[sl - 1] = '\0';
+            snprintf(form, sizeof(form), "%s%s", trunc, suffix);
+          } else if (vib == ASH_SHASTHI_VIB) {
+            /* i-stem 6bahu: 7.1.55 nāmi — short i → long I before nām.
+               agasti + nAm → agastInAm. */
+            size_t sl = strlen(g->short_stem);
+            char lengthened[64];
+            strncpy(lengthened, g->short_stem, sl);
+            lengthened[sl] = '\0';
+            if (sl > 0 && lengthened[sl - 1] == 'i') lengthened[sl - 1] = 'I';
+            else if (sl > 0 && lengthened[sl - 1] == 'u') lengthened[sl - 1] = 'U';
+            snprintf(form, sizeof(form), "%s%s", lengthened, suffix);
+          } else if (vib == ASH_SAPTAMI_VIB) {
+            snprintf(form, sizeof(form), "%s%s", g->short_stem, suffix);
+          } else if (vib == ASH_DVITIYA_VIB) {
+            /* "agasti" → drop final i, add In: agastIn */
+            size_t sl = strlen(g->short_stem);
+            char trunc[64];
+            strncpy(trunc, g->short_stem, sl - 1);
+            trunc[sl - 1] = '\0';
+            snprintf(form, sizeof(form), "%sIn", trunc);
+          } else {
+            snprintf(form, sizeof(form), "%s%s", g->short_stem, suffix);
+          }
+        }
+      } else if (g->is_as_stem) {
+        switch (vib) {
+          case ASH_PRATHAMA_VIB:
+          case ASH_DVITIYA_VIB:    suffix = "aH";   break;
+          case ASH_TRITIYA_VIB:    suffix = "BiH";  break;
+          case ASH_CATURTHI_VIB:   suffix = "ByaH"; break;
+          case ASH_PANCAMI_VIB:    suffix = "ByaH"; break;
+          case ASH_SHASTHI_VIB:    suffix = "Am";   break;
+          case ASH_SAPTAMI_VIB:    suffix = "su";   break;
+          default: suffix = NULL;
+        }
+        if (suffix) {
+          /* For 3-5-bahu (-ByaH-class), as-stem turns 's' → 'o' first
+             via 8.2.66 then 8.3.15: aṅgiras + BiH → aṅgiro + BiH. */
+          bool is_byah = (vib == ASH_TRITIYA_VIB || vib == ASH_CATURTHI_VIB ||
+                          vib == ASH_PANCAMI_VIB);
+          if (is_byah) {
+            char modified[64];
+            size_t sl = strlen(g->short_stem);
+            strncpy(modified, g->short_stem, sl - 2);
+            modified[sl - 2] = 'o';
+            modified[sl - 1] = '\0';
+            snprintf(form, sizeof(form), "%s%s", modified, suffix);
+          } else if (vib == ASH_SAPTAMI_VIB) {
+            /* aṅgiras + su → aṅgiraHsu (visarga before su). */
+            char modified[64];
+            size_t sl = strlen(g->short_stem);
+            strncpy(modified, g->short_stem, sl - 1);
+            modified[sl - 1] = 'H';
+            modified[sl] = '\0';
+            snprintf(form, sizeof(form), "%s%s", modified, suffix);
+          } else {
+            snprintf(form, sizeof(form), "%s%s", g->short_stem, suffix);
+          }
+        }
+      }
+      if (form[0]) {
+        prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+        ctx_out->term_count = 1;
+        strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
+        ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+        prakriya_log_transition(ctx_out, 204059, stem_slp1, form,
+                                "gotra-luk bahuvacane (2.4.59)");
+        return true;
+      }
+    }
+  }
   return a_stem_full_derive(stem_slp1, A_MASC, ASH_PUMS, vib, vac, ctx_out);
 }
 

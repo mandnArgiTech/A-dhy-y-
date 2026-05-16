@@ -430,6 +430,8 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
     ok = as_stem_neut_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && last == 'f') {
     ok = r_stem_masc_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_NAPUMSAKA && last == 'f') {
+    ok = r_stem_neut_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && nlen >= 2 &&
              normalized[nlen - 2] == 'i' && normalized[nlen - 1] == 'n') {
     /* Story 4.11: in-stem PUMS (guRin, tundin, ...). */

@@ -161,7 +161,15 @@ static const FemSlot AA_FEM[24] = {
 };
 
 static inline void apply_natva(const char *stem, char *form) {
-  (void)stem; sandhi_apply_natva(form);
+  /* 8.4.2 exception: if the STEM ends in "AnI" (the feminine suffix
+     ānuk per 4.1.49), the n is protected from 8.4.1 ṇatva. We skip
+     the natva pass in this case so AcAryAnI doesn't become AcAryARI. */
+  size_t sl = stem ? strlen(stem) : 0;
+  if (sl >= 3 && stem[sl - 1] == 'I' && stem[sl - 2] == 'n' &&
+      stem[sl - 3] == 'A') {
+    return;
+  }
+  sandhi_apply_natva(form);
 }
 
 static const FemSlot *fem_slot_lookup(const FemSlot *table, ASH_Vibhakti vib,
@@ -300,14 +308,49 @@ bool z_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   /* VOWEL = full stem (z preserved): arciz */
   memcpy(vowel_base, stem_slp1, n);
   vowel_base[n] = '\0';
-  /* VOICED = X + r: arcir */
+  /* 8.2.76 ik-upadhā lengthening only fires when the stem matches
+     the "long-vowel + single-cons + short-ik + z" pattern (e.g. ASiz,
+     vaciz, sajuz). Stems like arciz where there's a consonant
+     cluster before the 'i' do NOT lengthen. Test this once and apply
+     the same flag to all consonant-cluster bases below. */
+  bool eligible_for_length = false;
+  if (x_len >= 3) {
+    char up = stem_slp1[x_len - 1];
+    char up_pre = stem_slp1[x_len - 2];
+    char before_pre = stem_slp1[x_len - 3];
+    bool short_ik = (up == 'i' || up == 'u' || up == 'f');
+    bool single_cons = !varna_is_vowel(up_pre);
+    bool prior_long_vowel = (before_pre == 'A' || before_pre == 'I' ||
+                             before_pre == 'U' || before_pre == 'F' ||
+                             before_pre == 'e' || before_pre == 'o' ||
+                             before_pre == 'E' || before_pre == 'O');
+    /* Also: position before that must be the actual start of the
+       stem (no further consonant cluster). For ASiz: A-S-i-z — only
+       2 chars (A and S) before the i, so length=3 matches.
+       For arciz: a-r-c-i-z — 3 chars before i (a, r, c), fails. */
+    eligible_for_length = short_ik && single_cons && prior_long_vowel &&
+                          x_len == 3;
+  }
+  /* VOICED = X + r: arcir / ASIr (with conditional lengthening). */
   memcpy(voiced_base, stem_slp1, x_len);
   voiced_base[x_len] = 'r';
   voiced_base[x_len + 1] = '\0';
-  /* VISARGA = X + H: arciH */
+  if (eligible_for_length) {
+    char *up = &voiced_base[x_len - 1];
+    if (*up == 'i') *up = 'I';
+    else if (*up == 'u') *up = 'U';
+    else if (*up == 'f') *up = 'F';
+  }
+  /* VISARGA = X + H: arciH / ASIH (with conditional lengthening). */
   memcpy(visarga_base, stem_slp1, x_len);
   visarga_base[x_len] = 'H';
   visarga_base[x_len + 1] = '\0';
+  if (eligible_for_length) {
+    char *up = &visarga_base[x_len - 1];
+    if (*up == 'i') *up = 'I';
+    else if (*up == 'u') *up = 'U';
+    else if (*up == 'f') *up = 'F';
+  }
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_STRI, vib, vac);
   ctx_out->term_count = 1;
   const char *base;
@@ -321,10 +364,17 @@ bool z_stem_fem_full(const char *stem_slp1, ASH_Vibhakti vib, ASH_Vacana vac,
   char form[TERM_VALUE_LEN] = {0};
   if (slot->base == Z_DUAL) {
     /* saptami-bahu: arci + Hzu (visarga + zu). The visarga base
-       already adds H, so we just need the zu part. */
+       already adds H, so we just need the zu part. With upadhā
+       lengthening: ASIHzu. */
     char x_only[64];
     memcpy(x_only, stem_slp1, x_len);
     x_only[x_len] = '\0';
+    if (eligible_for_length) {
+      char *up = &x_only[x_len - 1];
+      if (*up == 'i') *up = 'I';
+      else if (*up == 'u') *up = 'U';
+      else if (*up == 'f') *up = 'F';
+    }
     snprintf(form, sizeof(form), "%sHzu", x_only);
   } else {
     snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
