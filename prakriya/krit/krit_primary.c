@@ -48,6 +48,26 @@ static const char *krit_suffix_upadesa(ASH_KritType krit) {
     case ASH_KRIT_KVASU: return "kvasu";
     case ASH_KRIT_KANAC: return "kAnac";
     case ASH_KRIT_INI: return "ini";
+    case ASH_KRIT_KIN: return "kin";
+    case ASH_KRIT_KVASUS: return "kvasus";
+    case ASH_KRIT_ATAN: return "atan";
+    case ASH_KRIT_KTAVATUS: return "ktavatus";
+    case ASH_KRIT_NAN: return "Ran";
+    case ASH_KRIT_GHURAC: return "Gurac";
+    case ASH_KRIT_AALUC: return "Aluc";
+    case ASH_KRIT_ATRN: return "atrn";
+    case ASH_KRIT_MANIN: return "manin";
+    case ASH_KRIT_RA: return "ra";
+    case ASH_KRIT_KIT: return "kit";
+    case ASH_KRIT_BHAVA: return "Bava";
+    case ASH_KRIT_VANIP: return "vanip";
+    case ASH_KRIT_VANAC: return "vanac";
+    case ASH_KRIT_SHACINIT: return "Sacinit";
+    case ASH_KRIT_KTHAN: return "kTan";
+    case ASH_KRIT_KHISHNUC: return "KizRuc";
+    case ASH_KRIT_KHA: return "Ka";
+    case ASH_KRIT_KTAVYAN: return "ktavyan";
+    case ASH_KRIT_KTRP: return "ktrp";
     default: return NULL;
   }
 }
@@ -89,6 +109,26 @@ static const char *krit_suffix_clean(ASH_KritType krit) {
     case ASH_KRIT_KVASU: return "vas";    /* kit, perfect active part */
     case ASH_KRIT_KANAC: return "Ana";    /* kit, perfect middle part */
     case ASH_KRIT_INI: return "in";       /* ñit, guṇa + in */
+    case ASH_KRIT_KIN: return "i";        /* kit, i */
+    case ASH_KRIT_KVASUS: return "vat";   /* perfect active, vat */
+    case ASH_KRIT_ATAN: return "at";      /* present-stem participle */
+    case ASH_KRIT_KTAVATUS: return "tavat"; /* tavat, alternate */
+    case ASH_KRIT_NAN: return "a";        /* ñit, vrddhi + a */
+    case ASH_KRIT_GHURAC: return "ura";   /* ura adjective */
+    case ASH_KRIT_AALUC: return "Alu";    /* ālu adjective */
+    case ASH_KRIT_ATRN: return "tra";     /* action -tra */
+    case ASH_KRIT_MANIN: return "man";    /* -man action */
+    case ASH_KRIT_RA: return "ra";        /* -ra action */
+    case ASH_KRIT_KIT: return "i";        /* kit -i agent */
+    case ASH_KRIT_BHAVA: return "Bava";   /* bhāva-noun */
+    case ASH_KRIT_VANIP: return "van";    /* -van adj */
+    case ASH_KRIT_VANAC: return "vana";   /* -vana action */
+    case ASH_KRIT_SHACINIT: return "";    /* special particle */
+    case ASH_KRIT_KTHAN: return "Ta";     /* -tha action */
+    case ASH_KRIT_KHISHNUC: return "izRu";/* ñit -iṣṇu */
+    case ASH_KRIT_KHA: return "Ka";       /* ñit -kha */
+    case ASH_KRIT_KTAVYAN: return "tavya";/* alternate -tavya */
+    case ASH_KRIT_KTRP: return "tra";     /* -tra agent */
     default: return NULL;
   }
 }
@@ -102,14 +142,19 @@ static bool krit_is_kit(ASH_KritType krit) {
          krit == ASH_KRIT_KMARAC || krit == ASH_KRIT_KA ||
          krit == ASH_KRIT_KELIMAR || krit == ASH_KRIT_MAN ||
          krit == ASH_KRIT_KAS || krit == ASH_KRIT_KVASU ||
-         krit == ASH_KRIT_KANAC;
+         krit == ASH_KRIT_KANAC ||
+         krit == ASH_KRIT_KIN || krit == ASH_KRIT_KVASUS ||
+         krit == ASH_KRIT_KTAVATUS || krit == ASH_KRIT_KIT ||
+         krit == ASH_KRIT_KTHAN || krit == ASH_KRIT_KTAVYAN ||
+         krit == ASH_KRIT_KTRP;
 }
 
 /* Whether a suffix triggers vṛddhi on the root vowel (ñit/ṇit). */
 static bool krit_triggers_vrddhi(ASH_KritType krit) {
   return krit == ASH_KRIT_GHAN || krit == ASH_KRIT_NYAT ||
          krit == ASH_KRIT_VUN  || krit == ASH_KRIT_RVU  ||
-         krit == ASH_KRIT_TRN;
+         krit == ASH_KRIT_TRN  || krit == ASH_KRIT_NAN  ||
+         krit == ASH_KRIT_KHISHNUC || krit == ASH_KRIT_KHA;
 }
 
 /* Closed list of seṭ-class roots that take iṭ before niṣṭhā/tum/tvA.
