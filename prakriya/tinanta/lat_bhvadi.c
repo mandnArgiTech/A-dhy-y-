@@ -561,13 +561,46 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      cakāra, etc.). */
   if (lakara == ASH_LIT) {
     char reduped[64] = {0};
-    if (!reduplicate(clean_root, reduped, sizeof(reduped))) {
+    /* 7.1.58 idito num: for i-anubandha roots, insert n before the
+       final consonant in the CLEAN ROOT first, so reduplication sees
+       the augmented root and can apply the correct abhyāsa pattern
+       (especially for vowel-initial roots which need "An"-abhyāsa
+       when the consonant cluster has 2+ chars). */
+    char augmented_root[64];
+    strncpy(augmented_root, clean_root, sizeof(augmented_root) - 1);
+    augmented_root[sizeof(augmented_root) - 1] = '\0';
+    if (i_anubandha) {
+      size_t cl = strlen(augmented_root);
+      size_t insert_at = cl;
+      for (size_t i = cl; i > 0; i--) {
+        if (!varna_is_vowel(augmented_root[i - 1])) {
+          insert_at = i - 1;
+          break;
+        }
+      }
+      if (cl + 1 < sizeof(augmented_root)) {
+        memmove(augmented_root + insert_at + 1, augmented_root + insert_at, cl - insert_at + 1);
+        augmented_root[insert_at] = 'n';
+      }
+    }
+    if (!reduplicate(augmented_root, reduped, sizeof(reduped))) {
       return false;
     }
-    /* Identify root portion (after the abhyāsa: first cons + vowel). */
+    /* Identify root portion (after the abhyāsa). For "An"-abhyāsa
+       vowel-initial roots, the reduplicate function emits 2 chars of
+       abhyāsa (vowel + n) before the root, so root_start scans past
+       them. The generic logic below skips consonants then a vowel. */
     size_t root_start = 0;
     while (root_start < strlen(reduped) && !varna_is_vowel(reduped[root_start])) root_start++;
     root_start++;  /* past the abhyāsa vowel */
+    /* For "An"-abhyāsa case, the next char is 'n' which is still part of
+       the abhyāsa; skip it too. We detect this when the abhyāsa starts
+       at index 0 with a vowel (vowel-initial root case) and the char
+       after the vowel is 'n'. */
+    if (reduped[0] && varna_is_vowel(reduped[0]) && reduped[root_start] == 'n' &&
+        varna_is_vowel(reduped[root_start + 1])) {
+      root_start++;  /* skip the abhyāsa-final 'n' */
+    }
 
     /* Classify the root for LIT treatment.
        - Vowel-final (BU, hu, śru): 7.4.69 inserts "v" before a vowel-
@@ -577,16 +610,22 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     size_t rlen = strlen(reduped);
     char root_final = (rlen > 0) ? reduped[rlen - 1] : 0;
     bool root_vowel_final = varna_is_vowel(root_final);
-    bool lit_strong = (v == ASH_EKAVACANA && p != ASH_MADHYAMA);
 
-    /* Specific U/Ū-final roots that take a "v" augment instead of
-       vrddhi in LIT (per 7.4.69 vasoḥ-): bhū, śru-bhū-fam. */
-    static const char *const LIT_V_AUGMENT_ROOTS[] = {"BU", "SrU", "Sru", NULL};
+    /* BU (bhū) takes a "v" augment instead of vrddhi in LIT
+       (per 7.4.69 vasoḥ-) AND has its abhyāsa-u replaced by 'a'
+       (per 7.4.66 ut paratasya in the BU-specific context).
+       Other vowel-final roots (Sru, kf, nI) get standard vrddhi. */
+    static const char *const LIT_V_AUGMENT_ROOTS[] = {"BU", NULL};
     bool needs_v_augment = false;
     for (size_t i = 0; LIT_V_AUGMENT_ROOTS[i]; i++) {
       if (strcmp(clean_root, LIT_V_AUGMENT_ROOTS[i]) == 0) {
         needs_v_augment = true; break;
       }
+    }
+    /* For BU: override the abhyāsa vowel to 'a' (which shorten_vowel
+       no longer applies for U). */
+    if (needs_v_augment && root_start > 0 && reduped[root_start - 1] == 'u') {
+      reduped[root_start - 1] = 'a';
     }
     if (needs_v_augment) {
       /* Skip vrddhi; append "v" before any vowel-initial ending
@@ -595,16 +634,64 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         reduped[rlen] = 'v';
         reduped[rlen + 1] = '\0';
       }
-    } else if (lit_strong) {
-      /* Apply vrddhi to root vowel for strong forms. */
-      char tmp[64];
-      strncpy(tmp, reduped + root_start, sizeof(tmp) - 1);
-      tmp[sizeof(tmp) - 1] = '\0';
-      replace_first_vowel(tmp, true);
-      strncpy(reduped + root_start, tmp, sizeof(reduped) - root_start - 1);
-      reduped[sizeof(reduped) - 1] = '\0';
+    } else if (v == ASH_EKAVACANA) {
+      /* Strong forms (eka): the root vowel changes by 7.2.116 ata
+         upadhāyāḥ (vrddhi of 'a'-upadhā before ṇit pratyay) or 7.3.86
+         pugantalaghūpadhasya (guṇa of i/u-upadhā) — both gated on a
+         LAGHU upadhā position. For madhyama-eka (Tal pratyay with iṭ),
+         only guṇa applies to i/u/f; 'a' stays unchanged. */
+      /* Find last vowel position in the root portion (post-abhyāsa). */
+      size_t last_v = (size_t)-1;
+      for (size_t i = root_start; i < rlen; i++) {
+        if (varna_is_vowel(reduped[i])) last_v = i;
+      }
+      if (last_v != (size_t)-1) {
+        size_t cons_after = (rlen - last_v - 1);
+        char upadha = reduped[last_v];
+        /* Laghu upadhā per 1.4.10 requires SHORT vowel + single cons. */
+        bool upadha_short = (upadha == 'a' || upadha == 'i' || upadha == 'u' ||
+                             upadha == 'f' || upadha == 'x');
+        bool laghu = upadha_short && (cons_after <= 1);
+        bool vowel_final = (cons_after == 0);
+        bool strong13 = (p != ASH_MADHYAMA);  /* 1eka or 3eka */
+        bool do_change = false;
+        bool do_vrddhi = false;
+        if (vowel_final && upadha_short) {
+          /* kf, nI etc. with SHORT vowel: 1eka/3eka vrddhi; 2eka guṇa. */
+          do_change = true;
+          do_vrddhi = strong13;
+        } else if (vowel_final) {
+          /* Long-vowel-final (nI with I, BU with U etc.): vrddhi for
+             1eka/3eka; nothing for 2eka. */
+          do_change = strong13;
+          do_vrddhi = true;
+        } else if (laghu) {
+          if (upadha == 'a') {
+            /* 7.2.116 vrddhi a→A only in 1eka/3eka (Ral-ṇit). */
+            do_change = strong13;
+            do_vrddhi = true;
+          } else {
+            /* 7.3.86 guṇa for laghu i/u/f upadhā in all eka forms. */
+            do_change = true;
+            do_vrddhi = false;
+          }
+        }
+        if (do_change) {
+          char tmp[64];
+          strncpy(tmp, reduped + root_start, sizeof(tmp) - 1);
+          tmp[sizeof(tmp) - 1] = '\0';
+          replace_first_vowel(tmp, do_vrddhi);
+          strncpy(reduped + root_start, tmp, sizeof(reduped) - root_start - 1);
+          reduped[sizeof(reduped) - 1] = '\0';
+        }
+      }
     }
     (void)root_vowel_final;
+
+    /* 8.3.59 ādeśapratyayoḥ: 's' inside the post-abhyāsa root portion
+       becomes 'ṣ' (z) when preceded by an iṇ-vowel from the abhyāsa
+       or earlier. Skip the abhyāsa itself (first root_start chars). */
+    sandhi_apply_satva(reduped, root_start);
 
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
@@ -616,11 +703,17 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      n+vowel rule the helper enforces. */
   sandhi_apply_natva(stem);
   for (size_t i = 0; stem[i]; i++) {
-    if (stem[i] == 'n' && (stem[i+1] == 'q' || stem[i+1] == 'Q' ||
-                           stem[i+1] == 'w' || stem[i+1] == 'W')) {
+    char nxt = stem[i+1];
+    if (stem[i] == 'n' && (nxt == 'q' || nxt == 'Q' || nxt == 'w' || nxt == 'W')) {
       /* Pre-retroflex nasal becomes ṇ regardless of trigger
          (8.4.58 anusvārasya yayi parasavarṇaḥ). */
       stem[i] = 'R';
+    } else if (stem[i] == 'n' && (nxt == 'k' || nxt == 'K' || nxt == 'g' || nxt == 'G')) {
+      /* 8.4.58 parasavarṇa before velars: n → N (ṅ). */
+      stem[i] = 'N';
+    } else if (stem[i] == 'n' && (nxt == 'c' || nxt == 'C' || nxt == 'j' || nxt == 'J')) {
+      /* 8.4.58 parasavarṇa before palatals: n → Y (ñ). */
+      stem[i] = 'Y';
     }
   }
   /* Order of logged steps:

@@ -28,15 +28,15 @@ static char shorten_vowel(char v) {
   switch (v) {
     case 'A': return 'a';
     case 'I': return 'i';
-    case 'U': return 'a';   /* long ū → a (special for back vowel) */
-    case 'F': return 'a';   /* ṝ → a */
+    case 'U': return 'u';   /* hrasva: ū → u */
+    case 'F': return 'a';   /* ṝ → a (7.4.66/7.4.59) */
     case 'f': return 'a';   /* short ṛ → a */
     case 'X': return 'a';   /* ḹ → a */
     case 'x': return 'a';   /* ḷ → a */
-    case 'E': return 'i';   /* ai → i in abhyāsa */
-    case 'O': return 'a';   /* au → a */
+    case 'E': return 'i';   /* ai → i in abhyāsa (i is the latter part) */
+    case 'O': return 'u';   /* au → u in abhyāsa (u is the latter part) */
     case 'e': return 'i';   /* e → i */
-    case 'o': return 'a';   /* o → a */
+    case 'o': return 'u';   /* o → u */
     default:  return v;
   }
 }
@@ -83,7 +83,24 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
   }
   if (first_vowel == n) return false;  /* no vowel — not a dhātu */
 
-  char abhyasa_cons = (first_vowel > 0) ? clean_root[0] : 0;
+  /* 7.4.61 śarpūrvāḥ khayaḥ — in an initial consonant cluster where
+     the FIRST consonant is a śar (S/z/s) and the second is a khay
+     (k/K/g/G/c/C/j/J/w/W/q/Q/t/T/d/D/p/P), the khay survives in the
+     abhyāsa instead of the śar. */
+  char abhyasa_cons = 0;
+  if (first_vowel > 0) {
+    abhyasa_cons = clean_root[0];
+    if (first_vowel >= 2 &&
+        (clean_root[0] == 'S' || clean_root[0] == 'z' || clean_root[0] == 's')) {
+      char c2 = clean_root[1];
+      bool c2_khay = (c2 == 'k' || c2 == 'K' || c2 == 'g' || c2 == 'G' ||
+                      c2 == 'c' || c2 == 'C' || c2 == 'j' || c2 == 'J' ||
+                      c2 == 'w' || c2 == 'W' || c2 == 'q' || c2 == 'Q' ||
+                      c2 == 't' || c2 == 'T' || c2 == 'd' || c2 == 'D' ||
+                      c2 == 'p' || c2 == 'P');
+      if (c2_khay) abhyasa_cons = c2;
+    }
+  }
   char abhyasa_vowel = shorten_vowel(clean_root[first_vowel]);
   /* 7.4.62 kuhoś cuḥ first (velar/laryngeal → palatal), then
      7.4.61 śarpūrvāḥ khayaḥ (deaspirate). */
@@ -92,14 +109,57 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
     abhyasa_cons = deaspirate(abhyasa_cons);
   }
 
-  /* Build "abhyasa + root". For vowel-initial roots, abhyasa is just
-     the shortened initial vowel (e.g. AS → aas → As — actually
-     vowel-initial roots use a special "AT" augment instead, but
-     we leave that to the LIT-specific code). */
+  /* Build "abhyasa + root". For vowel-initial roots, the abhyāsa
+     vowel and the root-initial vowel are savarṇa, so per 6.1.101
+     akaḥ savarṇe dīrghaḥ they merge into the corresponding long
+     vowel (a + a → ā, i + i → ī, u + u → ū). */
   size_t pos = 0;
   if (abhyasa_cons) {
     if (pos + 1 >= out_len) return false;
     out[pos++] = abhyasa_cons;
+  }
+  if (first_vowel == 0) {
+    /* Vowel-initial root. Count consonants after the initial vowel up
+       to the next vowel (or end). If 2+ consonants: use "An"-abhyāsa
+       per the vowel-initial LIT pattern (root vowel preserved, with
+       'n' inserted as connector). If 0-1 consonants: standard
+       savarṇa-dīrgha merge (6.1.101). */
+    size_t cons_after = 0;
+    for (size_t i = 1; i < n; i++) {
+      if (varna_is_vowel(clean_root[i])) break;
+      cons_after++;
+    }
+    char root_v = clean_root[0];
+    char merged = 0;
+    if ((abhyasa_vowel == 'a' && root_v == 'a') ||
+        (abhyasa_vowel == 'a' && root_v == 'A') ||
+        (abhyasa_vowel == 'A' && root_v == 'a') ||
+        (abhyasa_vowel == 'A' && root_v == 'A')) {
+      merged = 'A';
+    } else if ((abhyasa_vowel == 'i' && (root_v == 'i' || root_v == 'I')) ||
+               (abhyasa_vowel == 'I' && (root_v == 'i' || root_v == 'I'))) {
+      merged = 'I';
+    } else if ((abhyasa_vowel == 'u' && (root_v == 'u' || root_v == 'U')) ||
+               (abhyasa_vowel == 'U' && (root_v == 'u' || root_v == 'U'))) {
+      merged = 'U';
+    }
+    if (cons_after >= 2 && merged) {
+      /* "An"-abhyāsa: prefix merged-long-vowel + 'n', then full root. */
+      if (pos + 2 + n + 1 > out_len) return false;
+      out[pos++] = merged;
+      out[pos++] = 'n';
+      memcpy(out + pos, clean_root, n);
+      out[pos + n] = '\0';
+      return true;
+    }
+    if (merged) {
+      if (pos + 1 >= out_len) return false;
+      out[pos++] = merged;
+      if (pos + (n - 1) + 1 > out_len) return false;
+      memcpy(out + pos, clean_root + 1, n - 1);
+      out[pos + n - 1] = '\0';
+      return true;
+    }
   }
   if (pos + 1 >= out_len) return false;
   out[pos++] = abhyasa_vowel;
