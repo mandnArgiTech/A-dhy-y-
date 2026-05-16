@@ -540,6 +540,29 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
     }
     return true;
   }
+  /* 6.4.24 aniditāṃ hala upadhāyāḥ kṅiti — for non-idit aṅgas with
+     a nasal+stop upadhā-cluster, the nasal drops before a kit/ṅit
+     suffix. Fires for gaṇa-9 (śnā is ṅit) on roots like stanB → staB,
+     skanB → skaB, granT → graT etc. */
+  if (gana == 9 && !i_anubandha) {
+    size_t sn = strlen(stem);
+    if (sn >= 3) {
+      char penult = stem[sn - 2];
+      char final = stem[sn - 1];
+      bool is_nasal = (penult == 'n' || penult == 'm' || penult == 'N' ||
+                       penult == 'Y' || penult == 'R');
+      bool is_stop = (final == 'k' || final == 'K' || final == 'g' || final == 'G' ||
+                      final == 'c' || final == 'C' || final == 'j' || final == 'J' ||
+                      final == 'w' || final == 'W' || final == 'q' || final == 'Q' ||
+                      final == 't' || final == 'T' || final == 'd' || final == 'D' ||
+                      final == 'p' || final == 'P' || final == 'b' || final == 'B');
+      if (is_nasal && is_stop) {
+        /* Drop the nasal. */
+        stem[sn - 2] = final;
+        stem[sn - 1] = '\0';
+      }
+    }
+  }
   if (!append_with_vowel_sandhi(stem, stem_len, vik)) return false;
   /* gaṇa-5 (svādi nu) and gaṇa-8 (tanādi u) strong-form guṇa: the
      vikaraṇa-final u becomes o per 7.3.84 sārvadhātukārdhadhātukayoḥ
