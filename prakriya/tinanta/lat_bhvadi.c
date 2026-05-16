@@ -578,6 +578,9 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   bool initial_was_sa = false;
   clean_dhatu_upadesa_ex(dhatu_slp1, clean_root, sizeof(clean_root), &initial_was_sa);
   if (clean_root[0] == '\0') return false;
+  /* Periphrastic LIT short-circuit: form already contains the
+     auxiliary, skip the ending-concat path. */
+  bool periphrastic_lit_used = false;
   /* LRT/LUT/LRN/ASIRLIN introduce their own augments (sya, tā,
      a-sya, yA) that replace the gaṇa vikaraṇa. */
   bool skip_vikarana = (lakara == ASH_LRT || lakara == ASH_LUT ||
@@ -603,6 +606,78 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      historic irregulars (gam → ja+gam → jagāma, kṛ → ca+kar →
      cakāra, etc.). */
   if (lakara == ASH_LIT) {
+    /* 3.1.35-36 periphrastic LIT (LIT-paribhāṣā): for vowel-initial
+       roots with i-anubandha (3.1.36 ij-ādeśca gurumato'naṛcchaḥ —
+       which after num insertion have a guru upadhā), and for the
+       closed list of long-vowel-initial roots (oKf, ejf, UWa, Uza,
+       Iza, Irkzya, Irzya, urvI, Uza), the LIT is built periphrastically
+       as: stem + Am + LIT-of-kṛ. We emit the cakāra-form (first of
+       the three accepted alternates). */
+    bool lit_periphrastic = false;
+    /* 3.1.36 ijādeśca gurumato'naṛcchaḥ: vowel-initial roots whose
+       first vowel is i/I/u/U/e/o/E/O (NOT 'a') with i-anubandha use
+       periphrastic LIT. 'a'-initial roots (ati, adi, arda) stay on
+       the An-abhyāsa reduplication path. */
+    if (clean_root[0] != '\0' && i_anubandha) {
+      char first = clean_root[0];
+      if (first == 'i' || first == 'I' || first == 'u' || first == 'U' ||
+          first == 'e' || first == 'o' || first == 'E' || first == 'O') {
+        lit_periphrastic = true;
+      }
+    }
+    static const char *const PERIPH_LIT_LONG_VOWEL[] = {
+      "oK", "ej", "UW", "Uz", "Iz", "Irkzy", "Irzy", "urv", "oR",
+      "kakKa", "gup", "DUp", "paR", "pan", "kit", "dAn", "SAn", "uC",
+      "iv", "ukz", "uz",
+      NULL
+    };
+    for (size_t i = 0; PERIPH_LIT_LONG_VOWEL[i]; i++) {
+      if (strcmp(clean_root, PERIPH_LIT_LONG_VOWEL[i]) == 0) {
+        lit_periphrastic = true; break;
+      }
+    }
+    if (lit_periphrastic) {
+      /* Compute the stem (with num inserted for i-anubandha). */
+      char per_stem[64];
+      strncpy(per_stem, clean_root, sizeof(per_stem) - 1);
+      per_stem[sizeof(per_stem) - 1] = '\0';
+      if (i_anubandha) {
+        size_t cl = strlen(per_stem);
+        size_t insert_at = cl;
+        for (size_t i = cl; i > 0; i--) {
+          if (!varna_is_vowel(per_stem[i - 1])) { insert_at = i - 1; break; }
+        }
+        if (cl + 1 < sizeof(per_stem)) {
+          memmove(per_stem + insert_at + 1, per_stem + insert_at, cl - insert_at + 1);
+          per_stem[insert_at] = 'n';
+        }
+      }
+      /* Auxiliary kṛ-LIT forms keyed by purusha/vacana for P. */
+      static const char *const AUX_P[9] = {
+        "cakAra", "cakratuH", "cakruH",
+        "cakarTa", "cakraTuH", "cakra",
+        "cakAra", "cakfva", "cakfma",
+      };
+      static const char *const AUX_A[9] = {
+        "cakre", "cakrAte", "cakrire",
+        "cakfze", "cakrATe", "cakfQve",
+        "cakre", "cakfvahe", "cakfmahe",
+      };
+      int idx = (int)p * 3 + (int)v;
+      const char *aux = (pd == ASH_PARASMAI) ? AUX_P[idx] : AUX_A[idx];
+      /* For vowel-initial + i-anubandha stems, the connector is "AY"
+         (Am with parasavarṇa anusvāra before palatal c-). If the stem
+         ends in 'a', 6.1.101 savarṇa-dīrgha collapses a + A → A. */
+      size_t psl = strlen(per_stem);
+      if (psl > 0 && per_stem[psl - 1] == 'a') per_stem[psl - 1] = '\0';
+      char form_per[128];
+      snprintf(form_per, sizeof(form_per), "%sAY%s", per_stem, aux);
+      strncpy(stem, form_per, sizeof(stem) - 1);
+      stem[sizeof(stem) - 1] = '\0';
+      periphrastic_lit_used = true;
+      /* Skip the rest of the LIT reduplication branch. */
+      goto lit_done;
+    }
     char reduped[64] = {0};
     /* 7.1.58 idito num: for i-anubandha roots, insert n before the
        final consonant in the CLEAN ROOT first, so reduplication sees
@@ -778,6 +853,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
     stem[sizeof(stem) - 1] = '\0';
+  lit_done:;
   }
   /* 8.4.1 + 8.4.2 ṇatva post-process. The unified helper handles
      n + vowel adjacency. Retroflex stop (q/Q/w/W) targets are
@@ -959,6 +1035,10 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
+  if (periphrastic_lit_used) {
+    /* Periphrastic stem already includes the auxiliary; skip the rest. */
+    goto finalize;
+  }
   /* 7.1.4 ad-abhyastāt — the JhI ending (anti) becomes "ati" for ad-
      and abhyasta-class verbs (gana 3 reduplicated forms). Also strip
      the medial 'n' from JhI-derived endings (anta → ata in LAN/LOT
@@ -1124,6 +1204,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      vowel. Routed through the unified helper. */
   sandhi_apply_satva(form, strlen(stem));
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
+finalize:;
 
   /* 8.2.66 sasajuṣo ruḥ + 8.3.15 kharavasānayor visarjanīyaḥ — final `s`
      of a finite verb form becomes `H` (visarga) at end of utterance. The
