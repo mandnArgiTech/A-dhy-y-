@@ -6,6 +6,7 @@
 
 #include "aaiu_stems.h"
 #include "varna.h"
+#include "sandhi_natva.h"
 #include <string.h>
 
 typedef struct {
@@ -131,37 +132,8 @@ static const StemSlot U_NEUT[24] = {
    a vowel becomes `R` (ṇ) when the stem contains a triggering r/f/z/F.
    This is a simplified but practically sufficient implementation for the
    common i/u-stem paradigms. */
-/* 8.4.1 raṣābhyāṃ no ṇaḥ samānapade + 8.4.2 atkupvāṅnumvyavāye'pi.
-   Replace `n` with ṇ when following r/ṛ/ṣ/ṝ/ṇ in the same pada, but
-   the intervening characters must all be from the allowed set
-   (vowels, k-class, p-class, y, v, h, anusvāra). Dentals, palatals,
-   retroflex non-ṇ, and ś/s block the rule. */
-static bool natva_is_blocker(char c) {
-  switch (c) {
-    case 't': case 'T': case 'd': case 'D':           /* dental */
-    case 'c': case 'C': case 'j': case 'J': case 'Y': /* palatal */
-    case 'w': case 'W': case 'q': case 'Q':           /* retroflex non-ṇ */
-    case 'R': case 'S': case 's':                                /* ś / s (z=ṣ is a trigger) */
-    case 'l':                                          /* l */
-      return true;
-  }
-  return false;
-}
-
-static void apply_natva(const char *stem, char *form) {
-  (void)stem;
-  bool seen = false;
-  for (size_t i = 0; form[i]; i++) {
-    char c = form[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
-      seen = true;
-    } else if (natva_is_blocker(c)) {
-      seen = false;
-    } else if (seen && c == 'n' && form[i + 1] && varna_is_vowel(form[i + 1])) {
-      form[i] = 'R';
-      seen = false;
-    }
-  }
+static inline void apply_natva(const char *stem, char *form) {
+  (void)stem; sandhi_apply_natva(form);
 }
 
 /* Apply 8.2.66 + 8.3.15 final-s → visarga at end of pada. */

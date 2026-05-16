@@ -5,6 +5,7 @@
 
 #include "aaiu_stems.h"
 #include "varna.h"
+#include "sandhi_natva.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -159,36 +160,8 @@ static const FemSlot AA_FEM[24] = {
   {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA, "AH",   401002},
 };
 
-/* 8.4.1 raṣābhyāṃ no ṇaḥ + 8.4.2 atkupvāṅnumvyavāye'pi: replace `n`
-   with ṇ only when intervening chars between trigger and n are in
-   the allowed set (vowels, k/p-class, y/v/h, anusvāra). Dentals,
-   palatals, retroflex non-ṇ, ś/s, l block the rule. */
-static bool natva_is_blocker(char c) {
-  switch (c) {
-    case 't': case 'T': case 'd': case 'D':
-    case 'c': case 'C': case 'j': case 'J': case 'Y':
-    case 'w': case 'W': case 'q': case 'Q':
-    case 'R': case 'S': case 's':
-    case 'l':
-      return true;
-  }
-  return false;
-}
-
-static void apply_natva(const char *stem, char *form) {
-  (void)stem;
-  bool seen = false;
-  for (size_t i = 0; form[i]; i++) {
-    char c = form[i];
-    if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
-      seen = true;
-    } else if (natva_is_blocker(c)) {
-      seen = false;
-    } else if (seen && c == 'n' && form[i + 1] && varna_is_vowel(form[i + 1])) {
-      form[i] = 'R';
-      seen = false;
-    }
-  }
+static inline void apply_natva(const char *stem, char *form) {
+  (void)stem; sandhi_apply_natva(form);
 }
 
 static const FemSlot *fem_slot_lookup(const FemSlot *table, ASH_Vibhakti vib,

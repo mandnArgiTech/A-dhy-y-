@@ -29,6 +29,7 @@ set(SANDHI_SRC
     sandhi/sandhi_vowel.c
     sandhi/sandhi_hal.c
     sandhi/sandhi_visarga.c
+    sandhi/sandhi_natva.c
 )
 
 set(SUTRAPATHA_SRC

@@ -5,6 +5,7 @@
 #include "varna.h"
 #include "anubandha.h"
 #include "samjna.h"
+#include "sandhi_natva.h"
 #include <string.h>
 
 /* Reduce a dhātupāṭha upadeśa form to the clean root used in derivation.
@@ -550,31 +551,17 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                              &used_guna, &used_ec_ay)) {
     return false;
   }
-  /* 8.4.1 + 8.4.2 ṇatva post-process: in the present-tense stem, any
-     `n` (including the nuM augment) immediately following an r/f
-     trigger via allowed-only intervening characters becomes ṇ. The
-     dispatch tables in subanta apply this internally; for tinanta we
-     run a single pass over the joined stem here. */
-  {
-    bool seen = false;
-    for (size_t i = 0; stem[i]; i++) {
-      char c = stem[i];
-      if (c == 'r' || c == 'f' || c == 'z' || c == 'F') {
-        seen = true;
-      } else if (c == 't' || c == 'T' || c == 'd' || c == 'D' ||
-                 c == 'c' || c == 'C' || c == 'j' || c == 'J' || c == 'Y' ||
-                 c == 'S' || c == 's' || c == 'l') {
-        seen = false;
-      } else if (seen && c == 'n') {
-        char next = stem[i + 1];
-        if (next == 'q' || next == 'Q' || next == 'w' || next == 'W' ||
-            (next >= 'A' && next <= 'z' && (next == 'a' || next == 'A' ||
-             next == 'i' || next == 'I' || next == 'u' || next == 'U' ||
-             next == 'e' || next == 'o' || next == 'E' || next == 'O'))) {
-          stem[i] = 'R';
-          seen = false;
-        }
-      }
+  /* 8.4.1 + 8.4.2 ṇatva post-process. The unified helper handles
+     n + vowel adjacency. Retroflex stop (q/Q/w/W) targets are
+     handled separately below since they aren't covered by the
+     n+vowel rule the helper enforces. */
+  sandhi_apply_natva(stem);
+  for (size_t i = 0; stem[i]; i++) {
+    if (stem[i] == 'n' && (stem[i+1] == 'q' || stem[i+1] == 'Q' ||
+                           stem[i+1] == 'w' || stem[i+1] == 'W')) {
+      /* Pre-retroflex nasal becomes ṇ regardless of trigger
+         (8.4.58 anusvārasya yayi parasavarṇaḥ). */
+      stem[i] = 'R';
     }
   }
   /* Order of logged steps:
@@ -786,24 +773,9 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     }
   }
 
-  /* 8.3.59 ādeśapratyayoḥ — `s` of pratyaya becomes ṣ (z) when preceded
-     by an iṇ letter (i, ī, u, ū, ṛ, ṝ, ḷ, e, o, ai, au, k). a/ā do not
-     trigger this rule. We only flip suffix-region s, identified by
-     being past the stem boundary (which equals the stem length we
-     held before concatenation). */
-  {
-    size_t stem_len_at_join = strlen(stem);
-    for (size_t i = stem_len_at_join; form[i]; i++) {
-      if (form[i] != 's') continue;
-      if (i == 0) continue;
-      char prev = form[i - 1];
-      bool in_iN = (prev == 'i' || prev == 'I' || prev == 'u' || prev == 'U' ||
-                    prev == 'f' || prev == 'F' || prev == 'x' || prev == 'X' ||
-                    prev == 'e' || prev == 'o' || prev == 'E' || prev == 'O' ||
-                    prev == 'k');
-      if (in_iN) form[i] = 'z';
-    }
-  }
+  /* 8.3.59 ādeśapratyayoḥ — pratyaya-region `s` becomes ṣ after iṇ
+     vowel. Routed through the unified helper. */
+  sandhi_apply_satva(form, strlen(stem));
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
 
   /* 8.2.66 sasajuṣo ruḥ + 8.3.15 kharavasānayor visarjanīyaḥ — final `s`
