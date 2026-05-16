@@ -337,3 +337,197 @@ bool pronoun_is_sarvanama(const char *upadesa) {
 bool pronoun_is_idam(const char *upadesa) {
   return upadesa && strcmp(upadesa, "idam") == 0;
 }
+
+/* ── adas (that, distal demonstrative) — fully irregular ───────── */
+static const IdamSlot ADAS_MASC[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "asO"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "amU"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "amI"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "amum"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "amU"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "amUn"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "amunA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "amIBiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "amuzmE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "amUByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "amIByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "amuzmAt"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "amIByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "amuzya"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "amIzAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "amuzmin"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "amIzu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+static const IdamSlot ADAS_NEUT[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "adaH"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "amU"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "amUni"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "adaH"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "amU"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "amUni"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "amunA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "amIBiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "amuzmE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "amUByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "amIByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "amuzmAt"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "amIByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "amuzya"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "amIzAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "amuzmin"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "amIzu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+static const IdamSlot ADAS_FEM[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "asO"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "amU"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "amUH"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "amUm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "amU"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "amUH"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "amuyA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "amUBiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "amuzyE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "amUByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "amUByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "amuzyAH"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "amUByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "amUByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "amuzyAH"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "amUzAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "amuzyAm"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "amuyoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "amUzu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+bool adas_full(const char *stem_slp1, ASH_Linga li,
+               ASH_Vibhakti vib, ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  if (strcmp(stem_slp1, "adas") != 0) return false;
+  const IdamSlot *table = NULL;
+  switch (li) {
+    case ASH_PUMS:      table = ADAS_MASC; break;
+    case ASH_NAPUMSAKA: table = ADAS_NEUT; break;
+    case ASH_STRI:      table = ADAS_FEM;  break;
+    default: return false;
+  }
+  for (int i = 0; i < 24; i++) {
+    if (table[i].vib == vib && table[i].vac == vac) {
+      prakriya_init_subanta(ctx_out, stem_slp1, li, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, table[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700304, stem_slp1, table[i].form,
+                              "adas paradigm");
+      return true;
+    }
+  }
+  return false;
+}
+
+bool pronoun_is_adas(const char *upadesa) {
+  return upadesa && strcmp(upadesa, "adas") == 0;
+}
+
+/* ── asmad / yuṣmad (1st and 2nd person pronouns) ────────────── */
+static const IdamSlot ASMAD[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "aham"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "AvAm"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "vayam"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "mAm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "AvAm"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "asmAn"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "mayA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "AvAByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "asmABiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "mahyam"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "AvAByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "asmaByam"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "mat"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "AvAByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "asmat"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "mama"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "AvayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "asmAkam"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "mayi"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "AvayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "asmAsu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+static const IdamSlot YUZMAD[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "tvam"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "yuvAm"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "yUyam"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "tvAm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "yuvAm"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "yuzmAn"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "tvayA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "yuvAByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "yuzmABiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "tuByam"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "yuvAByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "yuzmaByam"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "tvat"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "yuvAByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "yuzmat"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "tava"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "yuvayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "yuzmAkam"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "tvayi"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "yuvayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "yuzmAsu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+bool asmad_yuzmad_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  const IdamSlot *table = NULL;
+  if (strcmp(stem_slp1, "asmad")  == 0) table = ASMAD;
+  else if (strcmp(stem_slp1, "yuzmad") == 0) table = YUZMAD;
+  else return false;
+  for (int i = 0; i < 24; i++) {
+    if (table[i].vib == vib && table[i].vac == vac) {
+      /* asmad/yuzmad are liṅga-invariant ("ALL"). Use PUMS for ctx. */
+      prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, table[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700305, stem_slp1, table[i].form,
+                              "1st/2nd person pronoun paradigm");
+      return true;
+    }
+  }
+  return false;
+}
+
+bool pronoun_is_personal(const char *upadesa) {
+  if (!upadesa) return false;
+  return strcmp(upadesa, "asmad")  == 0 ||
+         strcmp(upadesa, "yuzmad") == 0;
+}

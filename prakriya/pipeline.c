@@ -351,6 +351,12 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   if (pronoun_is_idam(normalized)) {
     /* Phase γ: idam (this) — irregular three-liṅga paradigm. */
     ok = idam_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_adas(normalized)) {
+    /* Phase γ: adas (that, distal) — irregular three-liṅga paradigm. */
+    ok = adas_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_personal(normalized)) {
+    /* Phase γ: asmad / yuzmad — liṅga-invariant personal pronouns. */
+    ok = asmad_yuzmad_full(normalized, vib, v, &ctx);
   } else if ((li == ASH_PUMS || li == ASH_NAPUMSAKA) &&
              pronoun_is_sarvanama(normalized)) {
     /* Phase γ: sarvanāma (tad, yad, etad, kim, sarva ...) masc/neut. */

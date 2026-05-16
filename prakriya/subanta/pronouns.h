@@ -28,6 +28,16 @@ bool pronoun_is_idam(const char *upadesa);
 bool idam_full(const char *stem_slp1, ASH_Linga li,
                ASH_Vibhakti vib, ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* adas (that, distal) — irregular demonstrative, all three liṅgas. */
+bool pronoun_is_adas(const char *upadesa);
+bool adas_full(const char *stem_slp1, ASH_Linga li,
+               ASH_Vibhakti vib, ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
+/* asmad (1st person) and yuzmad (2nd person) — liṅga-invariant. */
+bool pronoun_is_personal(const char *upadesa);
+bool asmad_yuzmad_full(const char *stem_slp1, ASH_Vibhakti vib,
+                       ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #ifdef __cplusplus
 }
 #endif
