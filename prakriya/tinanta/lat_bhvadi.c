@@ -340,6 +340,17 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
        only the pit endings (tip, sip, mip — i.e. ekavacana endings)
        trigger guṇa/vṛddhi. The non-pit endings (tas, anti, Tas, Ta,
        vas, mas) are kit and block guṇa, so root stays bare. */
+    /* gaṇa-3 (juhotyādi) reduplicates the root (6.1.10 ślau) before
+       attaching the athematic ending. Reduplicate first, then apply
+       guṇa to the LAST vowel of the reduplicated form for strong
+       forms. */
+    if (gana == 3 && !skip_vikarana) {
+      char reduped[64] = {0};
+      if (reduplicate(stem, reduped, sizeof(reduped))) {
+        strncpy(stem, reduped, stem_len - 1);
+        stem[stem_len - 1] = '\0';
+      }
+    }
     if (is_strong) {
       size_t sn = strlen(stem);
       char final = sn > 0 ? stem[sn - 1] : 0;
@@ -347,9 +358,34 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
                           final == 'x');
       bool long_vowel  = (final == 'I' || final == 'U' || final == 'F' ||
                           final == 'X');
-      if (gana == 2 && short_vowel) {
-        replace_first_vowel(stem, true);
-        *used_guna = true;
+      if ((gana == 2 || gana == 3) && short_vowel) {
+        /* Apply guṇa to the final vowel (root-final for gaṇa-2/3). */
+        if (gana == 3) {
+          /* For reduplicated stem, replace LAST vowel (the root vowel),
+             not the abhyāsa vowel. */
+          for (ssize_t i = (ssize_t)sn - 1; i >= 0; i--) {
+            char c = stem[i];
+            if (c == 'i' || c == 'u' || c == 'f' || c == 'x') {
+              char rep = varna_guna(c);
+              if (c == 'f' || c == 'x') {
+                /* f/x guṇa = ar/al with tail. */
+                char tail = (c == 'x') ? 'l' : 'r';
+                if (i + 1 < (ssize_t)stem_len) {
+                  memmove(stem + i + 2, stem + i + 1, sn - i);
+                  stem[i] = rep;
+                  stem[i + 1] = tail;
+                }
+              } else {
+                stem[i] = rep;
+              }
+              *used_guna = true;
+              break;
+            }
+          }
+        } else {
+          replace_first_vowel(stem, true);
+          *used_guna = true;
+        }
       } else if (gana == 2 && long_vowel) {
         replace_first_vowel(stem, false);
         *used_guna = true;
@@ -923,15 +959,48 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   }
   if (strlen(stem) + strlen(t->clean) + 1 > sizeof(form)) return false;
   strcpy(form, stem);
+  /* 7.1.4 ad-abhyastāt — the JhI ending (anti) becomes "ati" for ad-
+     and abhyasta-class verbs (gana 3 reduplicated forms). Also strip
+     the medial 'n' from JhI-derived endings (anta → ata in LAN/LOT
+     prathama-bahu and similar slots). */
+  if (gana == 3 && p == ASH_PRATHAMA && v == ASH_BAHUVACANA) {
+    static char abhyasta_jhi_override[16];
+    /* Drop the 'n' from "anti" → "ati", "antu" → "atu",
+       "an" → "uH" for LIT (special), "anta" → "ata" for LAN. */
+    const char *c = t->clean;
+    if (c && c[0] == 'a' && c[1] == 'n') {
+      abhyasta_jhi_override[0] = 'a';
+      strncpy(abhyasta_jhi_override + 1, c + 2, sizeof(abhyasta_jhi_override) - 2);
+      abhyasta_jhi_override[sizeof(abhyasta_jhi_override) - 1] = '\0';
+      static TingEntry abhyasta_local;
+      abhyasta_local = *t;
+      abhyasta_local.clean = abhyasta_jhi_override;
+      t = &abhyasta_local;
+    }
+  }
   /* Athematic vowel-final + vowel-initial ending: insert a glide
      (v after u/U, y after i/I, r after ṛ/ṝ) so the surface keeps the
      root vowel. ru + anti → ruvanti, vI + anti → viyanti (with I→i),
      yu + anti → yuvanti. This corresponds to the 6.4.77 acijñiti
      iyaṅ/uvaṅ + the underlying root vowel surfacing as a short.
      Skipped for LIT — the reduplication branch handles its own
-     stem→ending boundary (saṃprasāraṇa, v-augment, ec→ay). */
-  if ((gana == 2 || gana == 3 || gana == 5 || gana == 7 || gana == 8) &&
-      lakara != ASH_LIT) {
+     stem→ending boundary (saṃprasāraṇa, v-augment, ec→ay).
+     For gaṇa-3 we instead apply 6.1.77 yaṇ-ādeśa: short u/i/ṛ at
+     stem-end REPLACED by v/y/r before the vowel-initial ending. */
+  if (gana == 3 && lakara != ASH_LIT) {
+    size_t fl = strlen(form);
+    char stem_final = fl > 0 ? form[fl - 1] : 0;
+    char ending_initial = t->clean[0];
+    bool ending_vowel = (ending_initial == 'a' || ending_initial == 'A' ||
+                         ending_initial == 'i' || ending_initial == 'I' ||
+                         ending_initial == 'u' || ending_initial == 'U');
+    if (ending_vowel) {
+      if (stem_final == 'u') { form[fl - 1] = 'v'; }
+      else if (stem_final == 'i') { form[fl - 1] = 'y'; }
+      else if (stem_final == 'f') { form[fl - 1] = 'r'; }
+    }
+  } else if ((gana == 2 || gana == 5 || gana == 7 || gana == 8) &&
+             lakara != ASH_LIT) {
     size_t fl = strlen(form);
     char stem_final = fl > 0 ? form[fl - 1] : 0;
     char ending_initial = t->clean[0];
