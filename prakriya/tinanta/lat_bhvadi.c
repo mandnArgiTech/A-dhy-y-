@@ -703,6 +703,42 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       sandhi_apply_satva(reduped, root_start);
     }
 
+    /* 7.2.10 ekāca upadeśe — aniṭ roots refuse the iṭ-augment that the
+       LIT_PARASMAI table builds into iTa / iva / ima / iDve. Strip the
+       leading 'i' for the closed list of aniṭ roots BEFORE the
+       saṃprasāraṇa check, so the f→r rule only fires when the (now
+       trimmed) ending is genuinely vowel-initial. */
+    static const char *const LIT_ANIT_ROOTS[] = {
+      /* ṛ-final aniṭ class: kṛ, hṛ, vṛ, sṛ */
+      "kf", "hf", "vf", "sf",
+      /* short-vowel aniṭ vowel-finals (śru, stu, nī) */
+      "Sru", "stu", "nI",
+      NULL
+    };
+    bool lit_anit = false;
+    for (size_t i = 0; LIT_ANIT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, LIT_ANIT_ROOTS[i]) == 0) { lit_anit = true; break; }
+    }
+    if (lit_anit && t->clean[0] == 'i' && t->clean[1] != '\0') {
+      static char lit_anit_override[16];
+      strncpy(lit_anit_override, t->clean + 1, sizeof(lit_anit_override) - 1);
+      lit_anit_override[sizeof(lit_anit_override) - 1] = '\0';
+      static TingEntry lit_anit_local;
+      lit_anit_local = *t;
+      lit_anit_local.clean = lit_anit_override;
+      t = &lit_anit_local;
+    }
+
+    /* 6.1.108 saṃprasāraṇāc ca + 6.4.83 oḥ supi: in LIT weak forms
+       of ṛ-final roots (kṛ → cakṛ-, smṛ → sasmṛ-, hṛ → jahṛ-),
+       the root-final ṛ surfaces as r before vowel-initial endings. */
+    if (v != ASH_EKAVACANA) {
+      size_t rl = strlen(reduped);
+      if (rl > 0 && reduped[rl - 1] == 'f' && varna_is_vowel(t->clean[0])) {
+        reduped[rl - 1] = 'r';
+      }
+    }
+
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
     stem[sizeof(stem) - 1] = '\0';
@@ -891,8 +927,11 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      (v after u/U, y after i/I, r after ṛ/ṝ) so the surface keeps the
      root vowel. ru + anti → ruvanti, vI + anti → viyanti (with I→i),
      yu + anti → yuvanti. This corresponds to the 6.4.77 acijñiti
-     iyaṅ/uvaṅ + the underlying root vowel surfacing as a short. */
-  if (gana == 2 || gana == 3 || gana == 5 || gana == 7 || gana == 8) {
+     iyaṅ/uvaṅ + the underlying root vowel surfacing as a short.
+     Skipped for LIT — the reduplication branch handles its own
+     stem→ending boundary (saṃprasāraṇa, v-augment, ec→ay). */
+  if ((gana == 2 || gana == 3 || gana == 5 || gana == 7 || gana == 8) &&
+      lakara != ASH_LIT) {
     size_t fl = strlen(form);
     char stem_final = fl > 0 ? form[fl - 1] : 0;
     char ending_initial = t->clean[0];
