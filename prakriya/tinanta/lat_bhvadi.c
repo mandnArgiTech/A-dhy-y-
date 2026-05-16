@@ -985,6 +985,33 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
     }
 
+    /* 6.4.64 ato lopa iṭi ca + 7.4.40-41 — A/E-final dhātus in LIT:
+       in strong 1eka/3eka P, the root-final long vowel becomes O
+       (au) and the ending 'a' is absorbed (jaglO, SaSrO). In weak
+       forms the final long vowel is dropped (SaSratuH, jaglatuH).
+       Detect by clean root ending in 'A' or 'E'. */
+    {
+      size_t cl = strlen(clean_root);
+      char cf = (cl > 0) ? clean_root[cl - 1] : 0;
+      bool ae_final = (cf == 'A' || cf == 'E');
+      if (ae_final) {
+        size_t rl = strlen(reduped);
+        bool strong13_p = (v == ASH_EKAVACANA && p != ASH_MADHYAMA &&
+                           pd == ASH_PARASMAI);
+        if (rl > 0 && (reduped[rl - 1] == 'A' || reduped[rl - 1] == 'E')) {
+          if (strong13_p) {
+            reduped[rl - 1] = 'O';
+            /* Mark for ending-absorb: the 'a' of LIT 1eka/3eka P is
+               already in the form via t->clean; we'll suppress it. */
+            periphrastic_lit_used = true;  /* reuses the skip-ending flag */
+          } else {
+            /* Weak forms: drop the final vowel entirely. */
+            reduped[rl - 1] = '\0';
+          }
+        }
+      }
+    }
+
     /* 6.4.77 acijñiti — iyaṅ/uvaṅ-ādeśa: at the abhyāsa→post-guṇa-root
        boundary, short i/u + V becomes iy/uv + V. Applies to vowel-
        initial single-cons roots like uK, iK, uW, iw whose reduplicate
@@ -1034,6 +1061,11 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     } else if (stem[i] == 'n' && (nxt == 'c' || nxt == 'C' || nxt == 'j' || nxt == 'J')) {
       /* 8.4.58 parasavarṇa before palatals: n → Y (ñ). */
       stem[i] = 'Y';
+    } else if (stem[i] == 'n' && (nxt == 's' || nxt == 'S' || nxt == 'z' || nxt == 'h')) {
+      /* 8.3.24 naś ca a-pada-antasya jhali — n before sibilant /
+         h (jhal class) becomes anusvāra (M). e.g. dfh + i-anubandha
+         → dfnh → dfMh; Sansu → Sansa → SaMsa. */
+      stem[i] = 'M';
     }
   }
   /* Order of logged steps:

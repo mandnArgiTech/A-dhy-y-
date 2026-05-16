@@ -33,7 +33,9 @@ static char shorten_vowel(char v) {
     case 'f': return 'a';   /* short ṛ → a */
     case 'X': return 'a';   /* ḹ → a */
     case 'x': return 'a';   /* ḷ → a */
-    case 'E': return 'i';   /* ai → i in abhyāsa (i is the latter part) */
+    case 'E': return 'a';   /* ai → a in abhyāsa for ai-final dhātus
+                               (glē, mlē etc., per 7.4.66 ut paratasya
+                               applied for ec-final). */
     case 'O': return 'u';   /* au → u in abhyāsa (u is the latter part) */
     case 'e': return 'i';   /* e → i */
     case 'o': return 'u';   /* o → u */
