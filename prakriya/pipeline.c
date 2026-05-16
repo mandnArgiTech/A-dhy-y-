@@ -12,6 +12,7 @@
 #include "subanta/aaiu_stems.h"
 #include "subanta/consonant_stems.h"
 #include "subanta/pronouns.h"
+#include "subanta/numerals.h"
 #include "subanta/vibhakti.h"
 #include "krit/krit_primary.h"
 #include "taddhita/taddhita.h"
@@ -348,7 +349,12 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (pronoun_is_idam(normalized)) {
+  if (numeral_is_known(normalized) &&
+      !(li == ASH_STRI && strcmp(normalized, "catur") == 0)) {
+    /* Phase γ: numerals dvi, tri, catur (PUMS/NAPUMSAKA),
+       paYcan-daSan, zaz. catur STRI falls through to catur_stri_full. */
+    ok = numeral_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_idam(normalized)) {
     /* Phase γ: idam (this) — irregular three-liṅga paradigm. */
     ok = idam_full(normalized, li, vib, v, &ctx);
   } else if (pronoun_is_adas(normalized)) {
