@@ -11,6 +11,7 @@
 #include "subanta/a_stem.h"
 #include "subanta/aaiu_stems.h"
 #include "subanta/consonant_stems.h"
+#include "subanta/pronouns.h"
 #include "subanta/vibhakti.h"
 #include "krit/krit_primary.h"
 #include "taddhita/taddhita.h"
@@ -347,7 +348,13 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
+  if ((li == ASH_PUMS || li == ASH_NAPUMSAKA) &&
+      pronoun_is_sarvanama(normalized)) {
+    /* Phase γ: sarvanāma (tad, yad, etad, kim, sarva) masculine/neuter. */
+    ok = (li == ASH_PUMS)
+             ? sarvanama_masc_full(normalized, vib, v, &ctx)
+             : sarvanama_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
     /* Story 4.15: kim feminine pronominal paradigm. */
     ok = kim_stri_full(normalized, vib, v, &ctx);
   } else if (li == ASH_STRI && strcmp(normalized, "catur") == 0) {

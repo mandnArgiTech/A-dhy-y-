@@ -65,6 +65,7 @@ set(PRAKRIYA_SRC
     prakriya/subanta/feminine_stems.c
     prakriya/subanta/consonant_stems.c
     prakriya/subanta/consonant_stem_full.c
+    prakriya/subanta/pronouns.c
     prakriya/subanta/karaka.c
     prakriya/krit/krit_primary.c
     prakriya/taddhita/taddhita.c
