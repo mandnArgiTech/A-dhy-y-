@@ -317,6 +317,27 @@ typedef enum {
   ASH_KRIT_KVASU,      /**< Past active participle (-vas) per 3.2.107 */
   ASH_KRIT_KANAC,      /**< Past middle participle (-āna) per 3.2.106 */
   ASH_KRIT_INI,        /**< Agent (-in) per 3.2.93 */
+  /* Phase δ kṛt third tier — more action / agent / participial nouns */
+  ASH_KRIT_KIN,        /**< Action (-i, kit) per 3.3.108 */
+  ASH_KRIT_KVASUS,     /**< Past active (-vat, alternate to KVASU) per 3.2.108 */
+  ASH_KRIT_ATAN,       /**< Reduplicated present participle (-at) */
+  ASH_KRIT_KTAVATUS,   /**< Past active participle (-tavat, alternate) per 3.2.103 */
+  ASH_KRIT_NAN,        /**< Action (-a, ñit) per 3.3.107 */
+  ASH_KRIT_GHURAC,     /**< Adjective (-ura) per 3.2.161 */
+  ASH_KRIT_AALUC,      /**< Adjective (-ālu) per 3.2.158 */
+  ASH_KRIT_ATRN,       /**< Action (-tra) per 3.3.110 */
+  ASH_KRIT_MANIN,      /**< Action (-man) per 3.3.170 */
+  ASH_KRIT_RA,         /**< Action (-ra) per 3.3.57 */
+  ASH_KRIT_KIT,        /**< Agent (-i, kit) per 3.3.108 */
+  ASH_KRIT_BHAVA,      /**< Bhāva noun (-bhava) per 3.3.18 nominal */
+  ASH_KRIT_VANIP,      /**< Adjective (-van) per 3.2.74 */
+  ASH_KRIT_VANAC,      /**< Action (-vana) per 3.2.74 */
+  ASH_KRIT_SHACINIT,   /**< Tense particles (special) per 3.2.108 */
+  ASH_KRIT_KTHAN,      /**< Action (-tha) per 3.3.174 */
+  ASH_KRIT_KHISHNUC,   /**< Adjective (-iṣṇu, ñit) per 3.2.137 */
+  ASH_KRIT_KHA,        /**< Adjective (-kha) per 3.2.6 */
+  ASH_KRIT_KTAVYAN,    /**< Gerundive (alternate to tavya) per 3.3.96 */
+  ASH_KRIT_KTRP,       /**< Action (-tra) per 3.2.182 */
 } ASH_KritType;
 
 /** Derive a kṛt form. */
