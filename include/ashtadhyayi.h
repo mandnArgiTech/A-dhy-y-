@@ -338,6 +338,87 @@ typedef enum {
   ASH_KRIT_KHA,        /**< Adjective (-kha) per 3.2.6 */
   ASH_KRIT_KTAVYAN,    /**< Gerundive (alternate to tavya) per 3.3.96 */
   ASH_KRIT_KTRP,       /**< Action (-tra) per 3.2.182 */
+  /* Phase δ kṛt fourth tier — fill out 129 closed set */
+  ASH_KRIT_A,          /**< Simple -a (#1 in pratyay.txt) */
+  ASH_KRIT_ANG,        /**< -aṅ (#2) */
+  ASH_KRIT_ATHUC,      /**< -athu (#6) */
+  ASH_KRIT_ADHYAI,     /**< Infinitive -adhyai (#7) */
+  ASH_KRIT_ADHYAIN,    /**< Infinitive -adhyain (#8) */
+  ASH_KRIT_ANI,        /**< -ani (#9) */
+  ASH_KRIT_AP,         /**< -ap (#11) */
+  ASH_KRIT_ASE,        /**< Infinitive -ase (#12) */
+  ASH_KRIT_ASEN,       /**< Infinitive -asen (#13) */
+  ASH_KRIT_AARU,       /**< -āru (#14) */
+  ASH_KRIT_INC,        /**< -i (#16 iñ) */
+  ASH_KRIT_ITRA,       /**< -itra (#17) */
+  ASH_KRIT_INUN,       /**< -inuṇ (#19) */
+  ASH_KRIT_U,          /**< -u (#22) */
+  ASH_KRIT_UUKA,       /**< -ūka (#24) */
+  ASH_KRIT_ESH,        /**< -eś (#25) */
+  ASH_KRIT_KAN,        /**< -kañ (#27) */
+  ASH_KRIT_KADHYAI,    /**< -kadhyai (#28) */
+  ASH_KRIT_KADHYAIN,   /**< -kadhyain (#29) */
+  ASH_KRIT_KAP,        /**< -kap (#30) */
+  ASH_KRIT_KAMUL,      /**< -kamul (#31) */
+  ASH_KRIT_KASUN,      /**< -kasun (#32) */
+  ASH_KRIT_KASEN,      /**< -kasen (#33) */
+  ASH_KRIT_KI,         /**< -ki (#35) */
+  ASH_KRIT_KURAC,      /**< -kurac (#37) */
+  ASH_KRIT_KEN,        /**< -ken (#38) */
+  ASH_KRIT_KENYA,      /**< -kenya (#39) */
+  ASH_KRIT_KNU,        /**< -knu (#47) */
+  ASH_KRIT_KRU,        /**< -kru (#50) */
+  ASH_KRIT_KLUKAN,     /**< -klukan (#51) */
+  ASH_KRIT_KVANIP,     /**< -kvanip (#52) */
+  ASH_KRIT_KVARAP,     /**< -kvarap (#53) */
+  ASH_KRIT_KVIN,       /**< -kvin (#55) */
+  ASH_KRIT_KSE,        /**< -kse (#57) */
+  ASH_KRIT_KHAC,       /**< -khac (#58) */
+  ASH_KRIT_KHAMUN,     /**< -khamuñ (#59) */
+  ASH_KRIT_KHASH,      /**< -khash (#61) */
+  ASH_KRIT_KHUKAN,     /**< -khukañ (#63) */
+  ASH_KRIT_KHYUN,      /**< -khyun (#64) */
+  ASH_KRIT_GSNU,       /**< -gsnu (#65) */
+  ASH_KRIT_GHINUN,     /**< -ghinuṇ (#68) */
+  ASH_KRIT_NGVANIP,    /**< -ṅvanip (#70) */
+  ASH_KRIT_CHANASH,    /**< -cānaś (#71) */
+  ASH_KRIT_NYUT,       /**< -ñyuṭ (#72) */
+  ASH_KRIT_TAK,        /**< -ṭak (#74) */
+  ASH_KRIT_D,          /**< -ḍ (#75) */
+  ASH_KRIT_DU,         /**< -ḍu (#76) */
+  ASH_KRIT_N,          /**< -ṇ (#77) */
+  ASH_KRIT_NAC,        /**< -ṇac (#78) */
+  ASH_KRIT_NNYUT,      /**< -ṇyuṭ (#82) */
+  ASH_KRIT_NVI,        /**< -ṇvi (#83) */
+  ASH_KRIT_NVIN,       /**< -ṇvin (#84) */
+  ASH_KRIT_NVUCH,      /**< -ṇvuc (#85) */
+  ASH_KRIT_TAVAI,      /**< -tavai (#87/#90) */
+  ASH_KRIT_TAVEN,      /**< -taveṅ (#88) */
+  ASH_KRIT_TAVENAS,    /**< -taven (#89) */
+  ASH_KRIT_TOSUN,      /**< -tosun (#96) */
+  ASH_KRIT_THAKAN,     /**< -thakan (#98) */
+  ASH_KRIT_NANG,       /**< -naṅ (#99) */
+  ASH_KRIT_NAJING,     /**< -najiṅ (#100) */
+  ASH_KRIT_YAT,        /**< -yat (#103) */
+  ASH_KRIT_YUC,        /**< -yuc (#104) */
+  ASH_KRIT_RU,         /**< -ru (#106) */
+  ASH_KRIT_LYU,        /**< -lyu (#108) */
+  ASH_KRIT_VARAC,      /**< -varac (#111) */
+  ASH_KRIT_VIC,        /**< -vic (#112) */
+  ASH_KRIT_VIT,        /**< -viṭ (#113) */
+  ASH_KRIT_VUN_ALT,    /**< -vuñ (#114) */
+  ASH_KRIT_SHA,        /**< -ś (#116) */
+  ASH_KRIT_SHADHYAI,   /**< -śadhyai (#118) */
+  ASH_KRIT_SHADHYAIN,  /**< -śadhyain (#119) */
+  ASH_KRIT_SHANAN,     /**< -śānan (#121) */
+  ASH_KRIT_SHAAKAN,    /**< -ṣākan (#122) */
+  ASH_KRIT_SHTRAN,     /**< -ṣṭran (#123) */
+  ASH_KRIT_SHVUN,      /**< -ṣvun (#124) */
+  ASH_KRIT_SE,         /**< -se (#125) */
+  ASH_KRIT_SEN,        /**< -sen (#126) */
+  ASH_KRIT_DARA,       /**< -ḍara (#127) */
+  ASH_KRIT_IKAVAKA,    /**< -ikavaka (#128) */
+  ASH_KRIT_Y_ALT,      /**< -ya alternate (#129) */
 } ASH_KritType;
 
 /** Derive a kṛt form. */
