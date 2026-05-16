@@ -721,6 +721,41 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      historic irregulars (gam → ja+gam → jagāma, kṛ → ca+kar →
      cakāra, etc.). */
   if (lakara == ASH_LIT) {
+    /* LIT_OVERRIDE_TABLE: closed list of irregulars where the LIT
+       1eka/3eka P form bypasses the normal reduplication/vrddhi/
+       ec→ay pipeline. Checked FIRST so it wins over the periphrastic
+       detection. */
+    struct LitOverride { const char *root; const char *aux_form; };
+    static const struct LitOverride LIT_OVERRIDE_TABLE[] = {
+      /* yajādi vac-samprasāraṇa, LIT 1eka/3eka P */
+      {"vad", "uvAda"}, {"vac", "uvAca"}, {"vas", "uvAsa"},
+      {"vap", "uvApa"}, {"vah", "uvAha"}, {"yaj", "iyAja"},
+      {"ji", "jigAya"}, {"f",  "Ara"},
+      {"aj", "vivAya"},
+      {"dew", "daDO"}, {"dEp", "dadO"}, {"dAR", "dadO"},
+      {"Dew", "daDO"},
+      {"saR", "sasAna"},
+      {"pER", "pipERa"}, {"prER", "piprERa"},
+      {"CadiH", "cacCAda"},
+      {"sUrkz", "susUrkza"},
+      {"sUrkzy", "suzUkzya"},
+      {"sasj", "sasajja"},
+      {"sTiv", "tizWeva"},
+      {"kzIv", "cikzeva"},
+      {NULL, NULL},
+    };
+    bool strong_p_eka_check = (pd == ASH_PARASMAI && v == ASH_EKAVACANA &&
+                              (p == ASH_PRATHAMA || p == ASH_UTTAMA));
+    if (strong_p_eka_check) {
+      for (size_t i = 0; LIT_OVERRIDE_TABLE[i].root; i++) {
+        if (strcmp(clean_root, LIT_OVERRIDE_TABLE[i].root) == 0) {
+          strncpy(stem, LIT_OVERRIDE_TABLE[i].aux_form, sizeof(stem) - 1);
+          stem[sizeof(stem) - 1] = '\0';
+          periphrastic_lit_used = true;
+          goto lit_done;
+        }
+      }
+    }
     /* 3.1.35-36 periphrastic LIT (LIT-paribhāṣā): for vowel-initial
        roots with i-anubandha (3.1.36 ij-ādeśca gurumato'naṛcchaḥ —
        which after num insertion have a guru upadhā), and for the
@@ -759,6 +794,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         lit_periphrastic = true; break;
       }
     }
+
+    /* (LIT_OVERRIDE_TABLE moved earlier — fires before periphrastic.) */
     if (lit_periphrastic) {
       /* Compute the stem (with num inserted for i-anubandha). */
       char per_stem[64];
