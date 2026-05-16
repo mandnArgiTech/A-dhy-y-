@@ -29,6 +29,7 @@ set(SANDHI_SRC
     sandhi/sandhi_vowel.c
     sandhi/sandhi_hal.c
     sandhi/sandhi_visarga.c
+    sandhi/sandhi_natva.c
 )
 
 set(SUTRAPATHA_SRC
@@ -55,6 +56,7 @@ set(PRAKRIYA_SRC
     prakriya/tinanta/ting.c
     prakriya/tinanta/lat_bhvadi.c
     prakriya/tinanta/vikaranas.c
+    prakriya/tinanta/reduplication.c
     prakriya/subanta/vibhakti.c
     prakriya/subanta/a_stem.c
     prakriya/subanta/a_stem_full.c
@@ -63,6 +65,8 @@ set(PRAKRIYA_SRC
     prakriya/subanta/feminine_stems.c
     prakriya/subanta/consonant_stems.c
     prakriya/subanta/consonant_stem_full.c
+    prakriya/subanta/pronouns.c
+    prakriya/subanta/numerals.c
     prakriya/subanta/karaka.c
     prakriya/krit/krit_primary.c
     prakriya/taddhita/taddhita.c

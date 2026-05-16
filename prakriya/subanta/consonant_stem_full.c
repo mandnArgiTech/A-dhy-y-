@@ -773,29 +773,61 @@ static char voicing_pair(char c) {
   }
 }
 
+/* For voiced-palatal-final (j) stems, 8.2.30 coḥ kuḥ replaces the
+   palatal with the corresponding velar at word-end or before voiced-
+   cluster endings. j surfaces as g word-finally and as k before
+   voiceless cluster (-su → -kzu). */
+static char palatal_to_velar(char c) {
+  switch (c) {
+    case 'j': return 'g';
+    case 'J': return 'G';
+    default:  return c;
+  }
+}
+
 bool cons_stem_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
                          ASH_Vacana vac, PrakriyaCtx *ctx_out) {
   if (!stem_slp1 || !ctx_out) return false;
   size_t n = strlen(stem_slp1);
   if (n < 2) return false;
   char final = stem_slp1[n - 1];
-  /* Only handle the simple voiceless-stop-final cases here. */
+  /* Voiceless-stop-final (gup, marut, ...) and voiced-palatal-final
+     (bhuj, ākhubhuj). j triggers palatal→velar mapping per 8.2.30. */
   if (final != 'p' && final != 't' && final != 'k' && final != 'c' &&
-      final != 'w' && final != 'P' && final != 'T' && final != 'K') {
+      final != 'w' && final != 'P' && final != 'T' && final != 'K' &&
+      final != 'j' && final != 'J') {
     return false;
   }
   const CnSlot *slot = cn_slot_lookup(vib, vac);
   if (!slot) return false;
   prakriya_init_subanta(ctx_out, stem_slp1, ASH_PUMS, vib, vac);
   ctx_out->term_count = 1;
-  /* base = stem with optionally voiced final */
   char base[TERM_VALUE_LEN] = {0};
   size_t base_len = n - 1;
   memcpy(base, stem_slp1, base_len);
-  base[base_len] = (slot->base == CN_VOICED) ? voicing_pair(final) : final;
+  if (final == 'j' || final == 'J') {
+    /* j-stem: word-finally and before -ByAm/-BiH/-ByaH/-su, j → g
+       (palatal→velar by 8.2.30, voiced by 8.2.39 jaśtva).  Before
+       vowel-initial endings, j is retained. */
+    bool cons_suffix = (slot->suffix[0] == 'B' || slot->suffix[0] == 's');
+    bool endword = (slot->suffix[0] == '\0');
+    base[base_len] = (endword || cons_suffix) ? palatal_to_velar(final) : final;
+  } else {
+    base[base_len] = (slot->base == CN_VOICED) ? voicing_pair(final) : final;
+  }
   base[base_len + 1] = '\0';
   char form[TERM_VALUE_LEN] = {0};
   snprintf(form, sizeof(form), "%s%s", base, slot->suffix);
+  /* j-stem 7bahu (...su): 8.2.39 jaśtva → 8.3.59 ṣatva.
+     "<stem>gsu" → "<stem>kzu". */
+  if ((final == 'j' || final == 'J') &&
+      vib == ASH_SAPTAMI_VIB && vac == ASH_BAHUVACANA) {
+    size_t fl = strlen(form);
+    if (fl >= 3 && form[fl - 3] == 'g' && form[fl - 2] == 's') {
+      form[fl - 3] = 'k';
+      form[fl - 2] = 'z';
+    }
+  }
   strncpy(ctx_out->terms[0].value, form, TERM_VALUE_LEN - 1);
   ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
   prakriya_log_transition(ctx_out, slot->sutra_id, stem_slp1, form,

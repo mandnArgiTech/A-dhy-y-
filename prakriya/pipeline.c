@@ -11,6 +11,8 @@
 #include "subanta/a_stem.h"
 #include "subanta/aaiu_stems.h"
 #include "subanta/consonant_stems.h"
+#include "subanta/pronouns.h"
+#include "subanta/numerals.h"
 #include "subanta/vibhakti.h"
 #include "krit/krit_primary.h"
 #include "taddhita/taddhita.h"
@@ -282,19 +284,41 @@ static ASH_Form ctx_to_form(const PrakriyaCtx *ctx) {
 
 ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
                             ASH_Lakara l, ASH_Purusha pu, ASH_Vacana v, ASH_Pada pd) {
-  (void)p;
   PrakriyaCtx ctx = {0};
 
   if (!root_slp1 || root_slp1[0] == '\0') {
     return make_error_form("empty root");
   }
-  /* Stories 3.17/3.19/3.20/3.21/3.22/3.23/3.25 — LAT, LAN, LOT,
-     VIDHILIN, LRT, LUT, LRN, ASIRLIN routed through the parameterised
-     lakara_derive_ctx. LIT and LUN are not yet implemented. */
   if (l != ASH_LAT && l != ASH_LAN && l != ASH_LOT &&
       l != ASH_VIDHILIM && l != ASH_LRT && l != ASH_LUT &&
-      l != ASH_LRN && l != ASH_ASHIRLIM) {
+      l != ASH_LRN && l != ASH_ASHIRLIM && l != ASH_LIT &&
+      l != ASH_LUN) {
     return make_error_form("lakāra not yet implemented");
+  }
+  /* A9 — pada-flag enforcement (dhātupāṭha column pada_flag is P/A/U).
+     Reject mismatched-pada derivations gracefully. The lookup uses the
+     upadesa SLP1 first, then falls back to the cleaned form. The
+     check is best-effort: roots not present in the loaded dhātupāṭha
+     are not gated (e.g. compound roots, test inputs like "BU" that
+     match a real entry). */
+  if (p) {
+    const DhatuEntry *de = NULL;
+    for (int i = 0; i < p->dhatu_count; i++) {
+      if (strcmp(p->dhatus[i].upadesa_slp1, root_slp1) == 0 &&
+          (gana == 0 || p->dhatus[i].gana == gana)) {
+        de = &p->dhatus[i]; break;
+      }
+    }
+    if (!de) de = pipeline_find_dhatu(p, root_slp1, gana);
+    if (de) {
+      char pf = de->pada_flag;
+      if (pf == 'P' && pd == ASH_ATMANE) {
+        return make_error_form("dhātu is parasmaipada-only");
+      }
+      if (pf == 'A' && pd == ASH_PARASMAI) {
+        return make_error_form("dhātu is ātmanepada-only");
+      }
+    }
   }
   if (!lakara_derive_ctx(l, root_slp1, gana, pu, v, pd, &ctx)) {
     return make_error_form("derivation failed");
@@ -325,7 +349,27 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
   bool ends_in_as = nlen >= 2 && normalized[nlen - 2] == 'a' &&
                     normalized[nlen - 1] == 's';
 
-  if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
+  if (numeral_is_known(normalized) &&
+      !(li == ASH_STRI && strcmp(normalized, "catur") == 0)) {
+    /* Phase γ: numerals dvi, tri, catur (PUMS/NAPUMSAKA),
+       paYcan-daSan, zaz. catur STRI falls through to catur_stri_full. */
+    ok = numeral_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_idam(normalized)) {
+    /* Phase γ: idam (this) — irregular three-liṅga paradigm. */
+    ok = idam_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_adas(normalized)) {
+    /* Phase γ: adas (that, distal) — irregular three-liṅga paradigm. */
+    ok = adas_full(normalized, li, vib, v, &ctx);
+  } else if (pronoun_is_personal(normalized)) {
+    /* Phase γ: asmad / yuzmad — liṅga-invariant personal pronouns. */
+    ok = asmad_yuzmad_full(normalized, vib, v, &ctx);
+  } else if ((li == ASH_PUMS || li == ASH_NAPUMSAKA) &&
+             pronoun_is_sarvanama(normalized)) {
+    /* Phase γ: sarvanāma (tad, yad, etad, kim, sarva ...) masc/neut. */
+    ok = (li == ASH_PUMS)
+             ? sarvanama_masc_full(normalized, vib, v, &ctx)
+             : sarvanama_neut_full(normalized, vib, v, &ctx);
+  } else if (li == ASH_STRI && strcmp(normalized, "kim") == 0) {
     /* Story 4.15: kim feminine pronominal paradigm. */
     ok = kim_stri_full(normalized, vib, v, &ctx);
   } else if (li == ASH_STRI && strcmp(normalized, "catur") == 0) {
@@ -400,8 +444,10 @@ ASH_Form pipeline_subanta(Pipeline *p, const char *stem_slp1, ASH_Linga li,
     ok = vat_stem_masc_full(normalized, vib, v, &ctx);
   } else if (li == ASH_PUMS && nlen >= 2 &&
              (last == 'p' || last == 'P' || last == 'k' || last == 'K' ||
-              last == 't' || last == 'T' || last == 'c' || last == 'w')) {
-    /* Story 4.14: voiceless-stop-final consonant PUMS (gup, marut). */
+              last == 't' || last == 'T' || last == 'c' || last == 'w' ||
+              last == 'j' || last == 'J')) {
+    /* Story 4.14 + Phase γ: voiceless-stop-final and j-final
+       consonant PUMS (gup, marut, AKuBuj). */
     ok = cons_stem_masc_full(normalized, vib, v, &ctx);
   } else if (li == ASH_NAPUMSAKA && nlen >= 2 &&
              (last == 'j' || last == 'p' || last == 'k' || last == 't' ||

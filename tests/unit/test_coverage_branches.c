@@ -149,8 +149,11 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   fclose(tmp);
 
   ash_tinanta_paradigm(db, "BU", 1, ASH_LAT, forms18);
+  /* BU is parasmaipada-only per dhātupāṭha (pada_flag=P). After A9
+     pada-flag enforcement, ātmane slots (indices 9-17) come back
+     invalid; parasmai slots (0-8) remain valid. */
   TEST_ASSERT_TRUE(forms18[0].valid);
-  TEST_ASSERT_TRUE(forms18[17].valid);
+  TEST_ASSERT_TRUE(forms18[8].valid);
   for (int i = 0; i < 18; i++) ash_form_free(&forms18[i]);
 
   ash_subanta_paradigm(db, "rAma", ASH_PUMS, forms24);
@@ -182,7 +185,9 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   TEST_ASSERT_NOT_NULL(strstr(f.error, "empty root"));
   ash_form_free(&f);
 
-  f = ash_tinanta(db, "BU", 1, ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+  /* All 10 lakāras are now wired; exercise an out-of-range value to
+     hit the "not yet implemented" guard. */
+  f = ash_tinanta(db, "BU", 1, (ASH_Lakara)99, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_FALSE(f.valid);
   TEST_ASSERT_NOT_NULL(strstr(f.error, "not yet implemented"));
   ash_form_free(&f);
@@ -486,7 +491,8 @@ void test_guna_vikaranas_lakara_misc_branches(void) {
   TEST_ASSERT_TRUE(gana_uses_vrddhi(10));
   TEST_ASSERT_FALSE(gana_uses_vrddhi(6));
 
-  TEST_ASSERT_NULL(ting_get(ASH_LIT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI));
+  /* Out-of-range lakāra: ting_get must return NULL. */
+  TEST_ASSERT_NULL(ting_get((ASH_Lakara)99, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI));
   TEST_ASSERT_NULL(ting_get(ASH_LAT, (ASH_Purusha)99, ASH_EKAVACANA, ASH_PARASMAI));
   TEST_ASSERT_EQUAL_STRING("unknown", lakara_name((ASH_Lakara)99));
   TEST_ASSERT_FALSE(lakara_is_sarvadhatuka(ASH_LIT));
