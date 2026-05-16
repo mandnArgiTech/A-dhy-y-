@@ -148,6 +148,37 @@ void test_paribhasha_sthanivad_applies(void) {
   TEST_ASSERT_FALSE(paribhasha_sthanivad_applies("a", "i", 0));
 }
 
+void test_paribhasha_resolve_apavada(void) {
+  /* 3.1.69 śyan is an apavāda of 3.1.68 śap — wins. */
+  TEST_ASSERT_EQUAL_UINT32(301069, paribhasha_resolve_pair(301068, 301069));
+  TEST_ASSERT_EQUAL_UINT32(301069, paribhasha_resolve_pair(301069, 301068));
+  /* 7.3.86 (laghu upadhā specific) beats 7.3.84 (general). */
+  TEST_ASSERT_EQUAL_UINT32(703086, paribhasha_resolve_pair(703084, 703086));
+  /* paribhasha_is_apavada_of() reflects the same registry. */
+  TEST_ASSERT_TRUE(paribhasha_is_apavada_of(301077, 301068));
+  TEST_ASSERT_FALSE(paribhasha_is_apavada_of(301068, 301077));
+}
+
+void test_paribhasha_resolve_nitya(void) {
+  /* 7.3.84 is nitya; 7.2.115 is not — nitya wins even though it has
+     a lower numeric ID than 7.2.115 would suggest paratva. */
+  TEST_ASSERT_EQUAL_UINT32(703084, paribhasha_resolve_pair(703084, 702999));
+}
+
+void test_paribhasha_resolve_paratva(void) {
+  /* Two rules with no apavāda/nitya/antaraṅga relation — later wins. */
+  TEST_ASSERT_EQUAL_UINT32(800100, paribhasha_resolve_pair(800100, 700100));
+}
+
+void test_paribhasha_resolve_list(void) {
+  uint32_t candidates[] = { 301068, 301069, 301077 };
+  /* Both 301069 and 301077 are apavādas of 301068; among them paratva
+     picks the later (higher) ID: 301077. */
+  TEST_ASSERT_EQUAL_UINT32(301077, paribhasha_resolve(candidates, 3));
+  /* Empty list returns 0. */
+  TEST_ASSERT_EQUAL_UINT32(0, paribhasha_resolve(NULL, 0));
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_adhikara_build_from_db);
@@ -160,5 +191,9 @@ int main(void) {
   RUN_TEST(test_paribhasha_all_eight_defined);
   RUN_TEST(test_paribhasha_out_of_range);
   RUN_TEST(test_paribhasha_sthanivad_applies);
+  RUN_TEST(test_paribhasha_resolve_apavada);
+  RUN_TEST(test_paribhasha_resolve_nitya);
+  RUN_TEST(test_paribhasha_resolve_paratva);
+  RUN_TEST(test_paribhasha_resolve_list);
   return UNITY_END();
 }
