@@ -748,14 +748,19 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     strncpy(augmented_root, clean_root, sizeof(augmented_root) - 1);
     augmented_root[sizeof(augmented_root) - 1] = '\0';
     if (i_anubandha) {
+      /* 7.1.58 idito num dhātor — insert num AFTER the upadhā vowel
+         (i.e. before the final consonant cluster, not just the last
+         consonant). For roots like kAkz, this gives kAnkz which then
+         parasavarṇas to kANkz before velars (8.4.58). */
       size_t cl = strlen(augmented_root);
-      size_t insert_at = cl;
+      size_t last_vowel_pos = cl;  /* not found */
       for (size_t i = cl; i > 0; i--) {
-        if (!varna_is_vowel(augmented_root[i - 1])) {
-          insert_at = i - 1;
+        if (varna_is_vowel(augmented_root[i - 1])) {
+          last_vowel_pos = i - 1;
           break;
         }
       }
+      size_t insert_at = (last_vowel_pos < cl) ? last_vowel_pos + 1 : cl;
       if (cl + 1 < sizeof(augmented_root)) {
         memmove(augmented_root + insert_at + 1, augmented_root + insert_at, cl - insert_at + 1);
         augmented_root[insert_at] = 'n';
@@ -976,6 +981,33 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
             memmove(reduped + i, reduped + i + 1, rl - i);
             break;
           }
+        }
+      }
+    }
+
+    /* 6.4.77 acijñiti — iyaṅ/uvaṅ-ādeśa: at the abhyāsa→post-guṇa-root
+       boundary, short i/u + V becomes iy/uv + V. Applies to vowel-
+       initial single-cons roots like uK, iK, uW, iw whose reduplicate
+       did NOT merge and which got guṇa on the root vowel.
+       For "uoK" we should produce "uvoK"; for "ieK" → "iyeK".
+       Only scan the boundary at position root_start-1 (the abhyāsa
+       vowel slot). */
+    if (root_start >= 1) {
+      size_t pre = root_start - 1;
+      char abh = reduped[pre];
+      char next = reduped[pre + 1];
+      bool short_iu = (abh == 'i' || abh == 'u');
+      bool next_vowel = (next == 'a' || next == 'A' || next == 'i' || next == 'I' ||
+                         next == 'u' || next == 'U' || next == 'e' || next == 'o' ||
+                         next == 'E' || next == 'O' || next == 'f' || next == 'F' ||
+                         next == 'x' || next == 'X');
+      if (short_iu && next_vowel) {
+        /* Insert 'y' (after i) or 'v' (after u) at position pre+1. */
+        char glide = (abh == 'i') ? 'y' : 'v';
+        size_t rl = strlen(reduped);
+        if (rl + 1 < sizeof(reduped)) {
+          memmove(reduped + pre + 2, reduped + pre + 1, rl - pre);
+          reduped[pre + 1] = glide;
         }
       }
     }

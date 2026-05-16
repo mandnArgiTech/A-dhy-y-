@@ -120,46 +120,64 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
   }
   if (first_vowel == 0) {
     /* Vowel-initial root. Count consonants after the initial vowel up
-       to the next vowel (or end). If 2+ consonants: use "An"-abhyāsa
-       per the vowel-initial LIT pattern (root vowel preserved, with
-       'n' inserted as connector). If 0-1 consonants: standard
-       savarṇa-dīrgha merge (6.1.101). */
+       to the next vowel (or end).
+       Per 6.1.101 + 6.4.77: i/u-initial single-cons roots take the
+       iyaṅ/uvaṅ-ādeśa path (no merge — abhyāsa stays short, root
+       vowel gets guṇa, the i/u + V boundary later becomes iy/uv +
+       V). For a-initial we still merge to long Ā.
+       Multi-cons clusters (≥2 consonants after V) use "An"-abhyāsa
+       (arda → Anarda). */
     size_t cons_after = 0;
     for (size_t i = 1; i < n; i++) {
       if (varna_is_vowel(clean_root[i])) break;
       cons_after++;
     }
     char root_v = clean_root[0];
-    char merged = 0;
-    if ((abhyasa_vowel == 'a' && root_v == 'a') ||
-        (abhyasa_vowel == 'a' && root_v == 'A') ||
-        (abhyasa_vowel == 'A' && root_v == 'a') ||
-        (abhyasa_vowel == 'A' && root_v == 'A')) {
-      merged = 'A';
-    } else if ((abhyasa_vowel == 'i' && (root_v == 'i' || root_v == 'I')) ||
-               (abhyasa_vowel == 'I' && (root_v == 'i' || root_v == 'I'))) {
-      merged = 'I';
+    char merged_a = 0;
+    if ((abhyasa_vowel == 'a' && (root_v == 'a' || root_v == 'A')) ||
+        (abhyasa_vowel == 'A' && (root_v == 'a' || root_v == 'A'))) {
+      merged_a = 'A';
+    }
+    char merged_iu = 0;
+    if ((abhyasa_vowel == 'i' && (root_v == 'i' || root_v == 'I')) ||
+        (abhyasa_vowel == 'I' && (root_v == 'i' || root_v == 'I'))) {
+      merged_iu = 'I';
     } else if ((abhyasa_vowel == 'u' && (root_v == 'u' || root_v == 'U')) ||
                (abhyasa_vowel == 'U' && (root_v == 'u' || root_v == 'U'))) {
-      merged = 'U';
+      merged_iu = 'U';
     }
-    if (cons_after >= 2 && merged) {
-      /* "An"-abhyāsa: prefix merged-long-vowel + 'n', then full root. */
-      if (pos + 2 + n + 1 > out_len) return false;
-      out[pos++] = merged;
-      out[pos++] = 'n';
-      memcpy(out + pos, clean_root, n);
-      out[pos + n] = '\0';
-      return true;
+    /* Multi-consonant cluster: use "An"-abhyāsa pattern for any
+       vowel-initial root (covers ard, arc, idi, uK after num). */
+    if (cons_after >= 2) {
+      char vowel_for_an = merged_a ? merged_a :
+                          (merged_iu == 'I' ? 'I' :
+                           merged_iu == 'U' ? 'U' : 0);
+      if (vowel_for_an) {
+        if (pos + 2 + n + 1 > out_len) return false;
+        out[pos++] = vowel_for_an;
+        out[pos++] = 'n';
+        memcpy(out + pos, clean_root, n);
+        out[pos + n] = '\0';
+        return true;
+      }
     }
-    if (merged) {
+    /* Single-cons clusters: a-initial merges (ata → Āta), but
+       i/u-initial does NOT merge — the i/u stays as the abhyāsa,
+       and the root vowel keeps its full identity for guṇa to
+       operate. uKa → u + uKa → guṇa + uvaṅ → uvoKa. */
+    if (merged_a) {
       if (pos + 1 >= out_len) return false;
-      out[pos++] = merged;
+      out[pos++] = merged_a;
       if (pos + (n - 1) + 1 > out_len) return false;
       memcpy(out + pos, clean_root + 1, n - 1);
       out[pos + n - 1] = '\0';
       return true;
     }
+    /* For i/u-initial single-cons roots: fall through to the default
+       "abhyāsa-vowel + root" path. This produces "i" + "iK" = "iiK"
+       and the LIT branch will apply guṇa to the second i (root vowel),
+       turning it into "ieK", then post-process iyaṅ-ādeśa converts
+       "ieK" → "iyeK". */
   }
   if (pos + 1 >= out_len) return false;
   out[pos++] = abhyasa_vowel;
