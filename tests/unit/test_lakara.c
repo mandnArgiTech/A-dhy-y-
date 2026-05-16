@@ -40,10 +40,15 @@ void test_lakara_name_and_sarvadhatuka(void) {
 }
 
 void test_ting_get_rejects_invalid_lakara(void) {
-  /* ASH_LUN is the last unimplemented lakāra; ting_get returns NULL
-     for entries that aren't yet wired. */
-  const TingEntry *t = ting_get(ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+  /* Out-of-range lakāra index: ting_get must return NULL. */
+  const TingEntry *t = ting_get((ASH_Lakara)99, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
   TEST_ASSERT_NULL(t);
+}
+
+void test_ting_get_lun_is_wired(void) {
+  const TingEntry *t = ting_get(ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+  TEST_ASSERT_NOT_NULL(t);
+  TEST_ASSERT_EQUAL_STRING("It", t->clean);
 }
 
 void test_ting_assign_rejects_null_context(void) {
@@ -69,6 +74,7 @@ int main(void) {
   RUN_TEST(test_lat_all_18_forms_available);
   RUN_TEST(test_lakara_name_and_sarvadhatuka);
   RUN_TEST(test_ting_get_rejects_invalid_lakara);
+  RUN_TEST(test_ting_get_lun_is_wired);
   RUN_TEST(test_ting_assign_rejects_null_context);
   RUN_TEST(test_ting_assign_success_and_context_updates);
   return UNITY_END();

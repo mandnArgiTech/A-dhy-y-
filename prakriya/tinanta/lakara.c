@@ -128,6 +128,34 @@ static const TingEntry LIT_PARASMAI[9] = {
     {ASH_LIT, ASH_UTTAMA, ASH_BAHUVACANA, ASH_PARASMAI, "ma", "ima", SJ_TING | SJ_PARASMAIPADA},
 };
 
+/* LUN (aorist) — Story 3.24. Default iṣ-aorist endings (most common
+   sub-class for seṭ gaṇa-1 P roots). The clean form embeds the
+   iṣ-marker; the root portion is treated separately at form-build
+   time (a-augment, optional guṇa). Special-class roots (root-aorist
+   for bhū, sic-aorist for nī etc.) are handled inline. */
+static const TingEntry LUN_PARASMAI[9] = {
+    {ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA,  ASH_PARASMAI, "tip", "It",     SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_DVIVACANA,  ASH_PARASMAI, "tas", "izwAm",  SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ji",  "izuH",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_EKAVACANA,  ASH_PARASMAI, "sip", "IH",     SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_DVIVACANA,  ASH_PARASMAI, "Tas", "izwam",  SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ta",  "izwa",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_EKAVACANA,  ASH_PARASMAI, "mip", "izam",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_DVIVACANA,  ASH_PARASMAI, "vas", "izva",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_BAHUVACANA, ASH_PARASMAI, "mas", "izma",   SJ_TING | SJ_PARASMAIPADA},
+};
+static const TingEntry LUN_ATMANE[9] = {
+    {ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA,  ASH_ATMANE, "ta",    "izwa",    SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_DVIVACANA,  ASH_ATMANE, "AtAm",  "izAtAm",  SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_ATMANE, "Ja",    "izata",   SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_EKAVACANA,  ASH_ATMANE, "TAs",   "izWAH",   SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_DVIVACANA,  ASH_ATMANE, "ATAm",  "izATAm",  SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_ATMANE, "Dvam",  "iDvam",   SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_EKAVACANA,  ASH_ATMANE, "iw",    "izi",     SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_DVIVACANA,  ASH_ATMANE, "vahi",  "izvahi",  SJ_TING | SJ_ATMANEPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_BAHUVACANA, ASH_ATMANE, "mahiN", "izmahi",  SJ_TING | SJ_ATMANEPADA},
+};
+
 /* LRT (simple future) — Story 3.20. Same endings as LAT (primary). */
 static const TingEntry LRT_PARASMAI[9] = {
     {ASH_LRT, ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI, "tip", "ti", SJ_TING | SJ_PARASMAIPADA},
@@ -261,6 +289,7 @@ const TingEntry *ting_get(ASH_Lakara l, ASH_Purusha p, ASH_Vacana v, ASH_Pada pd
       case ASH_VIDHILIM: return &VIDHILIN_ATMANE[idx];
       case ASH_ASHIRLIM: return &ASIRLIN_ATMANE[idx];
       case ASH_LRN:      return &LRN_ATMANE[idx];
+      case ASH_LUN:      return &LUN_ATMANE[idx];
       default: return NULL;
     }
   }
@@ -274,6 +303,7 @@ const TingEntry *ting_get(ASH_Lakara l, ASH_Purusha p, ASH_Vacana v, ASH_Pada pd
     case ASH_LRN:      return &LRN_PARASMAI[idx];
     case ASH_ASHIRLIM: return &ASIRLIN_PARASMAI[idx];
     case ASH_LIT:      return &LIT_PARASMAI[idx];
+    case ASH_LUN:      return &LUN_PARASMAI[idx];
     default: return NULL;
   }
 }

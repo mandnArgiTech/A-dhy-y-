@@ -289,7 +289,8 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
   }
   if (l != ASH_LAT && l != ASH_LAN && l != ASH_LOT &&
       l != ASH_VIDHILIM && l != ASH_LRT && l != ASH_LUT &&
-      l != ASH_LRN && l != ASH_ASHIRLIM && l != ASH_LIT) {
+      l != ASH_LRN && l != ASH_ASHIRLIM && l != ASH_LIT &&
+      l != ASH_LUN) {
     return make_error_form("lakāra not yet implemented");
   }
   /* A9 — pada-flag enforcement (dhātupāṭha column pada_flag is P/A/U).

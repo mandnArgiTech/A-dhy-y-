@@ -546,7 +546,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      a-sya, yA) that replace the gaṇa vikaraṇa. */
   bool skip_vikarana = (lakara == ASH_LRT || lakara == ASH_LUT ||
                         lakara == ASH_LRN || lakara == ASH_ASHIRLIM ||
-                        lakara == ASH_LIT);
+                        lakara == ASH_LIT || lakara == ASH_LUN);
   /* 1.2.10 halaḥ śnaḥ śānajbhyām — kit applies only to ASHIRLIM-P
      (yāsuṭ-augmented). ASHIRLIM-Ā is sīsaT-augmented and not kit, so
      guṇa fires normally for Ā. */
@@ -754,8 +754,31 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      - ASIRLIN suppresses guṇa (block_guna_completely), OR
      - i-anubandha already inserted nuM (makes upadha guru, blocking
        7.3.86 guṇa per laghu requirement). */
-  if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN) &&
-      !block_guna_completely && !i_anubandha) {
+  /* LUN root-aorist (cli replaced by zero per 3.1.55 / 3.1.56 puṣādi-
+     and ad-class roots): the form is just a-augment + root + secondary
+     endings (LAN-style), no guṇa, no iṣ-marker. Vowel-initial endings
+     get a v-augment when the root ends in a vowel. The list is closed;
+     for these roots we discard any guṇa that apply_class_transform
+     applied and reset the stem to the bare clean root. */
+  bool lun_root_aorist = false;
+  if (lakara == ASH_LUN) {
+    static const char *const LUN_ROOT_AORIST_ROOTS[] = {
+      "BU", NULL
+    };
+    for (size_t i = 0; LUN_ROOT_AORIST_ROOTS[i]; i++) {
+      if (strcmp(clean_root, LUN_ROOT_AORIST_ROOTS[i]) == 0) {
+        lun_root_aorist = true; break;
+      }
+    }
+  }
+  if (lun_root_aorist) {
+    strncpy(stem, clean_root, sizeof(stem) - 1);
+    stem[sizeof(stem) - 1] = '\0';
+    used_guna = false;
+  }
+  if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN ||
+       lakara == ASH_LUN) &&
+      !block_guna_completely && !i_anubandha && !lun_root_aorist) {
     bool has_unstrong = false;
     for (size_t i = 0; stem[i]; i++) {
       char c = stem[i];
@@ -765,6 +788,24 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       replace_first_vowel(stem, false);
       used_guna = true;
     }
+  }
+  /* Override the LUN ending for root-aorist class. Endings are LAN's
+     secondary endings; vowel-initial endings (1bahu "an" / 3eka "am")
+     get a v-augment after vowel-final roots like BU, Sru. */
+  static const TingEntry LUN_ROOT_AORIST_P[9] = {
+    {ASH_LUN, ASH_PRATHAMA, ASH_EKAVACANA,  ASH_PARASMAI, "tip", "t",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_DVIVACANA,  ASH_PARASMAI, "tas", "tAm", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_PRATHAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ji",  "van", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_EKAVACANA,  ASH_PARASMAI, "sip", "H",   SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_DVIVACANA,  ASH_PARASMAI, "Tas", "tam", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_MADHYAMA, ASH_BAHUVACANA, ASH_PARASMAI, "Ta",  "ta",  SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_EKAVACANA,  ASH_PARASMAI, "mip", "vam", SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_DVIVACANA,  ASH_PARASMAI, "vas", "va",  SJ_TING | SJ_PARASMAIPADA},
+    {ASH_LUN, ASH_UTTAMA,   ASH_BAHUVACANA, ASH_PARASMAI, "mas", "ma",  SJ_TING | SJ_PARASMAIPADA},
+  };
+  if (lun_root_aorist && pd == ASH_PARASMAI) {
+    int idx = (int)p * 3 + (int)v;
+    if (idx >= 0 && idx < 9) t = &LUN_ROOT_AORIST_P[idx];
   }
 
   /* 3.1.33 syatāsi luṭos — for LRT/LRN insert sya. For LUT the
@@ -968,14 +1009,26 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   /* 6.4.71 luṅ-laṅ-lṛṅ-kṣv aḍudāttaḥ — past-tense lakāras (LAN, LRN,
      LUN) take an a-augment prepended to the form. Vowel sandhi at the
      a- + root junction: a + a → A, a + i → e, a + u → o. */
-  if (lakara == ASH_LAN || lakara == ASH_LRN) {
+  if (lakara == ASH_LAN || lakara == ASH_LRN || lakara == ASH_LUN) {
     char augmented[128] = {0};
     char before[128] = {0};
     strncpy(before, form, sizeof(before) - 1);
     char first = form[0];
+    char second = form[1];
+    bool followed_by_nasal = (second == 'n' || second == 'm' || second == 'N' ||
+                              second == 'Y' || second == 'R');
     if (first == 'a') {
       /* a + a → A (savarṇa-dīrgha 6.1.101). */
       augmented[0] = 'A';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if ((first == 'i' || first == 'I') && i_anubandha && followed_by_nasal) {
+      /* Vowel-initial i-anubandha (idi → ind): guṇa fires first (i→e),
+         then a-augment + e = ai (E) per 6.1.90 vṛddhi-of-augment. */
+      augmented[0] = 'E';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if ((first == 'u' || first == 'U') && i_anubandha && followed_by_nasal) {
+      /* Same pattern with u-initial roots: a + o → au (O) by 6.1.90. */
+      augmented[0] = 'O';
       strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
     } else if (first == 'i' || first == 'I') {
       /* a + i/I → e (guṇa 6.1.87). */
