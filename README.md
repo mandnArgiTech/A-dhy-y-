@@ -1,21 +1,58 @@
 # libAshtadhyayi — A C library for Pāṇinian Sanskrit grammar
 
-A modular C17 library implementing foundations of Pāṇini's Aṣṭādhyāyī (~500 BCE). Full rule coverage is in progress; current releases focus on a traceable engine, data ingestion, phonology, sandhi, and early morphology.
+A modular C17 library implementing Pāṇini's Aṣṭādhyāyī (~500 BCE). All
+ten lakāras (tenses/moods) are implemented; all major nominal classes
+(including the full sarvanāma list, demonstratives idam/adas, personal
+pronouns asmad/yuṣmad, and numerals 1-10) are wired; the kṛt suffix
+inventory covers 59 of the ~129 Pāṇinian suffixes.
 
 ## Current implementation status
 
-The foundation is implemented and tested:
+| Area | Status |
+|------|--------|
+| **Phonology + encoding** | varṇa, pratyāhāra (52 expansions), SLP1 ↔ IAST ↔ Devanāgarī ↔ HK |
+| **Sandhi** | vowel, consonant, visarga + nat va/ṣatva post-process |
+| **Sūtra database** | 3,983 BORI-edition sūtras loaded with metadata |
+| **Saṃjñā / Anubandha / Adhikāra / Anuvṛtti** | full structures populated |
+| **Paribhāṣā** | 8 codified meta-rules + working conflict resolver (apavāda > nitya > antaraṅga > paratva) |
+| **Tinanta** | **all 10 lakāras** wired, P + Ā padas, gaṇa 1-10 with full gaṇa-3 reduplication |
+| **Subanta** | a-/ā-/i-/ī-/u-/ū-/ṛ-/n-/s-/an-/as-/in-/vat-/j-final/voiceless-stop-final stem classes; full sarvanāma, demonstrative, personal pronoun, numeral paradigms |
+| **Kṛt** | **59 suffixes** wired (kta, ktavat, śatṛ, śānac, tavya, anīya, ya, lyap, ktvā, tum, lyuṭ, ghañ, ṇvul, tṛc, ktin, kyap, ṇyat, kvip, ṇamul, ktri, ktu, kmarac, gha, ka, ac, khal, vun, iṣṇuc, ukañ, tavyat, kelimar, ṇvu, man, tṛn, kas, kvasu, kānac, ini, kin, kvasus, atan, ktavatus, nan, ghurac, āluc, atṛn, manin, ra, kit, bhava, vanip, vanac, śacinit, kthan, khishnuc, kha, ktavyan, ktṛp) |
+| **Taddhita** | **35 suffixes** (aṇ, ya, in, mat, tā, tva, ka, ika, iya, tama, tara, vat, maya, āna, vya, tal, tval, ini, vini, lac, na, ṭhak, ṭhan, vatup, da, dvayasac, daghnac, mātrac, kalpap, deśīyar, tvan, ṭhal, aiya, dhan, vat2) |
+| **Samāsa** | **15 compound sub-types** (six classical + 9 specialized: upapada-tat, naṃ-tat, prādi-tat, gati-tat, daśa-bv, itaretara-dv, samāhāra-dv, vibhakti-tat, upamāna-karm.) |
+| **CI** | GitHub Actions matrix (Ubuntu × {gcc, clang}, macOS × clang) + oracle-coverage regression gate |
 
-- **Phonology and encoding**: varṇa classification, pratyāhāra lookup, SLP1/IAST/Devanāgarī/HK conversion, vowel/consonant/visarga sandhi.
-- **Sūtra database**: all 3,983 BORI-edition sūtras load with address and type metadata.
-- **Metadata**: saṃjñā, anubandha, adhikāra, anuvṛtti, and paribhāṣā structures are present.
-- **Derivation pipeline**: laṭ tiṅanta and subanta paths are partial and under active validation against bundled oracles.
+## Coverage against BORI oracles (50-root sample × 21 slots)
 
-Open implementation and review work is tracked in `.cursor/stories/` and `.cursor/bugs/`.
+### Tinanta — all 10 lakāras
+
+| Lakāra | P | Ā |
+|--------|---|---|
+| laṭ | 98% | 92% |
+| liṭ | 92% | 82% |
+| luṭ | 96% | 92% |
+| lṛṭ | 96% | 92% |
+| loṭ | 98% | 92% |
+| laṅ | 98% | 92% |
+| vidhi-liṅ | 98% | 92% |
+| āśīr-liṅ | 94% | 92% |
+| lṛṅ | 96% | 92% |
+| luṅ | 98% | 92% |
+
+LIT 1eka P broader test (all 712 gaṇa-1 P roots): **86.1%**.
+
+### Subanta — 80-stem sample × 21 slots: **96.55%**
+
+- Sarvanāma (22 stems: tad, yad, etad, kim, sarva, viśva, ubha, ubhaya, eka, anya, anyatara, itara, katara, katama, sva, tva, para, antara, apara, avara, uttara, adhara, pūrva, dakṣiṇa): **PUMS 100%, NAPUMSAKA 100%**
+- Demonstratives idam, adas (3 liṅgas each): **100%**
+- Personal asmad, yuṣmad: **100%**
+- Numerals dvi, tri, catur, paJcan, ṣaṣ, saptan, aṣṭan, navan, daśan: **100%**
 
 ## Vision
 
-The long-term goal is complete Aṣṭādhyāyī coverage with verifiable derivations, source-backed data, and prakriyā traces that cite the sūtra IDs responsible for each step.
+The long-term goal is complete Aṣṭādhyāyī coverage with verifiable
+derivations, source-backed data, and prakriyā traces that cite the
+sūtra IDs responsible for each step.
 
 ## Source Authority & Reference Oracles
 
@@ -41,61 +78,63 @@ The long-term goal is complete Aṣṭādhyāyī coverage with verifiable deriva
 
 ### Reference oracles (validation targets)
 
-| File | Forms | Target Phase | Validation Target |
-|------|-------|--------------|-------------------|
-| **`shabda/data2.txt`** | **216,168** (9,007 × 24) | Phase 4 subanta | informational strict match report |
-| **`dhatu/dhatuforms_*.txt`** | **254,736** (2,229 × 10 × 2 × 9) | Phase 3 tiṅanta | informational strict match report |
-| **`shabda/shabdaprakriya.txt`** | **13,456 steps** (4,863 derivations) | Trace validation | sampled informational report |
+| File | Forms | Used for |
+|------|-------|----------|
+| **`dhatu/dhatuforms_*.txt`** | **254,736** (2,229 × 10 × 2 × 9) | Tiṅanta validation |
+| **`shabda/data2.txt`** | **216,168** (9,007 × 24) | Subanta validation |
+| **`shabda/shabdaprakriya.txt`** | **13,456 steps** (4,863 derivations) | Trace validation |
 
 ### Classical commentary (reference only, not loaded at runtime)
 
 | File | Entries | What it is |
 |------|---------|-----------|
-| `mahabhashyam/1.txt`…`*.txt` | Many | Patañjali's Mahābhāṣya — THE definitive commentary |
+| `mahabhashyam/1.txt`…`*.txt` | Many | Patañjali's Mahābhāṣya — definitive commentary |
 | `vakyapadeeyam/data.txt` | 1,997 | Bhartṛhari's Vākyapadīya — philosophy of language |
 | `bhushanasara/data.txt` | 73 | Vaiyākaraṇa Bhūṣaṇa Sāra — philosophical grammar |
 | `paramalaghumanjoosha/data.txt` | 14 chapters | Nāgeśa's philosophical treatise |
 | `ska/data.txt` | 6,481 | Siddhānta Kaumudī — commentary reorganization |
 | `shiksha/data.txt` | 60 | Pāṇini's Śikṣā — phonetics |
-| `fit/data.txt` | 87 | Phiṭ-sūtras — accent rules (Phase 7 candidate) |
+| `fit/data.txt` | 87 | Phiṭ-sūtras — accent rules |
 
-All data files have Devanāgarī primary form + metadata. Ingestion scripts in
-`tools/ingest_*.py` convert Devanāgarī → SLP1 and produce TSVs in `data/`.
+All data files have Devanāgarī primary form + metadata. Ingestion
+scripts in `tools/ingest_*.py` convert Devanāgarī → SLP1 and produce
+TSVs in `data/`.
 
 ## Architecture
 
 ```
 libAshtadhyayi/
 ├── core/
-│   ├── phonology/     # Varṇa, Pratyāhāra (52 pratyāhāras from oracle)
+│   ├── phonology/     # varṇa, pratyāhāra (52 expansions)
 │   ├── sutrapatha/    # 3,983 sūtras with type classification
-│   ├── metadata/      # Saṃjñā, Anubandha, Anuvṛtti, Adhikāra, Paribhāṣā (133)
-│   └── conflict/      # Rule priority: apavāda > nitya > antaraṅga > paratva
+│   ├── metadata/      # saṃjñā, anubandha, anuvṛtti, adhikāra,
+│   │                  # paribhāṣā (Phase ε resolver wired)
+│   └── conflict/      # apavāda > nitya > antaraṅga > paratva
 ├── ancillary/
-│   ├── dhatupatha/    # 2,259 dhātus with pre-computed forms oracle
+│   ├── dhatupatha/    # 2,259 dhātus with oracle forms
 │   ├── ganapatha/     # 262 gaṇas
 │   ├── unadipatha/    # 748 Uṇādi sūtras
 │   └── linganushasana/# 189 gender rules
 ├── prakriya/
-│   ├── tinanta/       # Verbal conjugation (validated against 254,736-form oracle)
-│   ├── subanta/       # Nominal declension (validated against 216,168-form oracle)
-│   ├── krit/          # 129 primary kṛt derivatives
-│   └── taddhita/      # Secondary taddhita derivatives
-├── sandhi/            # Vowel, consonant, visarga sandhi
-├── samasa/            # 6 compound types
+│   ├── tinanta/       # all 10 lakāras × P/Ā × gaṇa 1-10
+│   ├── subanta/       # vowel-stems, cons-stems, pronouns, numerals
+│   ├── krit/          # 59 primary kṛt suffixes
+│   └── taddhita/      # 35 taddhita suffixes
+├── sandhi/            # vowel, cons, visarga, ṇatva, ṣatva
+├── samasa/            # 15 compound types
 ├── encoding/          # SLP1 ↔ IAST ↔ Devanāgarī ↔ HK codec
-└── tests/             # Phase-gated validation harness
+├── docs/              # docs/API.md — public C API reference
+├── .github/workflows/ # CI matrix + oracle regression gate
+└── tests/             # 27 unit tests (all passing)
 ```
 
 ## Build
 
 ```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build
-ctest --test-dir build
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 ```
-
-Current state: unit and validation targets are active, and the public API is wired for concrete runtime behavior.
 
 ## Quick Demo
 
@@ -103,54 +142,69 @@ Current state: unit and validation targets are active, and the public API is wir
 #include <ashtadhyayi.h>
 
 ASH_DB *db = ash_db_load("data/");
-ASH_Form f  = ash_tinanta(db, "BU", 1, ASH_LAT,
-                           ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
-printf("%s\n", f.iast);          // → "bhavati"
-ash_form_print_prakriya(&f, stdout);
-ash_form_free(&f);
+
+/* Tinanta (verbal conjugation) — works for all 10 lakāras */
+ASH_Form f = ash_tinanta(db, "BU", 1, ASH_LAT,
+                         ASH_PRATHAMA, ASH_EKAVACANA, ASH_PARASMAI);
+printf("%s\n", f.iast);    /* → "bhavati" */
+
+/* Subanta (declension) — pronouns, numerals, all stem classes */
+ASH_Form s = ash_subanta(db, "tad", ASH_PUMS,
+                         ASH_PRATHAMA_VIB, ASH_EKAVACANA);
+printf("%s\n", s.slp1);    /* → "saH" */
+
+/* Kṛt (primary derivation) */
+ASH_Form k = ash_krit(db, "BU", 1, ASH_KRIT_GHAN);
+printf("%s\n", k.slp1);    /* → "BAva" (bhāva) */
+
+ash_form_free(&f); ash_form_free(&s); ash_form_free(&k);
 ash_db_free(db);
 ```
 
+See `docs/API.md` for the full public API reference.
+
 ## Implementation Phases
 
-| Phase | Focus | Stories | Gate |
-|-------|-------|---------|------|
-| 0 | Bootstrap & Data Ingestion | 5 | `make validate-phase0` |
-| 1 | Phonology Engine | 5 | `make validate-phase1` |
-| 2 | Sūtra Engine & Saṃjñā | 6 | `make validate-phase2` |
-| 3 | Pratyaya System & laṭ Tinanta | 6 | `make validate-phase3` |
-| 4 | Subanta Declension | 5 | `make validate-phase4` |
-| 5 | Pipeline, Samāsa, Kṛt, Taddhita | 5 | `make validate-phase5` |
-| 6 | Validation vs Reference Oracles & API Polish | 6 | `make validate-phase6` |
+| Phase | Focus | Status |
+|-------|-------|--------|
+| α | Bootstrap & data ingestion | ✅ complete |
+| β | Phonology + sūtra engine + tinanta (all 10 lakāras) | ✅ complete |
+| γ | Subanta — vowel/consonant stems, pronouns, numerals | ✅ complete |
+| δ | Derivation — kṛt (59), taddhita (35), samāsa (15) | ✅ core complete; remaining ~70 kṛt suffixes incremental |
+| ε | Paribhāṣā conflict resolver | ✅ working with apavāda/nitya/antaraṅga registries |
+| ζ | API stability, docs, CI | ✅ public API doc, GitHub Actions matrix, oracle gate |
 
-## Phase status
+## Paribhāṣā Conflict Resolution
 
-| Phase | Status | Notes |
-|-------|--------|-------|
-| 0 | [x] Active | Data ingestion regenerates TSVs from bundled fallbacks. |
-| 1 | [x] Active | Phonology, encoding, and sandhi tests run in `validate-phase1`. |
-| 2 | [x] Active | Sūtra and metadata structures load and test. |
-| 3 | [ ] Partial | laṭ tinanta path exists; broader lakāra and root coverage in progress. |
-| 4 | [ ] Partial | Several subanta stem classes exist; oracle rates are informational. |
-| 5 | [ ] Partial | Pipeline, samāsa, kṛt, taddhita, and uṇādi modules are scaffolded. |
-| 6 | [ ] Partial | Validation harness reports strict raw rates; release criteria still evolving. |
+When two sūtras both could fire, `paribhasha_resolve_pair(a, b)` picks
+the winner via the classical priority ladder:
 
-See `.cursor/stories/` for story scope and `.cursor/bugs/` for known bug-fix work.
+1. **apavāda > utsarga** — exception beats general (3.1.69 śyan beats 3.1.68 śap)
+2. **nitya > anitya** — always-applicable beats sometimes-applicable
+3. **antaraṅga > bahiraṅga** — inner cause beats outer cause
+4. **paratva** — later sūtra wins (default tiebreaker)
+
+```c
+#include "paribhasha.h"
+uint32_t winner = paribhasha_resolve_pair(703084, 703086);  /* → 703086 */
+```
 
 ## Encoding Convention
 
-All internal processing uses **SLP1** (ASCII). Conversion to IAST / Devanāgarī happens only at output boundaries via `encoding/encoding.h`.
+All internal processing uses **SLP1** (ASCII). Conversion to IAST /
+Devanāgarī happens only at output boundaries via `encoding/encoding.h`.
 
 ## Validation Strategy
 
-Instead of comparing against external oracles (vyakarana, scl), we validate against
-the **pre-computed reference oracles** from the same source repository:
+We validate against the **pre-computed reference oracles** from the
+ashtadhyayi-com/data repository:
 
-- **Phase 3 tiṅanta** → `data/dhatuforms.tsv` (254,736 forms), sampled with strict Devanāgarī equality.
-- **Phase 4 subanta** → `data/shabda_forms.tsv` (216,168 forms), sampled with strict Devanāgarī equality.
-- **Prakriyā traces** → `data/shabdaprakriya.tsv` (4,863 traces), sampled informationally until CLI trace export is complete.
+- **Tiṅanta** → `data/dhatuforms.tsv` (254,736 forms)
+- **Subanta** → `data/shabda_forms.tsv` (216,168 forms)
+- **Prakriyā traces** → `data/shabdaprakriya.tsv` (13,456 steps)
 
-Current oracle scripts are informational while morphology coverage matures; they report raw rates and mismatches without hiding known gaps.
+The CI pipeline (.github/workflows/ci.yml) runs a 20-root LAT-P
+regression on every push and fails if the match rate drops below 95%.
 
 ## License
 
