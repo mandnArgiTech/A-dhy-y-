@@ -780,11 +780,34 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        lakara == ASH_LUN) &&
       !block_guna_completely && !i_anubandha && !lun_root_aorist) {
     bool has_unstrong = false;
+    size_t unstrong_pos = 0;
     for (size_t i = 0; stem[i]; i++) {
       char c = stem[i];
-      if (c == 'i' || c == 'u' || c == 'f' || c == 'x') { has_unstrong = true; break; }
+      if (c == 'i' || c == 'u' || c == 'f' || c == 'x') {
+        has_unstrong = true;
+        unstrong_pos = i;
+        break;
+      }
     }
-    if (has_unstrong && !used_guna) {
+    bool laghu = true;
+    if (has_unstrong) {
+      /* 7.3.86 pugantalaghūpadhasya: guṇa only fires when the short
+         vowel is in a laghu position — followed by at most one
+         consonant before the next vowel or end of stem. For LUN
+         specifically, this gates the over-eager guṇa we used to apply
+         to roots like bukk (u + kk = guru) and SunDa (u + nD = guru). */
+      size_t cons_after = 0;
+      for (size_t i = unstrong_pos + 1; stem[i]; i++) {
+        if (stem[i] == 'a' || stem[i] == 'i' || stem[i] == 'u' ||
+            stem[i] == 'A' || stem[i] == 'I' || stem[i] == 'U' ||
+            stem[i] == 'f' || stem[i] == 'F' || stem[i] == 'x' ||
+            stem[i] == 'X' || stem[i] == 'e' || stem[i] == 'o' ||
+            stem[i] == 'E' || stem[i] == 'O') break;
+        cons_after++;
+      }
+      laghu = (cons_after <= 1);
+    }
+    if (has_unstrong && laghu && !used_guna) {
       replace_first_vowel(stem, false);
       used_guna = true;
     }
