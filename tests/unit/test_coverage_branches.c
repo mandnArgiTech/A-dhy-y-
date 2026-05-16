@@ -149,8 +149,11 @@ void test_adhikara_pipeline_and_public_api_branches(void) {
   fclose(tmp);
 
   ash_tinanta_paradigm(db, "BU", 1, ASH_LAT, forms18);
+  /* BU is parasmaipada-only per dhātupāṭha (pada_flag=P). After A9
+     pada-flag enforcement, ātmane slots (indices 9-17) come back
+     invalid; parasmai slots (0-8) remain valid. */
   TEST_ASSERT_TRUE(forms18[0].valid);
-  TEST_ASSERT_TRUE(forms18[17].valid);
+  TEST_ASSERT_TRUE(forms18[8].valid);
   for (int i = 0; i < 18; i++) ash_form_free(&forms18[i]);
 
   ash_subanta_paradigm(db, "rAma", ASH_PUMS, forms24);
