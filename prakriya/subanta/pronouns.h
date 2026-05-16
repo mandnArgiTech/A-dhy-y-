@@ -23,6 +23,11 @@ bool sarvanama_masc_full(const char *stem_slp1, ASH_Vibhakti vib,
 bool sarvanama_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
                          ASH_Vacana vac, PrakriyaCtx *ctx_out);
 
+/* idam (this) — irregular demonstrative, all three liṅgas. */
+bool pronoun_is_idam(const char *upadesa);
+bool idam_full(const char *stem_slp1, ASH_Linga li,
+               ASH_Vibhakti vib, ASH_Vacana vac, PrakriyaCtx *ctx_out);
+
 #ifdef __cplusplus
 }
 #endif

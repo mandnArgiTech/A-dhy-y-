@@ -216,6 +216,124 @@ bool sarvanama_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
   return true;
 }
 
+/* ── idam (this, demonstrative) — fully irregular ──────────────── */
+/* Each row gives the surface form (alternates separated by "-"). */
+typedef struct {
+  ASH_Vibhakti vib;
+  ASH_Vacana   vac;
+  const char  *form;
+} IdamSlot;
+
+static const IdamSlot IDAM_MASC[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "ayam"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "imO"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "ime"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "imam"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "imO"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "imAn"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "anena"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "eBiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "asmE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "AByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "eByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "asmAt"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "eByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "asya"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "ezAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "asmin"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "ezu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+static const IdamSlot IDAM_NEUT[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "idam"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "ime"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "imAni"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "idam"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "ime"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "imAni"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "anena"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "eBiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "asmE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "AByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "eByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "asmAt"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "eByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "asya"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "ezAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "asmin"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "ezu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+static const IdamSlot IDAM_FEM[24] = {
+  {ASH_PRATHAMA_VIB,   ASH_EKAVACANA,    "iyam"},
+  {ASH_PRATHAMA_VIB,   ASH_DVIVACANA,    "ime"},
+  {ASH_PRATHAMA_VIB,   ASH_BAHUVACANA,   "imAH"},
+  {ASH_DVITIYA_VIB,    ASH_EKAVACANA,    "imAm"},
+  {ASH_DVITIYA_VIB,    ASH_DVIVACANA,    "ime"},
+  {ASH_DVITIYA_VIB,    ASH_BAHUVACANA,   "imAH"},
+  {ASH_TRITIYA_VIB,    ASH_EKAVACANA,    "anayA"},
+  {ASH_TRITIYA_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_TRITIYA_VIB,    ASH_BAHUVACANA,   "ABiH"},
+  {ASH_CATURTHI_VIB,   ASH_EKAVACANA,    "asyE"},
+  {ASH_CATURTHI_VIB,   ASH_DVIVACANA,    "AByAm"},
+  {ASH_CATURTHI_VIB,   ASH_BAHUVACANA,   "AByaH"},
+  {ASH_PANCAMI_VIB,    ASH_EKAVACANA,    "asyAH"},
+  {ASH_PANCAMI_VIB,    ASH_DVIVACANA,    "AByAm"},
+  {ASH_PANCAMI_VIB,    ASH_BAHUVACANA,   "AByaH"},
+  {ASH_SHASTHI_VIB,    ASH_EKAVACANA,    "asyAH"},
+  {ASH_SHASTHI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SHASTHI_VIB,    ASH_BAHUVACANA,   "AsAm"},
+  {ASH_SAPTAMI_VIB,    ASH_EKAVACANA,    "asyAm"},
+  {ASH_SAPTAMI_VIB,    ASH_DVIVACANA,    "anayoH"},
+  {ASH_SAPTAMI_VIB,    ASH_BAHUVACANA,   "Asu"},
+  {ASH_SAMBODHANA_VIB, ASH_EKAVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_DVIVACANA,    ""},
+  {ASH_SAMBODHANA_VIB, ASH_BAHUVACANA,   ""},
+};
+
+bool idam_full(const char *stem_slp1, ASH_Linga li,
+               ASH_Vibhakti vib, ASH_Vacana vac, PrakriyaCtx *ctx_out) {
+  if (!stem_slp1 || !ctx_out) return false;
+  if (strcmp(stem_slp1, "idam") != 0) return false;
+  const IdamSlot *table = NULL;
+  switch (li) {
+    case ASH_PUMS:      table = IDAM_MASC; break;
+    case ASH_NAPUMSAKA: table = IDAM_NEUT; break;
+    case ASH_STRI:      table = IDAM_FEM;  break;
+    default: return false;
+  }
+  for (int i = 0; i < 24; i++) {
+    if (table[i].vib == vib && table[i].vac == vac) {
+      prakriya_init_subanta(ctx_out, stem_slp1, li, vib, vac);
+      ctx_out->term_count = 1;
+      strncpy(ctx_out->terms[0].value, table[i].form, TERM_VALUE_LEN - 1);
+      ctx_out->terms[0].value[TERM_VALUE_LEN - 1] = '\0';
+      prakriya_log_transition(ctx_out, 700303, stem_slp1, table[i].form,
+                              "idam paradigm");
+      return true;
+    }
+  }
+  return false;
+}
+
 bool pronoun_is_sarvanama(const char *upadesa) {
   return pronoun_prefix(upadesa) != NULL;
+}
+
+bool pronoun_is_idam(const char *upadesa) {
+  return upadesa && strcmp(upadesa, "idam") == 0;
 }
