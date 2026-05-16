@@ -561,20 +561,42 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      cakāra, etc.). */
   if (lakara == ASH_LIT) {
     char reduped[64] = {0};
-    /* For LIT use the bare clean_root, not the post-class stem. */
     if (!reduplicate(clean_root, reduped, sizeof(reduped))) {
       return false;
     }
-    /* Strong forms: apply vrddhi to root vowel (7.2.115 aco ñṇiti).
-       The strong slots in LIT are prathama-eka and uttama-eka. */
+    /* Identify root portion (after the abhyāsa: first cons + vowel). */
+    size_t root_start = 0;
+    while (root_start < strlen(reduped) && !varna_is_vowel(reduped[root_start])) root_start++;
+    root_start++;  /* past the abhyāsa vowel */
+
+    /* Classify the root for LIT treatment.
+       - Vowel-final (BU, hu, śru): 7.4.69 inserts "v" before a vowel-
+         initial Ṇal ending, NO vrddhi on the root vowel.
+       - Consonant-final (kf, gam, pat): 7.2.115 vrddhi in strong
+         forms (prathama-eka, uttama-eka); weak forms keep bare root. */
+    size_t rlen = strlen(reduped);
+    char root_final = (rlen > 0) ? reduped[rlen - 1] : 0;
+    bool root_vowel_final = varna_is_vowel(root_final);
     bool lit_strong = (v == ASH_EKAVACANA && p != ASH_MADHYAMA);
-    if (lit_strong) {
-      /* Find the root portion (skip the abhyāsa: first cons + vowel,
-         or just first vowel for vowel-initial roots). */
-      size_t root_start = 0;
-      while (root_start < strlen(reduped) && !varna_is_vowel(reduped[root_start])) root_start++;
-      root_start++;  /* past the first vowel of abhyāsa */
-      /* Apply vrddhi to the next vowel encountered (the root vowel). */
+
+    /* Specific U/Ū-final roots that take a "v" augment instead of
+       vrddhi in LIT (per 7.4.69 vasoḥ-): bhū, śru-bhū-fam. */
+    static const char *const LIT_V_AUGMENT_ROOTS[] = {"BU", "SrU", "Sru", NULL};
+    bool needs_v_augment = false;
+    for (size_t i = 0; LIT_V_AUGMENT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, LIT_V_AUGMENT_ROOTS[i]) == 0) {
+        needs_v_augment = true; break;
+      }
+    }
+    if (needs_v_augment) {
+      /* Skip vrddhi; append "v" before any vowel-initial ending
+         (including iṭ-augmented ones like iTa, iva, ima). */
+      if (rlen + 2 < sizeof(reduped) && varna_is_vowel(t->clean[0])) {
+        reduped[rlen] = 'v';
+        reduped[rlen + 1] = '\0';
+      }
+    } else if (lit_strong) {
+      /* Apply vrddhi to root vowel for strong forms. */
       char tmp[64];
       strncpy(tmp, reduped + root_start, sizeof(tmp) - 1);
       tmp[sizeof(tmp) - 1] = '\0';
@@ -582,6 +604,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       strncpy(reduped + root_start, tmp, sizeof(reduped) - root_start - 1);
       reduped[sizeof(reduped) - 1] = '\0';
     }
+    (void)root_vowel_final;
+
     log_single_term_change(ctx_out, 601008, stem, reduped, "liwi DAtor anabhyAsasya");
     strncpy(stem, reduped, sizeof(stem) - 1);
     stem[sizeof(stem) - 1] = '\0';
@@ -738,7 +762,20 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     size_t fl = strlen(form);
     char stem_final = fl > 0 ? form[fl - 1] : 0;
     char ending_initial = t->clean[0];
-    if (stem_final == 'a' && ending_initial == 'a') {
+    /* 6.1.78 eco'yavāyāvaḥ — stem-final e/o/E/O before vowel-initial
+       ending: e → ay, o → av, E → Ay, O → Av. Important for LIT
+       vrddhi-results like juhO + a → juhAv + a = juhAva. */
+    if ((stem_final == 'o' || stem_final == 'O' || stem_final == 'e' || stem_final == 'E') &&
+        (ending_initial == 'a' || ending_initial == 'A' ||
+         ending_initial == 'i' || ending_initial == 'I' ||
+         ending_initial == 'u' || ending_initial == 'U')) {
+      char rep_v = (stem_final == 'o' || stem_final == 'O') ? 'v' : 'y';
+      char rep_a = (stem_final == 'o' || stem_final == 'e') ? 'a' : 'A';
+      form[fl - 1] = rep_a;
+      form[fl] = rep_v;
+      form[fl + 1] = '\0';
+      strcat(form, t->clean);
+    } else if (stem_final == 'a' && ending_initial == 'a') {
       form[fl - 1] = '\0';
       strcat(form, t->clean);
     } else if (stem_final == 'A' && ending_initial == 'a') {

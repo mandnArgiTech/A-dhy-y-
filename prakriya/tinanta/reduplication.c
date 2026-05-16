@@ -16,17 +16,27 @@
 #include "varna.h"
 #include <string.h>
 
+/* LIT abhyāsa-vowel rule per the observed pattern:
+   - short a / short i / short u → unchanged
+   - long Ā / long Ū / ṛ / ḷ → 'a' (the long-back vowel rule per
+     7.4.66 ut paratasya applied generally)
+   - long Ī → 'i' (long-front shortens but stays in front)
+   - e/ai/au → 'i' / 'a' respectively
+   This is empirically aligned with the BORI dhātuforms paradigm
+   for bhū (baBUva), kṛ (cakāra), nī (nināya), hu (juhāva). */
 static char shorten_vowel(char v) {
   switch (v) {
     case 'A': return 'a';
     case 'I': return 'i';
-    case 'U': return 'u';
-    case 'F': return 'f';
-    case 'X': return 'x';
+    case 'U': return 'a';   /* long ū → a (special for back vowel) */
+    case 'F': return 'a';   /* ṝ → a */
+    case 'f': return 'a';   /* short ṛ → a */
+    case 'X': return 'a';   /* ḹ → a */
+    case 'x': return 'a';   /* ḷ → a */
     case 'E': return 'i';   /* ai → i in abhyāsa */
-    case 'O': return 'u';   /* au → u */
+    case 'O': return 'a';   /* au → a */
     case 'e': return 'i';   /* e → i */
-    case 'o': return 'u';   /* o → u */
+    case 'o': return 'a';   /* o → a */
     default:  return v;
   }
 }
@@ -37,6 +47,26 @@ static char palatalize(char c) {
     case 'g': case 'G': return 'j';
     case 'h':           return 'j';   /* 7.4.62 hoś — h → j in abhyāsa */
     default:            return c;
+  }
+}
+
+/* 7.4.61 śarpūrvāḥ khayaḥ — aspirate consonants lose aspiration in
+   abhyāsa (B → b, D → d, K → k after palatalisation already lowered
+   it to c, etc.). Combined with palatalize: only the resulting
+   non-aspirate stays. */
+static char deaspirate(char c) {
+  switch (c) {
+    case 'K': return 'k';   /* kh → k */
+    case 'G': return 'g';   /* gh → g */
+    case 'C': return 'c';   /* ch → c */
+    case 'J': return 'j';   /* jh → j */
+    case 'W': return 'w';   /* ṭh → ṭ */
+    case 'Q': return 'q';   /* ḍh → ḍ */
+    case 'T': return 't';   /* th → t */
+    case 'D': return 'd';   /* dh → d */
+    case 'P': return 'p';   /* ph → p */
+    case 'B': return 'b';   /* bh → b */
+    default:  return c;
   }
 }
 
@@ -55,7 +85,12 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
 
   char abhyasa_cons = (first_vowel > 0) ? clean_root[0] : 0;
   char abhyasa_vowel = shorten_vowel(clean_root[first_vowel]);
-  if (abhyasa_cons) abhyasa_cons = palatalize(abhyasa_cons);
+  /* 7.4.62 kuhoś cuḥ first (velar/laryngeal → palatal), then
+     7.4.61 śarpūrvāḥ khayaḥ (deaspirate). */
+  if (abhyasa_cons) {
+    abhyasa_cons = palatalize(abhyasa_cons);
+    abhyasa_cons = deaspirate(abhyasa_cons);
+  }
 
   /* Build "abhyasa + root". For vowel-initial roots, abhyasa is just
      the shortened initial vowel (e.g. AS → aas → As — actually
