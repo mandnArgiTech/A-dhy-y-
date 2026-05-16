@@ -90,15 +90,37 @@ static const SarvanamaSlot *slot_lookup(const SarvanamaSlot *table,
   return NULL;
 }
 
-/* Translate a pronoun upadeśa (tad, yad, etad, kim, sarva) into the
-   stem prefix used for inflection (ta, ya, eta, ka, sarva). */
+/* Translate a pronoun upadeśa into the stem prefix used for inflection.
+   The list reflects 1.1.27 sarvAdIni sarvanAmAni and the canonical
+   tyad-/idam-class members. */
 static const char *pronoun_prefix(const char *upadesa) {
   if (!upadesa) return NULL;
-  if (strcmp(upadesa, "tad") == 0) return "t";
-  if (strcmp(upadesa, "yad") == 0) return "y";
-  if (strcmp(upadesa, "etad") == 0) return "et";
-  if (strcmp(upadesa, "kim") == 0) return "k";
-  if (strcmp(upadesa, "sarva") == 0) return "sarv";
+  /* tyad class (irregular nom-eka). */
+  if (strcmp(upadesa, "tad") == 0)   return "t";
+  if (strcmp(upadesa, "yad") == 0)   return "y";
+  if (strcmp(upadesa, "etad") == 0)  return "et";
+  if (strcmp(upadesa, "kim") == 0)   return "k";
+  /* sarva class (regular nom-eka, sarvanāma endings). */
+  if (strcmp(upadesa, "sarva") == 0)    return "sarv";
+  if (strcmp(upadesa, "viSva") == 0)    return "viSv";
+  if (strcmp(upadesa, "ubha") == 0)     return "uB";
+  if (strcmp(upadesa, "ubhaya") == 0)   return "uBay";
+  if (strcmp(upadesa, "eka") == 0)      return "ek";
+  if (strcmp(upadesa, "anya") == 0)     return "any";
+  if (strcmp(upadesa, "anyatara") == 0) return "anyatar";
+  if (strcmp(upadesa, "itara") == 0)    return "itar";
+  if (strcmp(upadesa, "katara") == 0)   return "katar";
+  if (strcmp(upadesa, "katama") == 0)   return "katam";
+  if (strcmp(upadesa, "sva") == 0)      return "sv";
+  if (strcmp(upadesa, "tva") == 0)      return "tv";
+  if (strcmp(upadesa, "para") == 0)     return "par";
+  if (strcmp(upadesa, "antara") == 0)   return "antar";
+  if (strcmp(upadesa, "apara") == 0)    return "apar";
+  if (strcmp(upadesa, "avara") == 0)    return "avar";
+  if (strcmp(upadesa, "uttara") == 0)   return "uttar";
+  if (strcmp(upadesa, "aDara") == 0)    return "aDar";
+  if (strcmp(upadesa, "pUrva") == 0)    return "pUrv";
+  if (strcmp(upadesa, "dakziRa") == 0)  return "dakziR";
   return NULL;
 }
 
@@ -161,15 +183,27 @@ bool sarvanama_neut_full(const char *stem_slp1, ASH_Vibhakti vib,
 
   char form[64];
   snprintf(form, sizeof(form), "%s%s", prefix, slot->suffix);
-  /* kim NAPUMSAKA nom/acc-eka is "kim" not "kat"; sarva NAPUMSAKA
-     nom/acc-eka uses the regular a-stem ending "am" (the -at suffix is
-     a tyad-class feature for tad/yad/etad/kim only). */
+  /* The -at suffix in nom/acc-eka NAPUMSAKA is a tyad-class feature
+     (tad → tat, yad → yat, etad → etat). For kim it's "kim", and for
+     all other sarvanāma stems (sarva/viśva/sva/anya/...) the regular
+     a-stem ending "am" applies. */
   if ((vib == ASH_PRATHAMA_VIB || vib == ASH_DVITIYA_VIB) &&
       vac == ASH_EKAVACANA) {
+    /* tyad-class extended: tad/yad/etad plus the anya-group
+       (anya, anyatara, itara, katara, katama) which also take -at
+       in the NAPUMSAKA nom/acc-eka per 7.1.25 etc. */
+    bool is_tyad = (strcmp(stem_slp1, "tad")      == 0 ||
+                    strcmp(stem_slp1, "yad")      == 0 ||
+                    strcmp(stem_slp1, "etad")     == 0 ||
+                    strcmp(stem_slp1, "anya")     == 0 ||
+                    strcmp(stem_slp1, "anyatara") == 0 ||
+                    strcmp(stem_slp1, "itara")    == 0 ||
+                    strcmp(stem_slp1, "katara")   == 0 ||
+                    strcmp(stem_slp1, "katama")   == 0);
     if (strcmp(stem_slp1, "kim") == 0) {
       strncpy(form, "kim", sizeof(form) - 1);
       form[sizeof(form) - 1] = '\0';
-    } else if (strcmp(stem_slp1, "sarva") == 0) {
+    } else if (!is_tyad) {
       snprintf(form, sizeof(form), "%sam", prefix);
     }
   }
