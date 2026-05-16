@@ -42,6 +42,7 @@ set(METADATA_SRC
     core/metadata/adhikara.c
     core/metadata/anuvrtti.c
     core/metadata/paribhasha.c
+    core/metadata/accent.c
 )
 
 set(CONFLICT_SRC

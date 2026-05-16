@@ -199,11 +199,27 @@ typedef struct {
   char     note[128];         /**< Human-readable note */
 } ASH_PrakriyaStep;
 
+/** Accent mode — controls whether ASH_Form.accent is populated. */
+typedef enum {
+  ASH_ACCENT_NONE = 0,    /**< No accent computed (default — Classical text) */
+  ASH_ACCENT_CLASSICAL,   /**< Bhāṣā accent (3-level: udātta/anudātta/svarita) */
+  ASH_ACCENT_VEDIC,       /**< Vedic accent (4-level: + pracaya) */
+} ASH_AccentMode;
+
+/** Per-syllable accent code (one char per vowel). */
+#define ASH_ACCENT_UDATTA      'U'   /**< High pitch */
+#define ASH_ACCENT_ANUDATTA    'A'   /**< Low pitch */
+#define ASH_ACCENT_SVARITA     'S'   /**< Falling pitch */
+#define ASH_ACCENT_PRACAYA     'P'   /**< Vedic non-cadential anudātta */
+
 /** A derived word form with full provenance */
 typedef struct {
   char              slp1[128];         /**< Final form in SLP1 */
   char              iast[256];         /**< Final form in IAST */
   char              devanagari[512];   /**< Final form in Devanāgarī */
+  char              accent[64];        /**< Per-syllable accent string (U/A/S/P).
+                                            Empty if not computed. */
+  ASH_AccentMode    accent_mode;       /**< Accent computation mode used. */
   ASH_PrakriyaStep *steps;            /**< Heap-allocated derivation trace */
   int               step_count;
   bool              valid;             /**< false if derivation failed */
