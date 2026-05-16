@@ -547,9 +547,10 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   bool skip_vikarana = (lakara == ASH_LRT || lakara == ASH_LUT ||
                         lakara == ASH_LRN || lakara == ASH_ASHIRLIM ||
                         lakara == ASH_LIT);
-  /* For ASIRLIN, the suffix is treated as kit (1.2.10 halaḥ śnaḥ
-     śānajbhyām), so guṇa is blocked entirely. */
-  bool block_guna_completely = (lakara == ASH_ASHIRLIM);
+  /* 1.2.10 halaḥ śnaḥ śānajbhyām — kit applies only to ASHIRLIM-P
+     (yāsuṭ-augmented). ASHIRLIM-Ā is sīsaT-augmented and not kit, so
+     guṇa fires normally for Ā. */
+  bool block_guna_completely = (lakara == ASH_ASHIRLIM && pd == ASH_PARASMAI);
   if (block_guna_completely) is_strong = false;
   if (!apply_class_transform(clean_root, gana, pd, i_anubandha, is_strong,
                              skip_vikarana, block_guna_completely,
