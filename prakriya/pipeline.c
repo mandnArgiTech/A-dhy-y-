@@ -302,11 +302,26 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
      are not gated (e.g. compound roots, test inputs like "BU" that
      match a real entry). */
   if (p) {
+    /* Some upadesas (e.g. klidi~) appear twice in the dhātupāṭha
+       — once as P, once as A. Prefer an entry whose pada-flag is
+       compatible with the requested pada before falling back to
+       the first match. */
     const DhatuEntry *de = NULL;
+    char want_pf = (pd == ASH_PARASMAI) ? 'P' : 'A';
     for (int i = 0; i < p->dhatu_count; i++) {
       if (strcmp(p->dhatus[i].upadesa_slp1, root_slp1) == 0 &&
-          (gana == 0 || p->dhatus[i].gana == gana)) {
+          (gana == 0 || p->dhatus[i].gana == gana) &&
+          (p->dhatus[i].pada_flag == want_pf ||
+           p->dhatus[i].pada_flag == 'U')) {
         de = &p->dhatus[i]; break;
+      }
+    }
+    if (!de) {
+      for (int i = 0; i < p->dhatu_count; i++) {
+        if (strcmp(p->dhatus[i].upadesa_slp1, root_slp1) == 0 &&
+            (gana == 0 || p->dhatus[i].gana == gana)) {
+          de = &p->dhatus[i]; break;
+        }
       }
     }
     if (!de) de = pipeline_find_dhatu(p, root_slp1, gana);
