@@ -1455,6 +1455,95 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      vowel. Routed through the unified helper. */
   sandhi_apply_satva(form, strlen(stem));
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
+
+  /* Cluster sandhi at the stem→ending boundary for athematic gaṇa-7
+     and similar voiced-asp / voiced-palatal / voiced-stop finals.
+     Rules collapsed into surface-level rewrites:
+       8.2.40 jhalāṃ jaś jhaśi   — voiceless after voiced asp → voiced
+       8.4.41 stho ścunā ścuḥ    — palatal+t → palatal-aspirate after voiced
+       8.4.55 khari ca            — voiced before voiceless → voiceless
+       8.2.30 coḥ kuḥ            — palatal at end → velar
+       aspiration-migration: Vasp + t/T → V + asp-stop  (D+t → dD,
+         G+t → gG, B+t → bB, J+t → jJ, Q+t → qQ).
+     Applied as a single post-form scan; safe to no-op on other roots. */
+  if (gana == 7) {
+    char before_cluster[128] = {0};
+    strncpy(before_cluster, form, sizeof(before_cluster) - 1);
+    /* Scan for the specific clusters that result from gaṇa-7 śnam
+       infix + ending. Apply at most one substitution per scan to
+       keep the rules predictable. */
+    for (size_t i = 0; form[i] && form[i + 1]; i++) {
+      char a = form[i], b = form[i + 1];
+      /* Voiced aspirate + t → aspiration migrate (8.2.40 + 8.4.41). */
+      if (b == 't' && (a == 'D' || a == 'G' || a == 'B' ||
+                       a == 'J' || a == 'Q')) {
+        char unasp = 0;
+        switch (a) {
+          case 'D': unasp = 'd'; break;
+          case 'G': unasp = 'g'; break;
+          case 'B': unasp = 'b'; break;
+          case 'J': unasp = 'j'; break;
+          case 'Q': unasp = 'q'; break;
+        }
+        form[i] = unasp;
+        form[i + 1] = a;  /* aspirate moves right */
+      } else if (b == 'T' && (a == 'D' || a == 'G' || a == 'B' ||
+                              a == 'J' || a == 'Q')) {
+        /* 2dvi / 2bahu cluster — D+T → dD (T elides into the asp). */
+        char unasp = 0;
+        switch (a) {
+          case 'D': unasp = 'd'; break;
+          case 'G': unasp = 'g'; break;
+          case 'B': unasp = 'b'; break;
+          case 'J': unasp = 'j'; break;
+          case 'Q': unasp = 'q'; break;
+        }
+        form[i] = unasp;
+        form[i + 1] = a;
+      } else if (b == 's' && (a == 'D' || a == 'G' || a == 'B')) {
+        /* 8.4.55 khari ca: voiced asp before voiceless s →
+           corresponding voiceless stop. D+s → t+s, B+s → p+s,
+           G+s → k+s. */
+        char devoiced = 0;
+        switch (a) {
+          case 'D': devoiced = 't'; break;
+          case 'G': devoiced = 'k'; break;
+          case 'B': devoiced = 'p'; break;
+        }
+        form[i] = devoiced;
+      } else if ((b == 't' || b == 'T' || b == 's') &&
+                 (a == 'd' || a == 'g' || a == 'b')) {
+        /* 8.4.55 khari ca: plain voiced before voiceless → voiceless.
+           d+t → t+t, g+t → k+t, b+t → p+t. Same for T and s. */
+        char devoiced = 0;
+        switch (a) {
+          case 'd': devoiced = 't'; break;
+          case 'g': devoiced = 'k'; break;
+          case 'b': devoiced = 'p'; break;
+        }
+        form[i] = devoiced;
+      } else if (b == 's' && (a == 'c' || a == 'j')) {
+        /* 8.2.30 coḥ kuḥ before sibilant: c → k, j → g.
+           Following s/ṣ will then ṣatva if preceded by k via 8.3.59
+           (we leave that to sandhi_apply_satva). */
+        form[i] = (a == 'c') ? 'k' : 'g';
+        if (i > 0 && form[i - 1] == 'Y') form[i - 1] = 'N';
+      } else if ((b == 't' || b == 'T') && (a == 'c' || a == 'j')) {
+        /* 8.2.30 coḥ kuḥ: palatal at end → velar before consonant.
+           c → k, j → g. Then jaś re-applies if needed.
+           Also re-classify preceding palatal nasal Y → velar N. */
+        form[i] = (a == 'c') ? 'k' : 'g';
+        if (i > 0 && form[i - 1] == 'Y') form[i - 1] = 'N';
+      }
+    }
+    if (strcmp(before_cluster, form) != 0) {
+      /* Re-apply 8.3.59 ṣatva so any newly-exposed k+s clusters get
+         k+ṣ (riRaksi → riRakzi). */
+      sandhi_apply_satva(form, 0);
+      log_single_term_change(ctx_out, 802040, before_cluster, form,
+                             "jhalAM jaS jhaSi + aspiration migration");
+    }
+  }
 finalize:;
 
   /* 8.2.66 sasajuṣo ruḥ + 8.3.15 kharavasānayor visarjanīyaḥ — final `s`
