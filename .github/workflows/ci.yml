@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build + ctest (${{ matrix.os }}, ${{ matrix.cc }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        cc: [gcc, clang]
+        exclude:
+          # macOS only ships clang as the system compiler — skip gcc there
+          # because the matrix entry is redundant.
+          - os: macos-latest
+            cc: gcc
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Install build tools (macOS)
+        if: matrix.os == 'macos-latest'
+        run: brew install cmake
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Run unit tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Smoke-test the demo
+        run: |
+          ./build/ash_demo tinanta BU 1 LAT PRATHAMA EKAVACANA PARASMAI
+          ./build/ash_demo tinanta gamx~ 1 LIT PRATHAMA EKAVACANA PARASMAI
+          ./build/ash_demo subanta tad PUMS PRATHAMA EKAVACANA
+          ./build/ash_demo subanta idam STRI TRITIYA EKAVACANA
+
+  oracle-coverage:
+    name: Oracle coverage smoke
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel
+
+      - name: Tinanta LAT sample coverage (top-20 gaṇa-1 P roots)
+        run: |
+          total=0; matched=0
+          while IFS=$'\t' read -r serial root; do
+            base=$(printf "01.%04d" "$serial")
+            for p in PRATHAMA MADHYAMA UTTAMA; do
+              case $p in PRATHAMA) op=PRATHAMA;; MADHYAMA) op=MADHYAMA;; UTTAMA) op=UTTAMA;; esac
+              for v in EKAVACANA DVIVACANA BAHUVACANA; do
+                case $v in EKAVACANA) ov=EKA;; DVIVACANA) ov=DVI;; BAHUVACANA) ov=BAHU;; esac
+                expected=$(awk -F'\t' -v b="$base" -v op="$op" -v ov="$ov" '$1==b && $4=="P" && $5=="LAT" && $6==op && $7==ov {gsub(/\r/,"",$9); print $9; exit}' data/dhatuforms.tsv)
+                [ -z "$expected" ] && continue
+                actual=$(./build/ash_demo tinanta "$root" 1 LAT "$p" "$v" PARASMAI 2>&1 | sed -n '3p')
+                total=$((total + 1))
+                [ "$actual" = "$expected" ] && matched=$((matched + 1))
+              done
+            done
+          done < <(awk -F'\t' '$2 == "1" && $8 == "P" {print $3"\t"$5}' data/dhatupatha.tsv | head -20)
+          rate=$(awk -v m="$matched" -v t="$total" 'BEGIN{if(t>0)printf "%.1f", 100*m/t}')
+          echo "LAT-P coverage: $matched / $total = $rate%"
+          # Fail if coverage drops below the established floor.
+          awk -v m="$matched" -v t="$total" 'BEGIN{exit (t>0 && 100*m/t >= 95) ? 0 : 1}'
