@@ -985,6 +985,19 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       /* a + u/U → o (guṇa 6.1.87). */
       augmented[0] = 'o';
       strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if (first == 'e' || first == 'E') {
+      /* 6.1.90 āṭ ca — a + e/ai → ai (vṛddhi). */
+      augmented[0] = 'E';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if (first == 'o' || first == 'O') {
+      /* 6.1.90 āṭ ca — a + o/au → au (vṛddhi). */
+      augmented[0] = 'O';
+      strncpy(augmented + 1, form + 1, sizeof(augmented) - 2);
+    } else if (first == 'f' || first == 'F') {
+      /* 6.1.90 āṭ ca — a + ṛ → ār (vṛddhi). */
+      augmented[0] = 'A';
+      augmented[1] = 'r';
+      strncpy(augmented + 2, form + 1, sizeof(augmented) - 3);
     } else {
       augmented[0] = 'a';
       strncpy(augmented + 1, form, sizeof(augmented) - 2);
