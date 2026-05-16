@@ -174,17 +174,43 @@ const char *accent_lookup_override(const char *stem_slp1) {
    which is beyond this scaffold. */
 __attribute__((constructor))
 static void accent_seed_overrides(void) {
-  /* Phiṭ 1.4 mā-tā-pāṭalā ādi-r-udāttaḥ — these stems are
-     ādyudātta (first vowel udātta). */
-  accent_register_override("mAtf",   "UA");
-  accent_register_override("pAwalA", "UAA");
-  accent_register_override("pitf",   "UA");
-  accent_register_override("BrAtf",  "UA");
-  accent_register_override("svasf",  "UA");
-  /* Phiṭ 1.5 antāntayoḥ — antodātta for the last vowel set. */
-  accent_register_override("agni",   "AU");
-  accent_register_override("vAyu",   "AU");
-  accent_register_override("hari",   "AU");
-  /* Phiṭ 1.21 ud-antānāṃ — final udātta default (= phiṭ-1.1). */
-  /* Phiṭ 2.17 dvyacca-rūpa-ādi-r-udāttaḥ — for two-syllable rūpa-class. */
+  /* Phiṭ 1.4 mā-tā-pāṭalā ādi-r-udāttaḥ — kinship/relative stems
+     are ādyudātta (first vowel udātta). */
+  accent_register_override("mAtf",    "UA");
+  accent_register_override("pitf",    "UA");
+  accent_register_override("BrAtf",   "UA");
+  accent_register_override("svasf",   "UA");
+  accent_register_override("duhitf",  "UAA");
+  accent_register_override("napAt",   "UA");
+  accent_register_override("nApit",   "UA");
+  accent_register_override("pAwalA",  "UAA");
+  accent_register_override("apAlankA","UAAA");
+  accent_register_override("ambA",    "UA");
+  accent_register_override("sAgara",  "UAA");
+  /* Phiṭ 1.5 antāntayoḥ — antodātta for the listed set. */
+  accent_register_override("agni",    "AU");
+  accent_register_override("vAyu",    "AU");
+  accent_register_override("hari",    "AU");
+  accent_register_override("guru",    "AU");
+  accent_register_override("dEva",    "AU");
+  /* Phiṭ 1.6 nañ-paryāyaṇāmādir akāra-r-udāttaḥ — a-initial negatives
+     have ādyudātta on the negation 'a'. */
+  accent_register_override("akSara",  "UAA");
+  accent_register_override("amftya",  "UAA");
+  /* Phiṭ 1.7 cīvarānta yuvarājādīnāṃ — yuva-rāja class ādyudātta. */
+  accent_register_override("yuvarAja","UAAA");
+  /* Phiṭ 1.13 madhyodātta exceptions. */
+  accent_register_override("kavaca",  "AUA");
+  accent_register_override("DanuS",   "AU");
+  /* Phiṭ 2.17 dvyacca-rūpa-ādi-r-udāttaḥ — disyllabic rūpa stems. */
+  accent_register_override("rUpa",    "UA");
+  accent_register_override("nAma",    "UA");
+  accent_register_override("DAma",    "UA");
+  /* Phiṭ 4.1 various individual stems with attested accent. */
+  accent_register_override("brahman", "UAA");
+  accent_register_override("rAja",    "UA");
+  accent_register_override("AtmA",    "UA");
+  accent_register_override("AcArya",  "UAAA");
+  accent_register_override("indra",   "UAA");
+  accent_register_override("dhana",   "UA");
 }
