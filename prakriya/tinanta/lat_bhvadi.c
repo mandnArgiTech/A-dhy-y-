@@ -47,7 +47,12 @@ static bool has_i_anubandha(const char *s) {
   if (!s) return false;
   size_t n = strlen(s);
   if (n < 2) return false;
-  return s[n - 2] == 'i' && s[n - 1] == '~';
+  /* Both 'i' and 'I' (long ī) anubandhas trigger num-insertion per
+     7.1.58 idito num dhātoḥ; the BORI dhātupāṭha lists roots like
+     jabhī~ (jaB + I~) which surface as "jamB" by parasavarṇa, same
+     as if a short-i num had been inserted. */
+  if (s[n - 1] != '~') return false;
+  return s[n - 2] == 'i' || s[n - 2] == 'I';
 }
 
 /* Returns true iff the dhātu, after stripping anubandhas, originally
@@ -308,10 +313,16 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
           nasal = 'Y'; break;  /* ñ */
         case 'w': case 'W': case 'q': case 'Q':
           nasal = 'R'; break;  /* ṇ */
+        case 'R':
+          nasal = 'R'; break;  /* ṇ + ṇ — parasavarṇa stays */
         case 't': case 'T': case 'd': case 'D':
           nasal = 'n'; break;  /* n */
+        case 'n':
+          nasal = 'n'; break;  /* n + n */
         case 'p': case 'P': case 'b': case 'B':
           nasal = 'm'; break;  /* m */
+        case 'm':
+          nasal = 'm'; break;  /* m + m */
         default: nasal = 'n'; break;
       }
       memmove(stem + sn, stem + sn - 1, 2);
@@ -967,8 +978,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
       size_t insert_at = (last_vowel_pos < cl) ? last_vowel_pos + 1 : cl;
       if (cl + 1 < sizeof(augmented_root)) {
+        char nasal = 'n';
+        /* 8.4.58 parasavarṇa: match the nasal to the varga of the
+           consonant that follows it. */
+        if (insert_at < cl) {
+          char next = augmented_root[insert_at];
+          switch (next) {
+            case 'k': case 'K': case 'g': case 'G': nasal = 'N'; break;
+            case 'c': case 'C': case 'j': case 'J': nasal = 'Y'; break;
+            case 'w': case 'W': case 'q': case 'Q': case 'R': nasal = 'R'; break;
+            case 'p': case 'P': case 'b': case 'B': case 'm': nasal = 'm'; break;
+            default: nasal = 'n'; break;
+          }
+        }
         memmove(augmented_root + insert_at + 1, augmented_root + insert_at, cl - insert_at + 1);
-        augmented_root[insert_at] = 'n';
+        augmented_root[insert_at] = nasal;
       }
     }
     if (!reduplicate(augmented_root, reduped, sizeof(reduped))) {
@@ -1619,6 +1643,20 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       size_t sl = strlen(stem);
       if (sl > 0 && stem[sl - 1] == 'a') {
         stem[sl - 1] = '\0';
+      }
+    }
+    /* For aniṭ roots whose guṇa-product was eagerly ec→ay-expanded
+       in apply_class_transform (ay/Ay/av/Av at end), revert the
+       expansion: with no iṭ to follow, the bare e/o stays at the
+       stem-ending junction (kzi → kze + tā = kzetA, not kzaytA). */
+    if (is_anit) {
+      size_t sl = strlen(stem);
+      if (sl >= 2) {
+        char a = stem[sl - 2], b = stem[sl - 1];
+        if (a == 'a' && b == 'y') { stem[sl - 2] = 'e'; stem[sl - 1] = '\0'; }
+        else if (a == 'A' && b == 'y') { stem[sl - 2] = 'E'; stem[sl - 1] = '\0'; }
+        else if (a == 'a' && b == 'v') { stem[sl - 2] = 'o'; stem[sl - 1] = '\0'; }
+        else if (a == 'A' && b == 'v') { stem[sl - 2] = 'O'; stem[sl - 1] = '\0'; }
       }
     }
     char extended[128] = {0};
