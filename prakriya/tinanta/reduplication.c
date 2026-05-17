@@ -104,6 +104,15 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
     }
   }
   char abhyasa_vowel = shorten_vowel(clean_root[first_vowel]);
+  /* For consonant + semivowel clusters (Cy, Cv, Cr, Cl), the
+     abhyāsa-vowel is replaced by the vocalic counterpart of the
+     semivowel rather than the root vowel: dyut → didyot (not
+     dudyot), syand → sisyand, etc. */
+  if (first_vowel >= 2) {
+    char c2 = clean_root[1];
+    if (c2 == 'y') abhyasa_vowel = 'i';
+    else if (c2 == 'v') abhyasa_vowel = 'u';
+  }
   /* 7.4.62 kuhoś cuḥ first (velar/laryngeal → palatal), then
      7.4.61 śarpūrvāḥ khayaḥ (deaspirate). */
   if (abhyasa_cons) {

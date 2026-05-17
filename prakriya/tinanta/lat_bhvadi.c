@@ -936,14 +936,32 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     }
     static const char *const PERIPH_LIT_LONG_VOWEL[] = {
       "oK", "ej", "UW", "Uz", "Iz", "Irkzy", "Irzy", "urv", "oR",
-      "kakKa", "gup", "DUp", "paR", "pan", "kit", "dAn", "SAn", "uC",
+      "kakKa", "gup", "DUp", "kit", "dAn", "SAn", "uC",
       "ucC",   /* uCI~ post-ch-doubling — short u, guru upadhā via cluster */
       "iv", "ukz", "uz",
+      /* 3.1.35 kāspratyayādām amantre liṭi — kAs is named for
+         periphrastic LIT. */
+      "kAs",
+      /* 3.1.37 dayāyāsām — daya, āya, ās take periphrastic LIT. */
+      "day", "ay", "As",
       NULL
+    };
+    /* paR/pan use periphrastic LIT only in parasmaipada (via the
+       Aya-augmented stem). The bare A-pada forms take regular
+       reduplication with 6.4.120 etva. */
+    static const char *const PERIPH_LIT_P_ONLY[] = {
+      "paR", "pan", NULL
     };
     for (size_t i = 0; PERIPH_LIT_LONG_VOWEL[i]; i++) {
       if (strcmp(clean_root, PERIPH_LIT_LONG_VOWEL[i]) == 0) {
         lit_periphrastic = true; break;
+      }
+    }
+    if (!lit_periphrastic && pd == ASH_PARASMAI) {
+      for (size_t i = 0; PERIPH_LIT_P_ONLY[i]; i++) {
+        if (strcmp(clean_root, PERIPH_LIT_P_ONLY[i]) == 0) {
+          lit_periphrastic = true; break;
+        }
       }
     }
 
@@ -966,9 +984,10 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
       /* 3.1.28 gupūdhūpa-vicchi-paṇi-pani — for these roots the
          periphrastic LIT stem is built on the āya-augmented dhātu
-         (gop-āya, dhūp-āya, etc.), not the bare root. Guṇa fires
-         on the root vowel first, then 'Aya' suffix splices in. */
-      if (lakara == ASH_LIT) {
+         (gop-āya, dhūp-āya, etc.), not the bare root. Per 3.1.32
+         the augmented stem is parasmaipada only; ātmane forms of
+         paṇa/pana use the bare root with regular etva. */
+      if (lakara == ASH_LIT && pd == ASH_PARASMAI) {
         static const char *const AYA_LIT_ROOTS[] = {
           "gup", "DUp", "vicC", "paR", "pan", NULL
         };
@@ -1379,7 +1398,49 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        slots. 7.4.62 kuhoś-cuḥ disqualifies k/K/g/G/h-initial roots
        (their abhyāsa is an ādeśa). 6.4.126 na śasadadavādiguṇānām
        excludes śas, dad, av-ādi, and guṇa-products. */
-    if (!i_anubandha && strlen(clean_root) == 3) {
+    /* 6.4.122 tṛphalabhajatrapaścakṣaḥ — closed list that OVERRIDES
+       6.4.120's normal exclusions: these roots take etva even when
+       their initial would otherwise be deaspirated in the abhyāsa
+       or when they have a 2-consonant cluster at the start. */
+    static const char *const ETVA_OVERRIDE_ROOTS[] = {
+      "Pal", "Baj", "trap", "tfp", "cakz", NULL
+    };
+    bool etva_override = false;
+    for (size_t ei = 0; ETVA_OVERRIDE_ROOTS[ei]; ei++) {
+      if (strcmp(clean_root, ETVA_OVERRIDE_ROOTS[ei]) == 0) {
+        etva_override = true; break;
+      }
+    }
+    if (etva_override && !i_anubandha) {
+      /* Replace abhyāsa+root with C(C)+e+C(C) — keep the initial
+         consonant cluster, change the medial 'a' to 'e', keep the
+         post-vocalic consonant(s). */
+      bool kit_slot = (pd == ASH_ATMANE) || (v != ASH_EKAVACANA) ||
+                      (p == ASH_MADHYAMA);
+      if (kit_slot) {
+        char et[8] = {0};
+        size_t cl = strlen(clean_root);
+        size_t pos = 0;
+        /* Initial consonant cluster: copy until first vowel. */
+        for (size_t i = 0; i < cl && !varna_is_vowel(clean_root[i]) &&
+                            pos + 2 < sizeof(et); i++) {
+          et[pos++] = clean_root[i];
+        }
+        et[pos++] = 'e';
+        /* Final consonants: skip the original 'a', copy the rest. */
+        for (size_t i = 0; i < cl; i++) {
+          if (clean_root[i] == 'a') {
+            for (size_t j = i + 1; j < cl && pos + 1 < sizeof(et); j++) {
+              et[pos++] = clean_root[j];
+            }
+            break;
+          }
+        }
+        et[pos] = '\0';
+        strncpy(reduped, et, sizeof(reduped) - 1);
+        reduped[sizeof(reduped) - 1] = '\0';
+      }
+    } else if (!i_anubandha && strlen(clean_root) == 3) {
       char c1 = clean_root[0], cv = clean_root[1], c2 = clean_root[2];
       bool is_cac = (cv == 'a' && !varna_is_vowel(c1) && !varna_is_vowel(c2));
       bool kuho_ci = (c1 == 'k' || c1 == 'K' || c1 == 'g' ||
@@ -1572,10 +1633,16 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      laghu position (single consonant before and after). 7.2.4 neṭi
      blocks i/u/ṛ root-vowels from vṛddhi (the guṇa-step already
      applied above is the final form). 7.2.5 hmyantakṣaṇa- excludes
-     'a' + cluster (the consonant after the root vowel must be the
-     final consonant of the root). */
+     'a' + cluster and "edita" (e-anubandha) dhātus. */
+  bool has_e_anubandha = false;
+  {
+    size_t dl = dhatu_slp1 ? strlen(dhatu_slp1) : 0;
+    if (dl >= 2 && dhatu_slp1[dl - 1] == '~' && dhatu_slp1[dl - 2] == 'e') {
+      has_e_anubandha = true;
+    }
+  }
   if (lakara == ASH_LUN && pd == ASH_PARASMAI && !lun_root_aorist &&
-      !i_anubandha) {
+      !i_anubandha && !has_e_anubandha) {
     size_t sl = strlen(stem);
     for (size_t i = 0; i < sl; i++) {
       char c = stem[i];
