@@ -104,12 +104,16 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
     }
   }
   char abhyasa_vowel = shorten_vowel(clean_root[first_vowel]);
-  /* For consonant + 'y' clusters, the abhyāsa-vowel is 'i' rather
-     than the root vowel (dyut → didyot not dudyot, syand → sisyand).
-     Cv/Cr clusters keep the root vowel as the abhyāsa-vowel
-     (tvanc → tatvanc, Svaca → SaSvac). */
+  /* Closed list of cluster-initial roots whose abhyāsa-vowel is
+     'i' rather than the root vowel (dyut → didyot, vyath → vivyaT,
+     vye → vivya). Most Cy-cluster roots (cyut → cucyot, syand →
+     sasyand, byas → babyas) keep the root-vowel-matching default. */
   if (first_vowel >= 2 && clean_root[1] == 'y') {
-    abhyasa_vowel = 'i';
+    if (strncmp(clean_root, "dyut", 4) == 0 ||
+        strncmp(clean_root, "vyaT", 4) == 0 ||
+        strncmp(clean_root, "vye", 3) == 0) {
+      abhyasa_vowel = 'i';
+    }
   }
   /* 7.4.62 kuhoś cuḥ first (velar/laryngeal → palatal), then
      7.4.61 śarpūrvāḥ khayaḥ (deaspirate). */
