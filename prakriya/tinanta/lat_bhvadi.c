@@ -902,6 +902,15 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         goto lit_done;
       }
     }
+    /* 2.4.56 ajer vyaghañapoḥ — 'aj' is replaced by 'vī' before
+       liṭ weak slots; the strong-eka P forms (LIT_OVERRIDE_TABLE
+       "aj" → "vivAya") already handled above. Substitute clean_root
+       to "vI" for the reduplicate/iyaṅ/ending pipeline so weak
+       slots produce vivyatuH, vivyuH, vivya, etc. */
+    if (strcmp(clean_root, "aj") == 0) {
+      strncpy(clean_root, "vI", sizeof(clean_root) - 1);
+      clean_root[sizeof(clean_root) - 1] = '\0';
+    }
     /* 3.1.35-36 periphrastic LIT (LIT-paribhāṣā): for vowel-initial
        roots with i-anubandha (3.1.36 ij-ādeśca gurumato'naṛcchaḥ —
        which after num insertion have a guru upadhā), and for the
@@ -1270,8 +1279,9 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     static const char *const LIT_ANIT_ROOTS[] = {
       /* ṛ-final aniṭ class: kṛ, hṛ, vṛ, sṛ */
       "kf", "hf", "vf", "sf",
-      /* short-vowel aniṭ vowel-finals (śru, stu, nī) */
-      "Sru", "stu", "nI",
+      /* short-vowel aniṭ vowel-finals (śru, stu); nī is vet in LIT
+         and routes through the iyaṅ-before-iṭ-i path instead. */
+      "Sru", "stu",
       NULL
     };
     bool lit_anit = false;
@@ -1950,6 +1960,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       /* 6.1.101 savarṇa-dīrgha: a + A → A (drop stem-final a). */
       form[fl - 1] = '\0';
       strcat(form, t->clean);
+    } else if (lakara == ASH_LIT && stem_final == 'I' &&
+               (ending_initial == 'i' || ending_initial == 'I') &&
+               !(p == ASH_MADHYAMA && v == ASH_EKAVACANA)) {
+      /* 6.1.77 iko yaṇaci in LIT UTTAMA-DVI / UTTAMA-BAHU: ī
+         before iṭ-augmented 'i'-initial ending becomes 'y' (oracle
+         ninyiva/ninyima, vivyiva/vivyima). MADHYAMA-EKA prefers the
+         ec→ay or aniṭ-guṇa form (ninayiTa / nineTa), so we leave
+         the savarṇa-merge / ec→ay path to handle that slot. */
+      form[fl - 1] = 'y';
+      strcat(form, t->clean);
+    } else if (lakara == ASH_LIT && stem_final == 'U' &&
+               (ending_initial == 'u' || ending_initial == 'U') &&
+               !(p == ASH_MADHYAMA && v == ASH_EKAVACANA)) {
+      form[fl - 1] = 'v';
+      strcat(form, t->clean);
     } else if (stem_final == 'I' && ending_initial == 'i') {
       strcat(form, t->clean + 1);
     } else if (stem_final == 'U' && ending_initial == 'u') {
@@ -1983,6 +2008,17 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       char glide = (stem_final == 'i') ? 'y' : 'v';
       form[fl] = glide;
       form[fl + 1] = '\0';
+      strcat(form, t->clean);
+    } else if (lakara == ASH_LIT &&
+               (stem_final == 'I' || stem_final == 'U') &&
+               varna_is_vowel(ending_initial)) {
+      /* 6.1.77 iko yaṇaci — long ī/ū before vowel becomes y/v.
+         For LIT weak slots the rule fires unconditionally
+         regardless of savarṇa (oracle ninyiva/vivyiva have y
+         before iṭ-augmented 'iva', not the savarṇa-dīrgha 'Iva'). */
+      char glide = (stem_final == 'I') ? 'y' : 'v';
+      form[fl - 1] = glide;
+      form[fl] = '\0';
       strcat(form, t->clean);
     } else {
       strcat(form, t->clean);
