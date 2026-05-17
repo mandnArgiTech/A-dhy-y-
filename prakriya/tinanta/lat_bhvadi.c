@@ -1654,17 +1654,27 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   if (lakara == ASH_LUN && pd == ASH_PARASMAI && !lun_root_aorist &&
       !i_anubandha && !has_e_anubandha) {
     size_t sl = strlen(stem);
-    for (size_t i = 0; i < sl; i++) {
-      char c = stem[i];
-      if (c == 'a') {
-        /* Only vṛddhi when 'a' is the upadhā of a single-consonant
-           coda — i.e., the consonant after 'a' is the final char. */
-        if (i + 2 == sl && !varna_is_vowel(stem[i + 1])) {
-          stem[i] = 'A';
+    /* For i/u/ṛ-final roots: apply_class_transform already guṇa-ed
+       the vowel and ec→ay-expanded the resulting e/o (kzi → kze →
+       kzay). The sici-vrddhi here promotes that to vṛddhi: kzay →
+       kzAy (ai), kzav → kzAv (au) — corresponding to 'ai' (E) and
+       'au' (O) before the sic-s and iṭ. */
+    if (sl >= 2 && (stem[sl - 1] == 'y' || stem[sl - 1] == 'v') &&
+        stem[sl - 2] == 'a') {
+      stem[sl - 2] = 'A';
+    } else {
+      /* 'a'-vowel root in laghu single-cons coda: vṛddhi 'a' → 'A'
+         (sal → sAl → asAlIt). */
+      for (size_t i = 0; i < sl; i++) {
+        char c = stem[i];
+        if (c == 'a') {
+          if (i + 2 == sl && !varna_is_vowel(stem[i + 1])) {
+            stem[i] = 'A';
+          }
+          break;
+        } else if (varna_is_vowel(c)) {
+          break;
         }
-        break;
-      } else if (varna_is_vowel(c)) {
-        break;
       }
     }
   }
