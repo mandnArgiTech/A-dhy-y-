@@ -1871,6 +1871,20 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       /* 6.1.88 vṛddhir eci: a + au → au. */
       form[fl - 1] = '\0';
       strcat(form, t->clean);
+    } else if (lakara == ASH_LIT &&
+               (stem_final == 'i' || stem_final == 'u') &&
+               (ending_initial == 'a' || ending_initial == 'A' ||
+                ending_initial == 'e' || ending_initial == 'E' ||
+                ending_initial == 'o' || ending_initial == 'O')) {
+      /* 6.4.77 acijñiti — iyaṅ/uvaṅ-ādeśa at the LIT stem→ending
+         boundary: a reduplicated stem whose root-vowel is a short
+         i / u (e.g. cikzi for kṣi) inserts y / v before a vowel-
+         initial weak ending (atuH, uH, aTuH, …). cikzi + atuH →
+         cikziyatuH. */
+      char glide = (stem_final == 'i') ? 'y' : 'v';
+      form[fl] = glide;
+      form[fl + 1] = '\0';
+      strcat(form, t->clean);
     } else {
       strcat(form, t->clean);
     }
