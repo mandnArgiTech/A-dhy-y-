@@ -801,6 +801,50 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
     }
   }
+  /* 3.1.30 kaṇḍvādibhyo yak + 7.4.83 dīrgho 'kitaḥ — kaṇḍū-class
+     roots (kamu~ etc.) take a 'yak' suffix with long root vowel
+     in sārvadhātuka contexts: kam → kAm + aya + te = kAmayate.
+     Closed list — currently only kamu~ in our gaṇa-1 sample.
+     This rule fires for both pada (kamu~ is A-pada in dhātupāṭha;
+     the form kAmayate is the only valid present tense). */
+  if (gana == 1 && !skip_vikarana) {
+    static const char *const KANDU_ROOTS[] = {
+      "kam", NULL
+    };
+    bool is_kandu = false;
+    for (size_t i = 0; KANDU_ROOTS[i]; i++) {
+      if (strcmp(clean_root, KANDU_ROOTS[i]) == 0) {
+        is_kandu = true; break;
+      }
+    }
+    if (is_kandu) {
+      /* stem is "kama" (clean + Sap 'a'); transform to "kAmaya"
+         by lengthening the root 'a' to 'A' and splicing "ay"
+         before the final 'a'. */
+      size_t sl = strlen(stem);
+      if (sl >= 2 && stem[sl - 1] == 'a' && sl + 2 < sizeof(stem)) {
+        /* Lengthen the first 'a' in stem (root vowel). */
+        for (size_t i = 0; i < sl - 1; i++) {
+          if (stem[i] == 'a') { stem[i] = 'A'; break; }
+        }
+        /* Splice "ay" before the trailing 'a'. */
+        stem[sl - 1] = 'a';   /* keep */
+        stem[sl] = '\0';
+        /* Now stem ends in 'A...a'. Insert 'y' between root and 'a'. */
+        /* Easier: rebuild as "kAm + ay + a". Find last 'a' (Sap), insert
+           "ay" before it. */
+        size_t nl = strlen(stem);
+        char rebuilt[64] = {0};
+        memcpy(rebuilt, stem, nl - 1);
+        rebuilt[nl - 1] = 'a';
+        rebuilt[nl] = 'y';
+        rebuilt[nl + 1] = 'a';
+        rebuilt[nl + 2] = '\0';
+        strncpy(stem, rebuilt, sizeof(stem) - 1);
+        stem[sizeof(stem) - 1] = '\0';
+      }
+    }
+  }
   /* 6.4.24 aniditāṃ hala upadhāyāḥ kṅiti — drop the nasal upadhā
      before a kit/ṅit suffix. ASHIRLIM-P (yāsuṭ-kit) is the canonical
      lakāra-driven kit context that bypasses the gaṇa vikaraṇa where
