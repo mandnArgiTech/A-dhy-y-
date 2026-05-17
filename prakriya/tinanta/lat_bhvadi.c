@@ -47,12 +47,17 @@ static bool has_i_anubandha(const char *s) {
   if (!s) return false;
   size_t n = strlen(s);
   if (n < 2) return false;
-  /* Both 'i' and 'I' (long ī) anubandhas trigger num-insertion per
-     7.1.58 idito num dhātoḥ; the BORI dhātupāṭha lists roots like
-     jabhī~ (jaB + I~) which surface as "jamB" by parasavarṇa, same
-     as if a short-i num had been inserted. */
   if (s[n - 1] != '~') return false;
-  return s[n - 2] == 'i' || s[n - 2] == 'I';
+  /* 7.1.58 idito num dhātoḥ — short-i anubandha triggers num
+     universally. Long-ī ('I') anubandha mostly does NOT trigger
+     num (yatI, citI, hlAdI, BfjI, kawI, knUyI, UyI etc. keep the
+     bare root); only specific Mādhava-Dhātupāṭha entries do —
+     currently the single 'jabhī~' (jaB + I~ → jamB). */
+  if (s[n - 2] == 'i') return true;
+  if (s[n - 2] == 'I') {
+    if (strcmp(s, "jaBI~") == 0) return true;
+  }
+  return false;
 }
 
 /* Returns true iff the dhātu, after stripping anubandhas, originally
@@ -764,6 +769,36 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                              &vik_sutra, &class_sutra,
                              &used_guna, &used_ec_ay)) {
     return false;
+  }
+  /* 3.1.28 gupūdhūpavicchipaṇi-paninibhya āyaḥ — for the closed
+     list gup, dhup, vicchi, paṇi, panu, an 'āya' suffix is inserted
+     before sārvadhātuka endings (LAT/LAN/LOT/VIDHILIM), forming
+     gopāyati, dhūpāyati, etc. The 'a' that apply_class_transform
+     already appended via the Sap vikaraṇa is the tail of this 'āya'
+     — we splice 'Ay' in before it. Sārvadhātuka only; the LIT
+     periphrastic and ārdhadhātuka paths handle these roots
+     separately via LIT_OVERRIDE_TABLE / PERIPH_LIT_LONG_VOWEL. */
+  if (gana == 1 && !skip_vikarana) {
+    static const char *const AYA_AUGMENT_ROOTS[] = {
+      "gup", "DUp", "vicC", "paR", "pan", NULL
+    };
+    bool needs_aya = false;
+    for (size_t i = 0; AYA_AUGMENT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, AYA_AUGMENT_ROOTS[i]) == 0) {
+        needs_aya = true; break;
+      }
+    }
+    if (needs_aya) {
+      /* stem currently ends in 'a' (vikaraṇa Sap appended). Splice
+         "Ay" before that final 'a': gopa → gopAya. */
+      size_t sl = strlen(stem);
+      if (sl > 0 && stem[sl - 1] == 'a' && sl + 2 < sizeof(stem)) {
+        stem[sl - 1] = 'A';
+        stem[sl] = 'y';
+        stem[sl + 1] = 'a';
+        stem[sl + 2] = '\0';
+      }
+    }
   }
   /* 6.4.24 aniditāṃ hala upadhāyāḥ kṅiti — drop the nasal upadhā
      before a kit/ṅit suffix. ASHIRLIM-P (yāsuṭ-kit) is the canonical
