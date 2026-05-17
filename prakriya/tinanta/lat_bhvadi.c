@@ -47,7 +47,17 @@ static bool has_i_anubandha(const char *s) {
   if (!s) return false;
   size_t n = strlen(s);
   if (n < 2) return false;
-  return s[n - 2] == 'i' && s[n - 1] == '~';
+  if (s[n - 1] != '~') return false;
+  /* 7.1.58 idito num dhātoḥ — short-i anubandha triggers num
+     universally. Long-ī ('I') anubandha mostly does NOT trigger
+     num (yatI, citI, hlAdI, BfjI, kawI, knUyI, UyI etc. keep the
+     bare root); only specific Mādhava-Dhātupāṭha entries do —
+     currently the single 'jabhī~' (jaB + I~ → jamB). */
+  if (s[n - 2] == 'i') return true;
+  if (s[n - 2] == 'I') {
+    if (strcmp(s, "jaBI~") == 0) return true;
+  }
+  return false;
 }
 
 /* Returns true iff the dhātu, after stripping anubandhas, originally
@@ -308,10 +318,16 @@ static bool apply_class_transform(const char *clean_root_in, int gana,
           nasal = 'Y'; break;  /* ñ */
         case 'w': case 'W': case 'q': case 'Q':
           nasal = 'R'; break;  /* ṇ */
+        case 'R':
+          nasal = 'R'; break;  /* ṇ + ṇ — parasavarṇa stays */
         case 't': case 'T': case 'd': case 'D':
           nasal = 'n'; break;  /* n */
+        case 'n':
+          nasal = 'n'; break;  /* n + n */
         case 'p': case 'P': case 'b': case 'B':
           nasal = 'm'; break;  /* m */
+        case 'm':
+          nasal = 'm'; break;  /* m + m */
         default: nasal = 'n'; break;
       }
       memmove(stem + sn, stem + sn - 1, 2);
@@ -754,6 +770,81 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                              &used_guna, &used_ec_ay)) {
     return false;
   }
+  /* 3.1.28 gupūdhūpavicchipaṇi-paninibhya āyaḥ — for the closed
+     list gup, dhup, vicchi, paṇi, panu, an 'āya' suffix is inserted
+     before sārvadhātuka endings (LAT/LAN/LOT/VIDHILIM), forming
+     gopāyati, dhūpāyati, etc. The 'a' that apply_class_transform
+     already appended via the Sap vikaraṇa is the tail of this 'āya'
+     — we splice 'Ay' in before it. Per 3.1.32 sanādy-antā dhātavaḥ,
+     the augmented stem behaves as a fresh dhātu and is conjugated
+     parasmaipada only; the Ātmane forms for paṇ/pana (which are
+     originally A-pada) keep the bare root. */
+  if (gana == 1 && !skip_vikarana && pd == ASH_PARASMAI) {
+    static const char *const AYA_AUGMENT_ROOTS[] = {
+      "gup", "DUp", "vicC", "paR", "pan", NULL
+    };
+    bool needs_aya = false;
+    for (size_t i = 0; AYA_AUGMENT_ROOTS[i]; i++) {
+      if (strcmp(clean_root, AYA_AUGMENT_ROOTS[i]) == 0) {
+        needs_aya = true; break;
+      }
+    }
+    if (needs_aya) {
+      /* stem currently ends in 'a' (vikaraṇa Sap appended). Splice
+         "Ay" before that final 'a': gopa → gopAya. */
+      size_t sl = strlen(stem);
+      if (sl > 0 && stem[sl - 1] == 'a' && sl + 2 < sizeof(stem)) {
+        stem[sl - 1] = 'A';
+        stem[sl] = 'y';
+        stem[sl + 1] = 'a';
+        stem[sl + 2] = '\0';
+      }
+    }
+  }
+  /* 3.1.30 kaṇḍvādibhyo yak + 7.4.83 dīrgho 'kitaḥ — kaṇḍū-class
+     roots (kamu~ etc.) take a 'yak' suffix with long root vowel
+     in sārvadhātuka contexts: kam → kAm + aya + te = kAmayate.
+     Closed list — currently only kamu~ in our gaṇa-1 sample.
+     This rule fires for both pada (kamu~ is A-pada in dhātupāṭha;
+     the form kAmayate is the only valid present tense). */
+  if (gana == 1 && !skip_vikarana) {
+    static const char *const KANDU_ROOTS[] = {
+      "kam", NULL
+    };
+    bool is_kandu = false;
+    for (size_t i = 0; KANDU_ROOTS[i]; i++) {
+      if (strcmp(clean_root, KANDU_ROOTS[i]) == 0) {
+        is_kandu = true; break;
+      }
+    }
+    if (is_kandu) {
+      /* stem is "kama" (clean + Sap 'a'); transform to "kAmaya"
+         by lengthening the root 'a' to 'A' and splicing "ay"
+         before the final 'a'. */
+      size_t sl = strlen(stem);
+      if (sl >= 2 && stem[sl - 1] == 'a' && sl + 2 < sizeof(stem)) {
+        /* Lengthen the first 'a' in stem (root vowel). */
+        for (size_t i = 0; i < sl - 1; i++) {
+          if (stem[i] == 'a') { stem[i] = 'A'; break; }
+        }
+        /* Splice "ay" before the trailing 'a'. */
+        stem[sl - 1] = 'a';   /* keep */
+        stem[sl] = '\0';
+        /* Now stem ends in 'A...a'. Insert 'y' between root and 'a'. */
+        /* Easier: rebuild as "kAm + ay + a". Find last 'a' (Sap), insert
+           "ay" before it. */
+        size_t nl = strlen(stem);
+        char rebuilt[64] = {0};
+        memcpy(rebuilt, stem, nl - 1);
+        rebuilt[nl - 1] = 'a';
+        rebuilt[nl] = 'y';
+        rebuilt[nl + 1] = 'a';
+        rebuilt[nl + 2] = '\0';
+        strncpy(stem, rebuilt, sizeof(stem) - 1);
+        stem[sizeof(stem) - 1] = '\0';
+      }
+    }
+  }
   /* 6.4.24 aniditāṃ hala upadhāyāḥ kṅiti — drop the nasal upadhā
      before a kit/ṅit suffix. ASHIRLIM-P (yāsuṭ-kit) is the canonical
      lakāra-driven kit context that bypasses the gaṇa vikaraṇa where
@@ -855,6 +946,15 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         goto lit_done;
       }
     }
+    /* 2.4.56 ajer vyaghañapoḥ — 'aj' is replaced by 'vī' before
+       liṭ weak slots; the strong-eka P forms (LIT_OVERRIDE_TABLE
+       "aj" → "vivAya") already handled above. Substitute clean_root
+       to "vI" for the reduplicate/iyaṅ/ending pipeline so weak
+       slots produce vivyatuH, vivyuH, vivya, etc. */
+    if (strcmp(clean_root, "aj") == 0) {
+      strncpy(clean_root, "vI", sizeof(clean_root) - 1);
+      clean_root[sizeof(clean_root) - 1] = '\0';
+    }
     /* 3.1.35-36 periphrastic LIT (LIT-paribhāṣā): for vowel-initial
        roots with i-anubandha (3.1.36 ij-ādeśca gurumato'naṛcchaḥ —
        which after num insertion have a guru upadhā), and for the
@@ -876,21 +976,45 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       bool long_initial = (first == 'I' || first == 'U' || first == 'F' ||
                            first == 'e' || first == 'o' ||
                            first == 'E' || first == 'O');
-      bool short_iu_with_anubandha = i_anubandha &&
-                                     (first == 'i' || first == 'u');
-      if (long_initial || short_iu_with_anubandha) {
+      /* 3.1.36 ijādeśca gurumato'naṛcchaḥ — vowel-initial dhātus
+         whose upadhā becomes guru (via num insertion for i-anubandha,
+         or originally) take periphrastic LIT. Short ṛ-initial roots
+         like fji~ → fnj qualify the same way as i/u-anubandha. */
+      bool short_iuf_with_anubandha = i_anubandha &&
+                                      (first == 'i' || first == 'u' ||
+                                       first == 'f');
+      if (long_initial || short_iuf_with_anubandha) {
         lit_periphrastic = true;
       }
     }
     static const char *const PERIPH_LIT_LONG_VOWEL[] = {
       "oK", "ej", "UW", "Uz", "Iz", "Irkzy", "Irzy", "urv", "oR",
-      "kakKa", "gup", "DUp", "paR", "pan", "kit", "dAn", "SAn", "uC",
+      "kakKa", "gup", "DUp", "kit", "dAn", "SAn", "uC",
+      "ucC",   /* uCI~ post-ch-doubling — short u, guru upadhā via cluster */
       "iv", "ukz", "uz",
+      /* 3.1.35 kāspratyayādām amantre liṭi — kAs is named for
+         periphrastic LIT. */
+      "kAs",
+      /* 3.1.37 dayāyāsām — daya, āya, ās take periphrastic LIT. */
+      "day", "ay", "As",
       NULL
+    };
+    /* paR/pan use periphrastic LIT only in parasmaipada (via the
+       Aya-augmented stem). The bare A-pada forms take regular
+       reduplication with 6.4.120 etva. */
+    static const char *const PERIPH_LIT_P_ONLY[] = {
+      "paR", "pan", NULL
     };
     for (size_t i = 0; PERIPH_LIT_LONG_VOWEL[i]; i++) {
       if (strcmp(clean_root, PERIPH_LIT_LONG_VOWEL[i]) == 0) {
         lit_periphrastic = true; break;
+      }
+    }
+    if (!lit_periphrastic && pd == ASH_PARASMAI) {
+      for (size_t i = 0; PERIPH_LIT_P_ONLY[i]; i++) {
+        if (strcmp(clean_root, PERIPH_LIT_P_ONLY[i]) == 0) {
+          lit_periphrastic = true; break;
+        }
       }
     }
 
@@ -909,6 +1033,40 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         if (cl + 1 < sizeof(per_stem)) {
           memmove(per_stem + insert_at + 1, per_stem + insert_at, cl - insert_at + 1);
           per_stem[insert_at] = 'n';
+        }
+      }
+      /* 3.1.28 gupūdhūpa-vicchi-paṇi-pani — for these roots the
+         periphrastic LIT stem is built on the āya-augmented dhātu
+         (gop-āya, dhūp-āya, etc.), not the bare root. Per 3.1.32
+         the augmented stem is parasmaipada only; ātmane forms of
+         paṇa/pana use the bare root with regular etva. */
+      if (lakara == ASH_LIT && pd == ASH_PARASMAI) {
+        static const char *const AYA_LIT_ROOTS[] = {
+          "gup", "DUp", "vicC", "paR", "pan", NULL
+        };
+        bool periph_aya = false;
+        for (size_t i = 0; AYA_LIT_ROOTS[i]; i++) {
+          if (strcmp(clean_root, AYA_LIT_ROOTS[i]) == 0) {
+            periph_aya = true; break;
+          }
+        }
+        if (periph_aya) {
+          /* 7.3.86 pugantalaghūpadhasya — guṇa only when the root
+             vowel is short (laghu). 'u' → 'o' for gup; long 'U' in
+             DUp keeps its identity. Then splice the 'Aya' suffix. */
+          char with_guna[32];
+          strncpy(with_guna, per_stem, sizeof(with_guna) - 1);
+          with_guna[sizeof(with_guna) - 1] = '\0';
+          for (size_t i = 0; with_guna[i]; i++) {
+            char c = with_guna[i];
+            if (c == 'i' || c == 'u' || c == 'f' || c == 'x') {
+              with_guna[i] = varna_guna(c);
+              break;
+            } else if (varna_is_vowel(c)) {
+              break;
+            }
+          }
+          snprintf(per_stem, sizeof(per_stem), "%sAya", with_guna);
         }
       }
       /* Auxiliary kṛ-LIT forms keyed by purusha/vacana for P. */
@@ -961,8 +1119,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       }
       size_t insert_at = (last_vowel_pos < cl) ? last_vowel_pos + 1 : cl;
       if (cl + 1 < sizeof(augmented_root)) {
+        char nasal = 'n';
+        /* 8.4.58 parasavarṇa: match the nasal to the varga of the
+           consonant that follows it. */
+        if (insert_at < cl) {
+          char next = augmented_root[insert_at];
+          switch (next) {
+            case 'k': case 'K': case 'g': case 'G': nasal = 'N'; break;
+            case 'c': case 'C': case 'j': case 'J': nasal = 'Y'; break;
+            case 'w': case 'W': case 'q': case 'Q': case 'R': nasal = 'R'; break;
+            case 'p': case 'P': case 'b': case 'B': case 'm': nasal = 'm'; break;
+            default: nasal = 'n'; break;
+          }
+        }
         memmove(augmented_root + insert_at + 1, augmented_root + insert_at, cl - insert_at + 1);
-        augmented_root[insert_at] = 'n';
+        augmented_root[insert_at] = nasal;
       }
     }
     if (!reduplicate(augmented_root, reduped, sizeof(reduped))) {
@@ -1127,6 +1298,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        restoration. */
     if (initial_was_sa) {
       sandhi_apply_satva(reduped, root_start);
+      /* The companion retroflex restoration: when the upadeśa
+         cluster was ṣṭ (z+w) — flattened to s+t by 6.1.64 — the
+         abhyāsa-reduplication path keeps the cluster as 'st' in the
+         root portion. After ṣatva re-fronts the s back to ṣ, also
+         restore the retroflex 't' to 'ṭ' (w) in that root position
+         so the surface form matches the original ṣṭ cluster
+         (ṣṭuc, ṣṭip, ṣṭep classes). */
+      if (dhatu_slp1 && dhatu_slp1[0] == 'z' && dhatu_slp1[1] == 'w') {
+        for (size_t i = root_start; reduped[i]; i++) {
+          if (reduped[i] == 'z' && reduped[i + 1] == 't') {
+            reduped[i + 1] = 'w';
+            break;
+          }
+        }
+      }
     }
 
     /* 7.2.10 ekāca upadeśe — aniṭ roots refuse the iṭ-augment that the
@@ -1137,8 +1323,9 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     static const char *const LIT_ANIT_ROOTS[] = {
       /* ṛ-final aniṭ class: kṛ, hṛ, vṛ, sṛ */
       "kf", "hf", "vf", "sf",
-      /* short-vowel aniṭ vowel-finals (śru, stu, nī) */
-      "Sru", "stu", "nI",
+      /* short-vowel aniṭ vowel-finals (śru, stu); nī is vet in LIT
+         and routes through the iyaṅ-before-iṭ-i path instead. */
+      "Sru", "stu",
       NULL
     };
     bool lit_anit = false;
@@ -1238,8 +1425,18 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
                          next == 'u' || next == 'U' || next == 'e' || next == 'o' ||
                          next == 'E' || next == 'O' || next == 'f' || next == 'F' ||
                          next == 'x' || next == 'X');
-      if (short_iu && next_vowel) {
-        /* Insert 'y' (after i) or 'v' (after u) at position pre+1. */
+      /* 6.1.101 akaḥ savarṇe dīrghaḥ has priority over 6.4.77: a
+         short vowel followed by its own savarṇa coalesces to the
+         long form (u+u → U, u+U → U, i+i → I, i+I → I). When the
+         next vowel is not savarṇa, 6.4.77 acijñiti inserts the
+         iyaṅ/uvaṅ glide instead. */
+      bool savarna = (abh == 'u' && (next == 'u' || next == 'U')) ||
+                     (abh == 'i' && (next == 'i' || next == 'I'));
+      if (savarna) {
+        reduped[pre] = (abh == 'u') ? 'U' : 'I';
+        size_t rl = strlen(reduped);
+        memmove(reduped + pre + 1, reduped + pre + 2, rl - pre - 1);
+      } else if (short_iu && next_vowel) {
         char glide = (abh == 'i') ? 'y' : 'v';
         size_t rl = strlen(reduped);
         if (rl + 1 < sizeof(reduped)) {
@@ -1255,11 +1452,61 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
        slots. 7.4.62 kuhoś-cuḥ disqualifies k/K/g/G/h-initial roots
        (their abhyāsa is an ādeśa). 6.4.126 na śasadadavādiguṇānām
        excludes śas, dad, av-ādi, and guṇa-products. */
-    if (!i_anubandha && strlen(clean_root) == 3) {
+    /* 6.4.122 tṛphalabhajatrapaścakṣaḥ — closed list that OVERRIDES
+       6.4.120's normal exclusions: these roots take etva even when
+       their initial would otherwise be deaspirated in the abhyāsa
+       or when they have a 2-consonant cluster at the start. */
+    static const char *const ETVA_OVERRIDE_ROOTS[] = {
+      "Pal", "Baj", "trap", "tfp", "cakz", NULL
+    };
+    bool etva_override = false;
+    for (size_t ei = 0; ETVA_OVERRIDE_ROOTS[ei]; ei++) {
+      if (strcmp(clean_root, ETVA_OVERRIDE_ROOTS[ei]) == 0) {
+        etva_override = true; break;
+      }
+    }
+    if (etva_override && !i_anubandha) {
+      /* Replace abhyāsa+root with C(C)+e+C(C) — keep the initial
+         consonant cluster, change the medial 'a' to 'e', keep the
+         post-vocalic consonant(s). */
+      bool kit_slot = (pd == ASH_ATMANE) || (v != ASH_EKAVACANA) ||
+                      (p == ASH_MADHYAMA);
+      if (kit_slot) {
+        char et[8] = {0};
+        size_t cl = strlen(clean_root);
+        size_t pos = 0;
+        /* Initial consonant cluster: copy until first vowel. */
+        for (size_t i = 0; i < cl && !varna_is_vowel(clean_root[i]) &&
+                            pos + 2 < sizeof(et); i++) {
+          et[pos++] = clean_root[i];
+        }
+        et[pos++] = 'e';
+        /* Final consonants: skip the original 'a', copy the rest. */
+        for (size_t i = 0; i < cl; i++) {
+          if (clean_root[i] == 'a') {
+            for (size_t j = i + 1; j < cl && pos + 1 < sizeof(et); j++) {
+              et[pos++] = clean_root[j];
+            }
+            break;
+          }
+        }
+        et[pos] = '\0';
+        strncpy(reduped, et, sizeof(reduped) - 1);
+        reduped[sizeof(reduped) - 1] = '\0';
+      }
+    } else if (!i_anubandha && strlen(clean_root) == 3) {
       char c1 = clean_root[0], cv = clean_root[1], c2 = clean_root[2];
       bool is_cac = (cv == 'a' && !varna_is_vowel(c1) && !varna_is_vowel(c2));
       bool kuho_ci = (c1 == 'k' || c1 == 'K' || c1 == 'g' ||
                       c1 == 'G' || c1 == 'h');
+      /* Aspirated stops (8.4.54 abhyāse cartar de-aspirates them so
+         the abhyāsa-initial is an ādeśa, blocking 6.4.120). */
+      bool aspirated_initial = (c1 == 'C' || c1 == 'J' || c1 == 'W' ||
+                                c1 == 'Q' || c1 == 'T' || c1 == 'D' ||
+                                c1 == 'P' || c1 == 'B');
+      /* v-initial CaC roots take samprasāraṇa (vac-class) or no rule
+         (other v-initial); they never take etva. */
+      bool v_initial = (c1 == 'v');
       static const char *const ETVA_EXCEPTIONS[] = {
         "Sas", "dad", NULL
       };
@@ -1274,7 +1521,8 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
          P slots are kit. */
       bool kit_slot = (pd == ASH_ATMANE) || (v != ASH_EKAVACANA) ||
                       (p == ASH_MADHYAMA);
-      if (is_cac && !kuho_ci && !excluded && kit_slot) {
+      if (is_cac && !kuho_ci && !aspirated_initial && !v_initial &&
+          !excluded && kit_slot) {
         char et[8] = {0};
         et[0] = c1; et[1] = 'e'; et[2] = c2;
         strncpy(reduped, et, sizeof(reduped) - 1);
@@ -1360,9 +1608,47 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
     stem[sizeof(stem) - 1] = '\0';
     used_guna = false;
   }
+  /* Aniṭ check for ASHIRLIM-A / LUN-A: when the dhātu is aniṭ
+     (Mādhava col-9 'A'), the ātmanepada s-aorist / sīsaṭ-ASHIRLIM
+     endings drop their iṭ-augment 'i' and the surface ṣ-of-sic
+     (post-iN) reverts to 's'. We also block guṇa on the root
+     vowel since the resulting suffix is kit. */
+  static const char *const ANIT_GANA1_ROOTS_FULL[] = {
+    "Baj","Bf","Cyu","De","Df","DmA","DrE","Dru","Dvf","DyE",
+    "Gas","Gf","GrA","Gu","KE","Ku","Nu","SE","Sad","Sap",
+    "Siz","SrA","SrE","Sru","SyE","cyu","dA","dE","dah","danS",
+    "de","dfS","drE","dru","du","dvf","dyE","f","gA","gE",
+    "gam","gf","glE","gu","had","hf","hve","hvf","jE","jf",
+    "ji","jri","jyu","kE","kfz","klu","kruS","ku","kzE","kzi",
+    "laB","me","mih","mlE","mnA","nI","nam","pA","pE","pac",
+    "plu","pru","pyE","rE","raB","ram","ranj","ru","ruh","sE",
+    "sRE","sTA","sad","sanj","sf","sfp","skand","smf","smi",
+    "srE","sru","stE","styE","su","svanj","tap","tip","trE",
+    "tviz","tyaj","u","vE","vah","vap","vas","ve","vf","viz",
+    "vye","yaB","yaj","yam",
+    "ad", "vac", "vid",
+    NULL
+  };
+  bool is_anit_atmane = false;
+  if ((lakara == ASH_ASHIRLIM || lakara == ASH_LUN) && pd == ASH_ATMANE &&
+      !i_anubandha) {
+    for (size_t i = 0; ANIT_GANA1_ROOTS_FULL[i]; i++) {
+      if (strcmp(clean_root, ANIT_GANA1_ROOTS_FULL[i]) == 0) {
+        is_anit_atmane = true; break;
+      }
+    }
+  }
+  /* Reset stem to bare clean_root for aniṭ-ātmane: the kit-suffix
+     blocks the guṇa already applied in apply_class_transform. */
+  if (is_anit_atmane) {
+    strncpy(stem, clean_root, sizeof(stem) - 1);
+    stem[sizeof(stem) - 1] = '\0';
+    used_guna = false;
+  }
   if ((lakara == ASH_LRT || lakara == ASH_LUT || lakara == ASH_LRN ||
        lakara == ASH_LUN) &&
-      !block_guna_completely && !i_anubandha && !lun_root_aorist) {
+      !block_guna_completely && !i_anubandha && !lun_root_aorist &&
+      !is_anit_atmane) {
     bool has_unstrong = false;
     size_t unstrong_pos = 0;
     for (size_t i = 0; stem[i]; i++) {
@@ -1396,6 +1682,46 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       used_guna = true;
     }
   }
+  /* 7.2.1 sici vṛddhiḥ parasmaipadeṣu — in the sic-aorist (LUN-P)
+     a single-syllable root's 'a' takes vṛddhi when it sits in a
+     laghu position (single consonant before and after). 7.2.4 neṭi
+     blocks i/u/ṛ root-vowels from vṛddhi (the guṇa-step already
+     applied above is the final form). 7.2.5 hmyantakṣaṇa- excludes
+     'a' + cluster and "edita" (e-anubandha) dhātus. */
+  bool has_e_anubandha = false;
+  {
+    size_t dl = dhatu_slp1 ? strlen(dhatu_slp1) : 0;
+    if (dl >= 2 && dhatu_slp1[dl - 1] == '~' && dhatu_slp1[dl - 2] == 'e') {
+      has_e_anubandha = true;
+    }
+  }
+  if (lakara == ASH_LUN && pd == ASH_PARASMAI && !lun_root_aorist &&
+      !i_anubandha && !has_e_anubandha) {
+    size_t sl = strlen(stem);
+    /* For i/u/ṛ-final roots: apply_class_transform already guṇa-ed
+       the vowel and ec→ay-expanded the resulting e/o (kzi → kze →
+       kzay). The sici-vrddhi here promotes that to vṛddhi: kzay →
+       kzAy (ai), kzav → kzAv (au) — corresponding to 'ai' (E) and
+       'au' (O) before the sic-s and iṭ. */
+    if (sl >= 2 && (stem[sl - 1] == 'y' || stem[sl - 1] == 'v') &&
+        stem[sl - 2] == 'a') {
+      stem[sl - 2] = 'A';
+    } else {
+      /* 'a'-vowel root in laghu single-cons coda: vṛddhi 'a' → 'A'
+         (sal → sAl → asAlIt). */
+      for (size_t i = 0; i < sl; i++) {
+        char c = stem[i];
+        if (c == 'a') {
+          if (i + 2 == sl && !varna_is_vowel(stem[i + 1])) {
+            stem[i] = 'A';
+          }
+          break;
+        } else if (varna_is_vowel(c)) {
+          break;
+        }
+      }
+    }
+  }
   /* Override the LUN ending for root-aorist class. Endings are LAN's
      secondary endings; vowel-initial endings (1bahu "an" / 3eka "am")
      get a v-augment after vowel-final roots like BU, Sru. */
@@ -1413,6 +1739,44 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   if (lun_root_aorist && pd == ASH_PARASMAI) {
     int idx = (int)p * 3 + (int)v;
     if (idx >= 0 && idx < 9) t = &LUN_ROOT_AORIST_P[idx];
+  }
+
+  /* Aniṭ-ātmane ending override: drop the iṭ 'i' from the LUN/
+     ASHIRLIM ending. Without the iN-vowel before the sic-s, both
+     the s itself (ṣ → s) and the immediately-following retroflex
+     stops (ṭ → t, ṭh → th) lose their retroflexion since 8.3.59 /
+     8.4.41 no longer apply. Only the FIRST z+w/W cluster reverts —
+     downstream retroflexes (like the 'z' in 'sIzwa' / 'sIzWAH'
+     occurring after the long 'I' sīsaṭ vowel) keep their ṣ since
+     the long 'I' is itself iN. */
+  if (is_anit_atmane && t && t->clean && t->clean[0] == 'i') {
+    static char anit_atmane_buf[24];
+    const char *src = t->clean + 1;  /* skip iṭ 'i' */
+    size_t out_idx = 0;
+    bool first_z_seen = false;
+    for (size_t i = 0; src[i] && out_idx + 1 < sizeof(anit_atmane_buf); i++) {
+      char c = src[i];
+      if (c == 'z' && !first_z_seen) {
+        anit_atmane_buf[out_idx++] = 's';
+        first_z_seen = true;
+        /* If next char is retroflex w/W (from 8.4.41 ṣṭunā), revert
+           to dental t/T. */
+        if (src[i + 1] == 'w') {
+          anit_atmane_buf[out_idx++] = 't';
+          i++;
+        } else if (src[i + 1] == 'W') {
+          anit_atmane_buf[out_idx++] = 'T';
+          i++;
+        }
+      } else {
+        anit_atmane_buf[out_idx++] = c;
+      }
+    }
+    anit_atmane_buf[out_idx] = '\0';
+    static TingEntry anit_atmane_local;
+    anit_atmane_local = *t;
+    anit_atmane_local.clean = anit_atmane_buf;
+    t = &anit_atmane_local;
   }
 
   /* 3.1.33 syatāsi luṭos — for LRT/LRN insert sya. For LUT the
@@ -1479,6 +1843,20 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       size_t sl = strlen(stem);
       if (sl > 0 && stem[sl - 1] == 'a') {
         stem[sl - 1] = '\0';
+      }
+    }
+    /* For aniṭ roots whose guṇa-product was eagerly ec→ay-expanded
+       in apply_class_transform (ay/Ay/av/Av at end), revert the
+       expansion: with no iṭ to follow, the bare e/o stays at the
+       stem-ending junction (kzi → kze + tā = kzetA, not kzaytA). */
+    if (is_anit) {
+      size_t sl = strlen(stem);
+      if (sl >= 2) {
+        char a = stem[sl - 2], b = stem[sl - 1];
+        if (a == 'a' && b == 'y') { stem[sl - 2] = 'e'; stem[sl - 1] = '\0'; }
+        else if (a == 'A' && b == 'y') { stem[sl - 2] = 'E'; stem[sl - 1] = '\0'; }
+        else if (a == 'a' && b == 'v') { stem[sl - 2] = 'o'; stem[sl - 1] = '\0'; }
+        else if (a == 'A' && b == 'v') { stem[sl - 2] = 'O'; stem[sl - 1] = '\0'; }
       }
     }
     char extended[128] = {0};
@@ -1636,6 +2014,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       /* 6.1.101 savarṇa-dīrgha: a + A → A (drop stem-final a). */
       form[fl - 1] = '\0';
       strcat(form, t->clean);
+    } else if (lakara == ASH_LIT && stem_final == 'I' &&
+               (ending_initial == 'i' || ending_initial == 'I') &&
+               !(p == ASH_MADHYAMA && v == ASH_EKAVACANA)) {
+      /* 6.1.77 iko yaṇaci in LIT UTTAMA-DVI / UTTAMA-BAHU: ī
+         before iṭ-augmented 'i'-initial ending becomes 'y' (oracle
+         ninyiva/ninyima, vivyiva/vivyima). MADHYAMA-EKA prefers the
+         ec→ay or aniṭ-guṇa form (ninayiTa / nineTa), so we leave
+         the savarṇa-merge / ec→ay path to handle that slot. */
+      form[fl - 1] = 'y';
+      strcat(form, t->clean);
+    } else if (lakara == ASH_LIT && stem_final == 'U' &&
+               (ending_initial == 'u' || ending_initial == 'U') &&
+               !(p == ASH_MADHYAMA && v == ASH_EKAVACANA)) {
+      form[fl - 1] = 'v';
+      strcat(form, t->clean);
     } else if (stem_final == 'I' && ending_initial == 'i') {
       strcat(form, t->clean + 1);
     } else if (stem_final == 'U' && ending_initial == 'u') {
@@ -1658,8 +2051,90 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       /* 6.1.88 vṛddhir eci: a + au → au. */
       form[fl - 1] = '\0';
       strcat(form, t->clean);
+    } else if (lakara == ASH_LIT &&
+               (stem_final == 'i' || stem_final == 'u') &&
+               varna_is_vowel(ending_initial)) {
+      /* 6.4.77 acijñiti — iyaṅ/uvaṅ-ādeśa at the LIT stem→ending
+         boundary: a reduplicated stem whose root-vowel is a short
+         i / u (e.g. cikzi for kṣi) inserts y / v before a vowel-
+         initial weak ending (atuH, uH, aTuH, …). cikzi + atuH →
+         cikziyatuH. */
+      char glide = (stem_final == 'i') ? 'y' : 'v';
+      form[fl] = glide;
+      form[fl + 1] = '\0';
+      strcat(form, t->clean);
+    } else if (lakara == ASH_LIT &&
+               (stem_final == 'I' || stem_final == 'U') &&
+               varna_is_vowel(ending_initial)) {
+      /* 6.1.77 iko yaṇaci — long ī/ū before vowel becomes y/v.
+         For LIT weak slots the rule fires unconditionally
+         regardless of savarṇa (oracle ninyiva/vivyiva have y
+         before iṭ-augmented 'iva', not the savarṇa-dīrgha 'Iva'). */
+      char glide = (stem_final == 'I') ? 'y' : 'v';
+      form[fl - 1] = glide;
+      form[fl] = '\0';
+      strcat(form, t->clean);
     } else {
       strcat(form, t->clean);
+    }
+  }
+  /* Aniṭ-ātmane cluster sandhi at the stem-ending junction:
+     - 8.2.26 jharo jhari savarṇe: stop + s + dental stop drops the
+       internal s (tip + s + ta → tipta; tip + s + TAH → tipTAH).
+     - 8.2.40 jhalāṃ jaś jhaśi: voiceless stop becomes voiced
+       (= jaś) before a voiced aspirate (jhaś); the internal s also
+       drops in this configuration (tip + s + Dvam → tibDvam). */
+  if (is_anit_atmane) {
+    size_t fl = strlen(form);
+    /* Pass 1 — 8.2.26 jharo jhari savarṇe with sic-s: stop + s +
+       dental stop drops the s. Stop + s + voiced asp drops s AND
+       voices the preceding stop (8.2.40 jhalāṃ jaś jhaśi). */
+    for (size_t i = 0; i + 2 < fl; i++) {
+      char a = form[i], b = form[i + 1], c = form[i + 2];
+      bool a_voiceless_stop = (a == 'p' || a == 'P' || a == 't' || a == 'T' ||
+                               a == 'k' || a == 'K' || a == 'c' || a == 'C' ||
+                               a == 'w' || a == 'W');
+      bool c_dent_unvoiced = (c == 't' || c == 'T');
+      bool c_voiced_asp = (c == 'D' || c == 'B' || c == 'J' || c == 'G' ||
+                           c == 'Q');
+      if (a_voiceless_stop && b == 's' && c_dent_unvoiced) {
+        memmove(form + i + 1, form + i + 2, fl - i - 1);
+        fl--;
+        break;
+      } else if (a_voiceless_stop && b == 's' && c_voiced_asp) {
+        char voiced = a;
+        switch (a) {
+          case 'p': case 'P': voiced = 'b'; break;
+          case 't': case 'T': voiced = 'd'; break;
+          case 'k': case 'K': voiced = 'g'; break;
+          case 'c': case 'C': voiced = 'j'; break;
+          case 'w': case 'W': voiced = 'q'; break;
+        }
+        form[i] = voiced;
+        memmove(form + i + 1, form + i + 2, fl - i - 1);
+        fl--;
+        break;
+      }
+    }
+    /* Pass 2 — 8.2.40 jhalāṃ jaś jhaśi at a bare stop+voiced-asp
+       junction (no intervening s): voice the preceding stop. */
+    for (size_t i = 0; i + 1 < fl; i++) {
+      char a = form[i], b = form[i + 1];
+      bool a_voiceless_stop = (a == 'p' || a == 'P' || a == 't' || a == 'T' ||
+                               a == 'k' || a == 'K' || a == 'c' || a == 'C' ||
+                               a == 'w' || a == 'W');
+      bool b_voiced_asp = (b == 'D' || b == 'B' || b == 'J' || b == 'G' ||
+                           b == 'Q');
+      if (a_voiceless_stop && b_voiced_asp) {
+        switch (a) {
+          case 'p': case 'P': form[i] = 'b'; break;
+          case 't': case 'T': form[i] = 'd'; break;
+          case 'k': case 'K': form[i] = 'g'; break;
+          case 'c': case 'C': form[i] = 'j'; break;
+          case 'w': case 'W': form[i] = 'q'; break;
+        }
+        break;
+      }
     }
   }
   /* Nasal place assimilation (cluster surface rule corresponding to
@@ -1704,8 +2179,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   }
 
   /* 8.3.59 ādeśapratyayoḥ — pratyaya-region `s` becomes ṣ after iṇ
-     vowel. Routed through the unified helper. */
-  sandhi_apply_satva(form, strlen(stem));
+     vowel. For LRT/LRN, the stem already includes the sya pratyaya
+     ("kzesya"), so the boundary marker stem-end falls after the
+     sic-s and misses it; widen the scan to start right after the
+     root portion (= clean_root length, padded for any guṇa-grown
+     stem). For other lakāras the stem-end is a safe split. */
+  size_t satva_split = strlen(stem);
+  if (lakara == ASH_LRT || lakara == ASH_LRN) {
+    /* Look for the start of the sya pratyaya: scan backward from
+       end of stem to find the last 's'. */
+    size_t sl = strlen(stem);
+    for (size_t i = sl; i > 0; i--) {
+      if (stem[i - 1] == 's') { satva_split = i - 1; break; }
+    }
+  }
+  sandhi_apply_satva(form, satva_split);
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
 
   /* Cluster sandhi at the stem→ending boundary for athematic gaṇa-7

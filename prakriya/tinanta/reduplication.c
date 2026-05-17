@@ -104,6 +104,17 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
     }
   }
   char abhyasa_vowel = shorten_vowel(clean_root[first_vowel]);
+  /* Closed list of cluster-initial roots whose abhyāsa-vowel is
+     'i' rather than the root vowel (dyut → didyot, vyath → vivyaT,
+     vye → vivya). Most Cy-cluster roots (cyut → cucyot, syand →
+     sasyand, byas → babyas) keep the root-vowel-matching default. */
+  if (first_vowel >= 2 && clean_root[1] == 'y') {
+    if (strncmp(clean_root, "dyut", 4) == 0 ||
+        strncmp(clean_root, "vyaT", 4) == 0 ||
+        strncmp(clean_root, "vye", 3) == 0) {
+      abhyasa_vowel = 'i';
+    }
+  }
   /* 7.4.62 kuhoś cuḥ first (velar/laryngeal → palatal), then
      7.4.61 śarpūrvāḥ khayaḥ (deaspirate). */
   if (abhyasa_cons) {
@@ -149,11 +160,15 @@ bool reduplicate(const char *clean_root, char *out, size_t out_len) {
       merged_iu = 'U';
     }
     /* Multi-consonant cluster: use "An"-abhyāsa pattern for any
-       vowel-initial root (covers ard, arc, idi, uK after num). */
-    if (cons_after >= 2) {
+       vowel-initial root (covers ard, arc, idi, uK after num).
+       Short ṛ-initial roots like fj, fc also use An-abhyāsa even
+       with a single consonant following the ṛ (oracle: fj → Anfje). */
+    bool rinit_single = (root_v == 'f' && cons_after >= 1);
+    if (cons_after >= 2 || rinit_single) {
       char vowel_for_an = merged_a ? merged_a :
                           (merged_iu == 'I' ? 'I' :
-                           merged_iu == 'U' ? 'U' : 0);
+                           merged_iu == 'U' ? 'U' :
+                           (root_v == 'f') ? 'A' : 0);
       if (vowel_for_an) {
         if (pos + 2 + n + 1 > out_len) return false;
         out[pos++] = vowel_for_an;
