@@ -775,10 +775,11 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
      before sārvadhātuka endings (LAT/LAN/LOT/VIDHILIM), forming
      gopāyati, dhūpāyati, etc. The 'a' that apply_class_transform
      already appended via the Sap vikaraṇa is the tail of this 'āya'
-     — we splice 'Ay' in before it. Sārvadhātuka only; the LIT
-     periphrastic and ārdhadhātuka paths handle these roots
-     separately via LIT_OVERRIDE_TABLE / PERIPH_LIT_LONG_VOWEL. */
-  if (gana == 1 && !skip_vikarana) {
+     — we splice 'Ay' in before it. Per 3.1.32 sanādy-antā dhātavaḥ,
+     the augmented stem behaves as a fresh dhātu and is conjugated
+     parasmaipada only; the Ātmane forms for paṇ/pana (which are
+     originally A-pada) keep the bare root. */
+  if (gana == 1 && !skip_vikarana && pd == ASH_PARASMAI) {
     static const char *const AYA_AUGMENT_ROOTS[] = {
       "gup", "DUp", "vicC", "paR", "pan", NULL
     };
@@ -961,6 +962,39 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
         if (cl + 1 < sizeof(per_stem)) {
           memmove(per_stem + insert_at + 1, per_stem + insert_at, cl - insert_at + 1);
           per_stem[insert_at] = 'n';
+        }
+      }
+      /* 3.1.28 gupūdhūpa-vicchi-paṇi-pani — for these roots the
+         periphrastic LIT stem is built on the āya-augmented dhātu
+         (gop-āya, dhūp-āya, etc.), not the bare root. Guṇa fires
+         on the root vowel first, then 'Aya' suffix splices in. */
+      if (lakara == ASH_LIT) {
+        static const char *const AYA_LIT_ROOTS[] = {
+          "gup", "DUp", "vicC", "paR", "pan", NULL
+        };
+        bool periph_aya = false;
+        for (size_t i = 0; AYA_LIT_ROOTS[i]; i++) {
+          if (strcmp(clean_root, AYA_LIT_ROOTS[i]) == 0) {
+            periph_aya = true; break;
+          }
+        }
+        if (periph_aya) {
+          /* 7.3.86 pugantalaghūpadhasya — guṇa only when the root
+             vowel is short (laghu). 'u' → 'o' for gup; long 'U' in
+             DUp keeps its identity. Then splice the 'Aya' suffix. */
+          char with_guna[32];
+          strncpy(with_guna, per_stem, sizeof(with_guna) - 1);
+          with_guna[sizeof(with_guna) - 1] = '\0';
+          for (size_t i = 0; with_guna[i]; i++) {
+            char c = with_guna[i];
+            if (c == 'i' || c == 'u' || c == 'f' || c == 'x') {
+              with_guna[i] = varna_guna(c);
+              break;
+            } else if (varna_is_vowel(c)) {
+              break;
+            }
+          }
+          snprintf(per_stem, sizeof(per_stem), "%sAya", with_guna);
         }
       }
       /* Auxiliary kṛ-LIT forms keyed by purusha/vacana for P. */
@@ -1873,9 +1907,7 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
       strcat(form, t->clean);
     } else if (lakara == ASH_LIT &&
                (stem_final == 'i' || stem_final == 'u') &&
-               (ending_initial == 'a' || ending_initial == 'A' ||
-                ending_initial == 'e' || ending_initial == 'E' ||
-                ending_initial == 'o' || ending_initial == 'O')) {
+               varna_is_vowel(ending_initial)) {
       /* 6.4.77 acijñiti — iyaṅ/uvaṅ-ādeśa at the LIT stem→ending
          boundary: a reduplicated stem whose root-vowel is a short
          i / u (e.g. cikzi for kṣi) inserts y / v before a vowel-
@@ -1990,8 +2022,21 @@ bool lakara_derive_ctx(ASH_Lakara lakara,
   }
 
   /* 8.3.59 ādeśapratyayoḥ — pratyaya-region `s` becomes ṣ after iṇ
-     vowel. Routed through the unified helper. */
-  sandhi_apply_satva(form, strlen(stem));
+     vowel. For LRT/LRN, the stem already includes the sya pratyaya
+     ("kzesya"), so the boundary marker stem-end falls after the
+     sic-s and misses it; widen the scan to start right after the
+     root portion (= clean_root length, padded for any guṇa-grown
+     stem). For other lakāras the stem-end is a safe split. */
+  size_t satva_split = strlen(stem);
+  if (lakara == ASH_LRT || lakara == ASH_LRN) {
+    /* Look for the start of the sya pratyaya: scan backward from
+       end of stem to find the last 's'. */
+    size_t sl = strlen(stem);
+    for (size_t i = sl; i > 0; i--) {
+      if (stem[i - 1] == 's') { satva_split = i - 1; break; }
+    }
+  }
+  sandhi_apply_satva(form, satva_split);
   log_single_term_change(ctx_out, 304078, stem, form, "tiN assignment");
 
   /* Cluster sandhi at the stem→ending boundary for athematic gaṇa-7

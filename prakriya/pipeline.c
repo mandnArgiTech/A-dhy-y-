@@ -327,10 +327,17 @@ ASH_Form pipeline_tinanta(Pipeline *p, const char *root_slp1, int gana,
     if (!de) de = pipeline_find_dhatu(p, root_slp1, gana);
     if (de) {
       char pf = de->pada_flag;
+      /* 3.1.32 sanādy-antā dhātavaḥ — the āya-augmented stem of
+         paṇa/pana is a derived dhātu that takes parasmaipada (the
+         bare root keeps ātmanepada). Allow PARASMAI for these
+         A-pada dhātus; their P forms route through the Aya path. */
+      bool aya_p_override = (pf == 'A' && pd == ASH_PARASMAI &&
+                              (strcmp(de->upadesa_slp1, "paRa~") == 0 ||
+                               strcmp(de->upadesa_slp1, "pana~") == 0));
       if (pf == 'P' && pd == ASH_ATMANE) {
         return make_error_form("dhātu is parasmaipada-only");
       }
-      if (pf == 'A' && pd == ASH_PARASMAI) {
+      if (pf == 'A' && pd == ASH_PARASMAI && !aya_p_override) {
         return make_error_form("dhātu is ātmanepada-only");
       }
     }
